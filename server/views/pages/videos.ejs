@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+    <% include ../partials/header %>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="text-muted">Videos</h4>
+            </div>
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#createVideo">
+                    Video Upload
+                </button>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="createVideo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="/videos" method="post" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Upload a video file</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <fieldset class="form-group">
+                                <label  for="inputitle">Title</label>
+                                <input type="text" id="inputitle" name="title" class="form-control" placeholder="Video Title" required="">
+                            </fieldset>
+                            <label class="file" style="width: 100%" onclick="$('input[id=lefile]').click();">
+                                <input type="file" id="video" name="video">
+                                <span class="file-custom"></span>
+                            </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <% videos.forEach(function(videos){ %>
+                <div class="col-lg-4">
+                    <h4 id="videoName" class="list-group-item-heading"><%= videos.title %></h4>
+                   <!-- <video width="320" height="240" controls preload="auto" codecs="avc1.42E01E, mp4a.40.2"> !-->
+                        <!--    <audio controls loop> <source class="audioPlayer" src="<%= videos.videoName %>" type="video/mp4" />  !-->
+
+                        <audio controls class="audioPlayer">
+                      <source class="sourcePlayer" src="<%= videos.videoName %>" type="audio/mpeg" />
+                      </audio>
+
+                    <small>Upload by: <%= videos.user_id %></small>
+                </div>
+            <% }); %>
+        </div>
+        </div>
+        <% include ../partials/footer %>
+    
+
+        <script>
+
+                 function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                }
+
+            audioPlayer();
+          function audioPlayer() {
+            
+            
+            //$("#audioPlayer")[0].src.play();
+            var audioPlayer = document.querySelector(".audioPlayer");
+            var audioPlayer1 = document.querySelectorAll(".audioPlayer");
+            //var firstPlayer = audioPlayer[1].src;
+            console.log(audioPlayer);
+            console.log(audioPlayer1);
+            var firstPlayer = document.querySelectorAll(".sourcePlayer")[0];
+            var secondPlayer = document.querySelectorAll(".audioPlayer")[1];
+            var sliced = firstPlayer.src.slice(29);
+            var slicedSecond = secondPlayer.src.slice(29);
+            console.log(firstPlayer.src);
+            console.log("?? " + sliced);
+            console.log("hey" + slicedSecond);
+            var songs = [sliced,slicedSecond];
+            console.log(songs);
+
+            var i = 0;
+
+            var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(videos) %>"));
+
+            audioPlayer.addEventListener('ended',function() {
+                i++;
+                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(29);
+                audioPlayer.src = nextSong;
+                audioPlayer.load();
+                audioPlayer.play();
+                document.getElementById("videoName").innerHTML = myVar[i].videoName.slice(0,-4);
+                if (i==2) {
+                    i = -1;
+                }
+            },false); 
+        
+
+        }
+        
+        </script>
+    </body>
+    </html>

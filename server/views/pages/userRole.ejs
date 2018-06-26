@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+
+</head>
+<style>
+#output{
+    border-radius:50%;
+    /*display: inline; */
+    width: 140px;
+    height: 140px;
+}
+footer.page-footer {
+    margin-top:400px !important;
+}
+</style>
+<body>
+    <% include ../partials/header %>
+  
+        <!-- Modal -->
+        
+                    <form action="/userRole" method="post"> 
+
+                        <h1> Welcome <%=user.name%> , please select your account! </h1>
+                          <button type="submit" class="btn btn-primary" name="role" value="user"> I WAN TO BE A USER! </button>
+                            <button type="submit" class="btn btn-primary" name="role" value="instructor" > I WAN TO BE A INSTRUCTOR! </button>
+                            </form>
+            
+        <!-- comments inside the image-->
+      
+
+      
+        <% include ../partials/footer %>
+       
+
+        <script>
+        var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
+
+        </script>
+        
+    </body>
+    </html>

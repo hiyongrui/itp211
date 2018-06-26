@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+   
+</head>
+<style>
+#output{
+    border-radius:50%;
+    /*display: inline; */
+    width: 200px;
+    height: 200px;
+    /* border: 2px solid grey; */
+}
+.user{
+    color: blue;
+}
+</style>
+<body>
+    <% include ../partials/header %>
+    <!-- Page Content -->
+    <div class="container">
+       
+        <!-- Team Members Row -->
+        <div class="row">
+
+          <div class="col-lg-12">
+            <h2 class="my-4"> All the users </h2>
+          </div>
+
+          <% users.forEach(function(users) { %>
+          <div class="col-xs-6 col-md-4">
+           
+                <img id="output" class="card-img-top" src="images/<%= users.userImage %>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'">
+
+               <a href="users/profile/<%=users.id%>"> <button type="button" class="btn btn-outline-success waves-effect"> visit </button>
+                
+                <p class="text-center user"> username: <%= users.name %> </p>
+
+                <p class="text-center user"> email: <%= users.email %> </p>
+
+                <p class="text-center user"> role: <%= users.role %> </p>
+           
+          </div> <% }); %> 
+
+        </div>
+        
+      </div>   
+      <!-- /.container -->
+       
+<!-- 
+                <div class="list-group">
+                    <% users.forEach(function(users){ %>
+                        <a href="users/profile/<%=users.id%>" id="viewBtn" data-id="<%=users.id %>" class="list-group-item"> </a>
+
+                           <img src="<%= gravatar %>" alt="" style="float: left; margin-right: 10px"> 
+                       
+                            <div class="comments">
+                                <form action="/comments" method="delete">
+                                    <h4 class="list-group-item-heading">
+                                            <img id="output" class="card-img-top" src="images/<%= users.userImage %>" alt= "Card image cap">
+                                        <%= users.name %>
+                                            <button class="btn btn-secondary pull-right chatBtn" type="button" data-id="<%= users.id%>"> Chat</button>
+                                    </h4>
+                                    <p class="list-group-item-text">
+                                        <%=  users.email  %>
+                                    </p>
+                                    <p class="list-group-item-text">
+                                            <%=  users.experience  %>
+                                        </p>
+                                </form>
+                            </div>
+                        </a>
+                        <% }); %>
+                    </div> !-->
+        
+        <% include ../partials/footer %>
+      
+        <script>
+            $('#viewBtn').click(function () {
+              var user_num = $(this).closest("a").data('id');
+              location.href = "<%-urlPath %>/profile/"+user_num;
+            });
+            console.log(document.getElementById("output"));
+        </script>
+
+</body>
+
+</html>

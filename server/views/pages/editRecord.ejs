@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <!--
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src='/javascripts/jquery.min.js'></script>
+    <script src='/javascripts/bootstrap.min.js'></script>
+    !-->
+</head>
+<% include ../partials/header %>
+<body>
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Edit Student Record</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="inputStudentID">Student ID</label>
+            <input type="text" id="inputStudentID" name="studentId" class="form-control" placeholder="Student Id" required="true" value="<%=item.studentId%>">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputName">Student Name</label>
+            <input type="text" id="inputName" name="studentName" class="form-control" placeholder="Student Name" required="true" value="<%=item.name%>">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputGroup">Group</label>
+            <input type="text" id="inputGroup" name="group" class="form-control" placeholder="Group" required="true" value="<%=item.group%>">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputHobby">Hobby</label>
+            <input type="text" id="inputHobby" name="hobby" class="form-control" placeholder="Hobby" required="true" value="<%=item.hobby%>">
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" onclick=saveChanges()>Save Changes</button>
+        <button type="button" class="btn btn-secondary" onclick=discardChanges()>Cancel</button>
+    </div>
+    <script>
+        function saveChanges() {
+            var url = "<%=hostPath%>/p5db/edit/<%=item.id%>";
+            var newValues = {
+                studentId: $("#inputStudentID").val(),
+                name: $("#inputName").val(),
+                group: $("#inputGroup").val(),
+                hobby: $("#inputHobby").val()
+            }
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                dataType: "json",
+                contentType: "application/json",
+                success: function(result){
+                    alert("Student record updated successfully");
+                    location.href = "<%=hostPath%>/p5db"
+                },
+                error: function(result){
+                    alert("Error updating student record");
+                    discardChanges();
+                }
+            })
+        }
+
+        function discardChanges() {
+            location.href = "<%=hostPath%>"
+        }
+    </script>
+</body>
+
+</html>

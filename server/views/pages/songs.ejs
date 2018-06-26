@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  
+</head>
+
+<style>
+    .file-custom:after {
+        content: "Choose song...";
+    }
+    footer.page-footer{
+        margin-top:400px !important;
+    }
+    .swal-overlay {
+  background-color: rgba(0, 0, 123, 0.4);
+}
+.swal-modal {
+  background-color: powderblue;
+  border: 3px solid mediumseagreen
+}
+.swal-button {
+  padding: 7px 19px;
+  border-radius: 2px;
+  background-color: #4962B3;
+  font-size: 12px;
+  border: 1px solid white;
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+}
+.swal-footer {
+  background-color: mediumaquamarine;
+  margin-top: 32px;
+  border-top: 1px solid #E9EEF1;
+  overflow: hidden;
+}
+</style>
+
+<body>
+    <% include ../partials/header %>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="text-muted"> Songs </h4>
+            </div>
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#createSong">
+                    Songs Upload
+                </button>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="createSong" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="/songs" method="post" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Upload a song </h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <fieldset class="form-group">
+                                <label  for="inputitle">Title</label>
+                                <input type="text" id="inputitle" name="title" class="form-control" placeholder="Song Title" required="">
+                            </fieldset>
+                            <label class="file" style="width: 100%" onclick="$('input[id=lefile]').click();">
+                                <input type="file" id="song" name="song" required="">
+                                <span class="file-custom"></span>
+                            </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <% songs.forEach(function(songs){ %>
+
+                <a href="#" class="list-group-item" data-id="<%= songs.id%>">
+
+                <div class="col-lg-12">    
+                            <form action="/songs" method="delete">
+                    <h4 id="songName" class="list-group-item-heading songTitle"><%= songs.title %></h4>
+                        <audio controls class="audioPlayer">
+                      <source class="sourcePlayer" src="<%= songs.songName %>" type="audio/mpeg" />
+                      </audio>
+
+                    <small class="byWho">Upload by: <%= songs.user_id %></small>
+                    <button type="button" class="btn-primary deleteBtn" value="<%=songs.id%>"> Delete  </button>
+                   
+                            </form> 
+                </div> </a>
+           
+       <% }); %> 
+
+       <% songs.forEach(function(songs){ %>
+            <div class="col-lg-12 list-group-item" data-id="<%=songs.id"> 
+
+                <h4> <%=songs.songName%> </h4>
+            </div>
+        <% }); %>
+          
+    </div>
+        </div>
+
+        <% include ../partials/footer %>
+    
+
+        <script>
+
+                 function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                }
+
+function setCookie(cname,cvalue,exdays)
+{
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+                function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+            levelUp();
+        //setTimeout(audioPlayer,3000); // setInterval(audioPlayer,1000)? if place levelup behind audioplayer, use settimeout audioplayer
+            //process.nextTick(audioPlayer);
+                audioPlayer();
+                
+                var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
+                
+          function audioPlayer() {
+            
+            
+            //$("#audioPlayer")[0].src.play();
+            var audioPlayer = document.querySelector(".audioPlayer");
+            var audioPlayerFooter = document.querySelector(".kys");
+            var audioPlayer1 = document.querySelectorAll(".audioPlayer");
+            //var firstPlayer = audioPlayer[1].src;
+            console.log(audioPlayer);
+            console.log(audioPlayer1);
+            var firstPlayer = document.querySelectorAll(".sourcePlayer")[0];
+            var secondPlayer = document.querySelectorAll(".audioPlayer")[1];
+            var sliced = firstPlayer.src.slice(28);
+            var slicedSecond = secondPlayer.src.slice(29);
+            console.log(firstPlayer.src);
+            console.log("?? " + sliced);
+            console.log("hey" + slicedSecond);
+            var songs = [sliced,slicedSecond];
+            console.log(songs);
+
+            var i = 0;
+
+            //var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
+           
+            /*
+            audioPlayer.addEventListener('play',function() {
+                document.getElementById("footerSong").innerHTML = "HELLO";
+                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
+                console.log("YO" + nextSong);
+                //audioPlayerFooter.play();
+            }) */
+
+            audioPlayer.addEventListener('ended',function() {
+                i++;
+                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
+                audioPlayer.src = nextSong;
+              /*  audioPlayerFooter.src = nextSong;
+                audioPlayerFooter.load();
+                audioPlayerFooter.play(); */
+                console.log("??" + nextSong);
+                audioPlayer.load();
+                audioPlayer.play();
+                setCookie('songName' , nextSong)   
+                document.getElementById("songName").innerHTML = "now playing : " + myVar[i].songName.slice(0,-4);
+                if (i==2) {
+                    i = -1;
+                }
+            },false); 
+            
+            
+         /*   audioPlayerFooter.addEventListener('ended',function() {
+                i++;
+                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
+                audioPlayerFooter.src = nextSong;
+                audioPlayer.src = nextSong;
+                audioPlayerFooter.load();
+                audioPlayerFooter.play();
+                audioPlayer.play();
+                console.log("??" + nextSong);
+                setCookie('songName' , nextSong)  
+                //document.getElementById("songName").innerHTML = myVar[i].songName.slice(0,-4);
+                if (i==2) {
+                    i = -1;
+                }
+            },false); 
+            */
+       
+
+        }
+
+        function levelUp() {
+        var obj = [[1,2000], [2, 5000] , [3, 6000] , [4,8000] ];
+        
+        console.log(JSON.stringify(obj));
+        console.log(obj);
+        var currentUser = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));
+        console.log(currentUser.experience);
+        console.log(currentUser.level);
+        
+        objLength = Object.keys(obj).length;
+        console.log(objLength);
+        
+        for (i=0; i< objLength;i++) {
+            console.log("HEY" + obj[i][0]);
+            
+            if (currentUser.level == obj[i][0]) {
+                //currentUser.level += 1;
+                console.log("???" +obj[i][0]); 
+                console.log(currentUser.experience);
+                if (currentUser.experience > obj[i][1]) { //user level 2 > level2
+                    console.log(currentUser.experience);
+                    currentUser.level +=1;
+                    currentUser.coin = 50;
+                    currentUser.experience = currentUser.experience - obj[i][1];
+                    console.log(currentUser.experience);
+           swal({title:"YOU HAVE LEVELED UP to " + currentUser.level + "!", icon: "http://allwishes.in/wp-content/uploads/2014/05/congratulation-images2.gif"
+           ,button: { text: "Got it!"}} ).then((value)=> {
+               swal({title:'You are currently left with ' + currentUser.experience + ' exp!' ,
+               text:"You gained " + currentUser.coin + " coins!" , button: { text: "Awesome!!"} ,icon:"https://images.cdn3.stockunlimited.net/clipart/employee-showing-thumbs-up_1637121.jpg" });
+           })
+                }
+            }
+        }
+    }
+
+    console.log(" document cookie >> " + document.cookie);
+    var songFirst = document.querySelector(".sourcePlayer").src.slice(28);
+    
+        //var audioFooter = document.querySelector(".kys");
+        //audioFooter.src =   myVar[0].songName;
+        //console.log(audioFooter.src)
+        //console.log(audioFooter.currentTime);
+        //var timing = getCookie("songCookie");
+        //audioFooter.currentTime = timing;
+        //document.querySelector(".kys").src =  myVar[0].songName;
+        console.log(document.getElementsByClassName("sourcePlayer")[0]);
+        //console.log(myVar[0].songName);
+        //console.log(currentUser.level)
+
+
+
+    var song = document.getElementsByTagName('audio')[0];
+    var audioFooter = document.querySelector(".kys");
+
+    window.onload = function() {
+
+        var getThis = getCookie('songCookie');
+        var getSong = getCookie('songName');
+        //var getOne = getCookie('songCookie11');
+         if (getSong == 0) {
+        document.getElementById("songName").innerHTML = "song: " +  getSong;
+        song.src =  songFirst;
+        song.currentTime = getThis;
+        song.play();
+
+        /* audioFooter.src = songFirst;
+        audioFooter.currentTime = getThis;
+        audioFooter.play(); */
+         }
+         else{
+        document.getElementById("songName").innerHTML =  "song playing: " + getSong.slice(0,-4);
+        song.src = getSong;
+        song.currentTime = getThis;
+        //audioFooter.currentTime = getOne;
+        song.play();
+       /*  audioFooter.src = getSong;
+        audioFooter.currentTime = getThis;
+        //audioFooter.currentTime = getOne;
+        audioFooter.play(); */
+        }
+    }
+
+    window.onbeforeunload = function() {
+
+        var songNameBeforeExit = document.querySelector(".audioPlayer").src.slice(28);
+        setCookie('songCookie',song.currentTime);
+        //setCookie('songCookie11', audioFooter.currentTime);
+        setCookie('songName', songNameBeforeExit);
+
+    }
+
+    /*
+        $(".audioPlayer:not(:first)").hide();
+       $(".byWho:not(:first)").hide();
+        $(".songTitle:not(:first)").hide(); */
+console.log(docment.getElementsByClassName("deleteBtn"))
+        
+
+        </script>
+
+       <!-- <script src="/javascripts/test.js"></script> !-->
+       
+
+       <script>
+        $('.deleteBtn').click(function() {
+                var songs_id = $(this).val();      
+                console.log("<%-urlPath%>" + songs_id);
+                $.ajax({
+                        url: '<%-urlPath%>' + songs_id,
+                        type: 'DELETE',
+                        success: function(result) {
+                            console.log(result.message);
+                            var itemToRemove = '.list-group-item[data-id='+songs_id+']';
+                            $(itemToRemove).remove();
+                        },
+                        error: function(result){
+                            alert("Unable to delete songs.");
+                            console.log(result.message);
+                        } 
+                    });  
+            });
+       
+       </script>
+       
+    </body>
+    </html>

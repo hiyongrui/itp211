@@ -1,0 +1,112 @@
+<style>
+    .musique{
+        margin-right:20px;
+    }
+    .container{
+        padding:40px;
+    }
+    #nameOfSong{
+        margin-left:30px;
+    }
+</style>
+<footer class="footer">
+    <div class="container">
+    
+        <span class="musique"> Musique </span>
+        
+        <span id="nameOfSong">  </span>
+                  
+       
+            <% songs.forEach(function(songs){ %>
+                
+                        <audio controls class="audioPlayer">
+                      <source class="sourcePlayer" src="songs/<%= songs.songName %>" type="audio/mpeg" />
+                      </audio>
+            <% }); %>
+                      
+            
+            
+        </div>
+            
+    </div>
+   
+    
+</footer>
+
+<script>
+
+    /* 
+     function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                }
+
+    audioPlayer();
+            */
+
+                var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
+                
+                function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+         /* function audioPlayer() {
+            
+          
+            //$("#audioPlayer")[0].src.play();
+            var audioPlayer = document.querySelector(".audioPlayer");
+         
+            var audioPlayer1 = document.querySelectorAll(".audioPlayer");
+            //var firstPlayer = audioPlayer[1].src;
+            console.log(audioPlayer);
+            console.log(audioPlayer1);
+            var firstPlayer = document.querySelectorAll(".sourcePlayer")[1];
+            var secondPlayer = document.querySelectorAll(".audioPlayer")[1];
+            //var sliced = firstPlayer.src.slice(28);
+            //var slicedSecond = secondPlayer.src.slice(29);
+            //console.log(firstPlayer.src);
+            //console.log("?? source player " + sliced);
+            //console.log("hey" + slicedSecond);
+      
+        //var timing = getCookie("songCookie");
+        //audioPlayer.currentTime = timing;
+         
+          var i = 0;
+
+            //var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
+        
+            audioPlayer.addEventListener('ended',function() {
+                i++;
+                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
+                audioPlayer.src = "songs/" + nextSong;
+                console.log("??aaa" + nextSong);
+                audioPlayer.load();
+                audioPlayer.play();
+                //document.getElementById("songName").innerHTML = myVar[i].songName.slice(0,-4);
+                if (i==2) {
+                    i = -1;
+                }
+            },false); 
+            
+           
+        }  */
+     
+var getCurrentName = getCookie("songName");
+console.log("current cookie song name is " + getCurrentName);
+          $(".audioPlayer:not(:first)").hide();
+         
+</script>
+

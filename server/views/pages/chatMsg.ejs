@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+    <script src="/javascripts/socket.io.js"></script>
+    
+</head>
+<body>
+    <% include ../partials/header %>
+    <div class="container">
+        <br>
+        <div class="jumbotron">
+            <h1 class="display-4"> Send Message </h1>
+            <br>
+            <input id="name" class="form-control" placeholder="Name">
+            <br>
+            <textarea id="message" class="form-control" placeholder="Message"></textarea>
+            <br>
+            <button id="send" class="btn btn-success">Send</button>
+        </div>
+        <div id="messages">
+            <%data.forEach(function(msg){%>
+            <h4> <%=msg.name%> </h4>
+            <!-- <p class="userid"> <%=msg.message%> chat id is : <%=msg.id%> user id is : <%=msg.user_id%></p> !-->
+            <p class="userid"> <%=msg.user_id%> </p>
+        <%})%>
+        </div>
+    </div>
+    
+    <script>
+         function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                }
+        
+                var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(data) %>"));
+                //console.log(myVar[myVar.length-1].user_id);
+                var userchatlength = document.getElementsByClassName("userid");
+                //lastuserchat = userchatlength[userchatlength.length-1].innerHTML;
+                //console.log(lastuserchat);
+
+        var socket = io()
+        $(() => {
+            $("#send").click(()=>{
+                var message = { name: $("#name").val(), message: $("#message").val() , /*user_id: myVar[myVar.length-1].user_id ,  addon: lastuserchat */}
+                postMessage(message)
+            })
+        })
+
+        socket.on('message', addMessage)
+
+        function addMessage(msg) {                                                   //   ${myVar[myVar.length-1].user_id}
+            $("#messages").append(`<h4> ${msg.name} </h4> <p> ${msg.message} -->  User id is :   </p>  `)
+        }
+
+        function postMessage(message) {
+            $.post('<%=url%>', message)
+        }
+    </script>
+</body>
+</html>

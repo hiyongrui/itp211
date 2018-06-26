@@ -1,0 +1,16 @@
+
+
+<frameset rows="90%,*">
+        <frame src="/songs"  /> <!-- this one always remains -->
+        
+        <div> <frame id ="hello" src="/login" noresize="noresize" scrolling="no" /> </div>
+        <button onclick="myFunction()"> </button> <!-- this one changes without breaking the frameset,
+         as long as you only use links with either no target or target="_SELF" -->
+    </frameset>
+
+    <script>
+    function myFunction() {
+            var getframe = document.getElementById("hello");
+            getframe.remove();
+    }
+    </script>

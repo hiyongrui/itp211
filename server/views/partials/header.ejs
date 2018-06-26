@@ -1,0 +1,241 @@
+
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Bootstrap core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- Material Design Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.4/css/mdb.min.css" rel="stylesheet">
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.4/js/mdb.min.js"></script>
+
+<script src="/javascripts/socket.io.js"></script>
+
+
+<style>
+    /*
+    .navbar{
+        margin-bottom: 18px !important;
+    } */
+    #profilePictureHeader{
+        border-radius:50%;
+    /*display: inline; */
+    width: 32px;
+    height: 32px;
+    border:2px solid lightslategray;
+    margin-left:30px;
+    }
+    
+   #loginBtn{
+       margin-left:30px;
+       border-left:1px solid grey;
+   }
+    
+   
+</style>
+<!-- new navbar !-->
+
+<!--Navbar -->
+<nav class="mb-1 navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <a class="navbar-brand" href="#"> Musique </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+
+            
+            <!--Navbar-->
+            <nav class="mb-1 navbar-dark bg-dark">
+                    <form class="form-inline">
+                        <input class="form-control" type="search" placeholder="Search..." aria-label="Search" style="width:333px">
+                    
+                    </form>
+                </nav>
+
+    <!--/.Navbar-->
+            
+            <ul class="navbar-nav ml-auto"> <!-- ml auto for left side !-->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Instruments
+                        <!-- <span class="sr-only">(current)</span> !-->
+                    </a>
+                </li>
+    
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                         Lessons
+                    </a>
+                </li>
+    
+                <li class="nav-item">
+                    <a class="nav-link" href="/songs">
+                        <i class="fa fa-music"></i> Songs
+                    </a>
+                </li>
+
+            <% if (user) { %>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img id="profilePictureHeader" src="/images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
+                         <%=user.name %> 
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
+                        <a class="dropdown-item" href="/profile"> My profile </a>
+                        <a class="dropdown-item" href="/comments"> Comments </a>
+                        <a class="dropdown-item" href="/users"> Search users </a>
+                        <a class="dropdown-item" href="/images-gallery"> Images gallery </a>
+                        <a class="dropdown-item" href="/logout"> Log out </a>
+                    </div>
+                </li>
+
+                <% }
+
+                else { %>
+                
+                
+                <li class="nav-item">
+                    <a id="loginBtn" class="nav-link" href="/login">
+                        <i class="fa fa-sign-in"></i> Log In
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup">
+                        <button class="btn btn-outline-white btn-sm my-0"> 
+                            <i class="fa fa-user-o"> </i> Sign Up </button>
+                    </a>
+                </li>
+                
+                <% } %>
+
+                </ul>
+
+        </div>
+    </nav>
+    <!--/.Navbar -->
+
+
+   
+
+
+<!-- Fixed navbar !-->
+
+<!--
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    
+
+        
+                <a class="navbar-brand" href="/">ITP211 Multimedia App</a>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Sign in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">Sign up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile">Profile</a>
+                    </li>
+                     
+                    <li class="nav-item">
+                        <a class="nav-link" href="/comments">Comments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/videos">Videos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/images-gallery">Photos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/messages"> Chat </a>
+                    </li>
+
+                    <% if (user) { %>
+
+                        <% if (user.experience > 4800) {%> <!-- or user.role == "user"-->
+                        <!--
+                        <li class="nav-item">
+                            <a class="nav-link" href="/signup"> Sign up! </a>
+                        </li>
+                     
+                        <% } 
+
+                        else {%> 
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout"> Logout </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/songs"> Songs </a>
+                        </li>
+                        <li class="nav-item"> 
+                            <a class="nav-link" href="/users"> Users </a>
+                        </li>
+                        <li class="nav-item">  <!-- or 
+                                <!-- <img id="profilePictureHeader" src="/images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
+                                <p class="userIdNavBar"> <%=user.id %> </p> <!-- <%= user.name %>  !-->
+                            <!-- </li>
+                        <% } %>
+
+                    <% }  
+                    
+                    else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/songs"> Song </a>
+                        </li>
+                    <% } %>
+                </ul>
+         
+    </nav>
+</div>
+
+<!-- Fixed navbar !--> 
+
+
+
+<script>
+     function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                }
+        
+                var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));
+
+        function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+    var currentProfileOnlineUserId = getCookie("userid")
+    //var currentProfileOnlineUserId =  myVar.id;
+    console.log("user Navbar " + currentProfileOnlineUserId);
+    var socket = io();
+    socket.emit("newUser", currentProfileOnlineUserId); 
+
+</script>

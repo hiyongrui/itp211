@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <script src="/javascripts/socket.io.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"> </script>
+
+</head>
+
+<style>
+ .userID {
+    /*  visibility:hidden;  or color:white/transparent;*/
+     font-size:9px;
+ }
+ #output{
+    border-radius:50%;
+    /*display: inline; */
+    width: 142px;
+    height: 142px;
+    border:2px solid lightslategray;
+}
+
+/* input{
+    display:none;
+}
+
+input::after{
+    content: "\f303";
+    position:absolute;
+    top:10px;
+} */
+
+.avatar-upload {
+    position: relative;
+    max-width: 150px; /*was 205px , lesser the number shift avatar to left */
+    margin: 5px auto;
+}
+
+.avatar-edit {
+     position:absolute; 
+    right:12px;
+    left:20px;
+    z-index:1;
+    top:-2px;
+}
+
+#image{
+    display:none;
+}
+
+label{
+    display:inline-block;
+    width:34px;
+    height:34px;
+    margin-bottom: 0;
+    border-radius: 100%;
+    background-color: lightskyblue;
+    color:darkblue;
+    border:1px solid transparent;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    font-weight: normal;
+    transition: all .2s ease-in-out;  
+    position: absolute;
+    left: 120px;
+    right:0;
+}
+
+label:hover{
+    background: #f1f1f1;
+    border-color: #d6d6d6;
+}
+
+#pencil{    /* position of pencil */
+    margin-top:8px;
+    margin-left:8px;
+}
+
+#avatar-card{
+    border: 4px solid #c8ccd0;
+    border-radius:4px;
+    text-align: center;
+    padding: 17px;
+    box-shadow: inset 130px #e7e8ea;
+    background: linear-gradient(to top, whitesmoke 50%, #e7e8ea 50%);
+    width:240px;
+    height:240px;
+    margin-left:450px; 
+}
+.gravatar-wrapper-164 img{
+    width:164px;
+    height:164px;
+    border-radius:50%;
+}
+
+.text-xs-center{
+    text-align: center;
+    /* margin-left:580px; */
+}
+
+.col-xs-10{
+    width: 50%;
+}
+
+.row{
+    margin-left:300px !important;
+    padding:30px;
+    margin-right:0px !important;
+}
+
+.userLevelBefore{
+    float:left;
+    margin-right:30px;
+    color:blue;
+    line-height: 16px;
+}
+
+.userLevelAfter{
+    float:right;
+    margin-left:30px;
+    color:blue;
+    line-height: 16px;
+}
+
+.progress{
+    background-color:#607D8B !important;
+}
+.progress-bar{
+    background-color: #03A9F4 !important;
+}
+
+
+#first{
+    padding:10px 0 100px;   
+     background-color:white;
+}
+
+#second{
+    background-color:#f7f7f7;
+    padding:60px 0 100px;
+}
+
+#firstone{
+     background-color:white;  
+}
+
+ #secondone { 
+    background-color:#f7f7f7;
+}
+
+
+
+.container-fluid {
+   padding-left:0; /* or padding:0 !important */
+   padding-right:0;
+    margin-right:auto;
+    margin-left:auto
+ }
+ 
+ a.nav-link.active{
+     color:#ff6050;
+     border-bottom: 3px solid #ff6050 !important;
+ }
+
+ .nav-link{
+    color:#4e5860;
+ }
+ .nav-justified .nav-item{
+     display:flex;
+   align-items: flex-start;
+margin-left:150px;
+ }
+
+ .rowGrid{
+     display:flex;
+     flex-wrap:wrap;
+     margin-right:15px;
+     margin-left:15px;
+ }
+
+ .font-weight-bold.mt-3{
+     font-family:'Droid Serif','Helvetica Neue',Helvetica,Arial,sans-serif;
+     font-style:itatlic;
+     font-size:72px;
+     color:blue;
+ }
+
+ .font-weight-bold.mt-1{
+     color:lightseagreen;
+     font-size:35px;
+     font-family:itatlic;
+ }
+
+ #visual{
+     margin-top:100px;
+     padding:60px;
+     border-top: 1px solid blue !important;
+ }
+</style>
+
+<body>
+    <% include ../partials/header %>
+
+    <div id="first" class="container-fluid no padding">
+
+        
+
+
+            <div id="firstone">
+
+                <form action="/profile" method="post" enctype="multipart/form-data">
+
+                <div class="avatar-upload"> 
+
+                    <div class="avatar-edit">  
+                        <input type="file" id="image" name="image" onchange="form.submit();">
+                        <label for="image"> <i id="pencil" class="fas fa-pencil-alt"> </i> </label>
+                    </div>
+                    
+                    <img id="output" src="images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
+
+                   
+                </div>
+
+                <section class="text-center">
+                    <h2> <%=user.name%> </h2>
+                    <p style="color:blueviolet"><%=user.rank%>  | <%=user.coin%> coins</p>
+                </section>
+                </form>
+                    <!--
+                <span class="text-xs-center"> <%= user.name %> </span> 
+                <span class="text-xs-center"> experience : <%= user.experience %> </span>
+                        !-->
+                <div class="row">
+                
+
+                <div class="col-xs-1">
+                <span class="userLevelBefore"> <i class="fa fa-question-circle" data-toggle = "tooltip" data-placement="top" 
+                    title="current exp is : <%=user.experience%> , you need <%=user.expNeeded%> more exp to level up! "> </i> Level <%= user.level %> </span>
+                </div>
+
+                <div class="col-xs-10 progress" data-toggle="tooltip">    
+                    <div id="progressPercentage" class="progress-bar" role="progressbar"  aria-valuemin="0" aria-valuemax="100"
+                    data-toggle="tooltip" data-placement="top" title="current exp is : <%=user.experience%> , you need <%=user.expNeeded%> more exp to level up!"> 
+                    </div>
+                </div>
+
+                <div class="col-xs-1">
+                 <span class="userLevelAfter"> Level <%= user.level + 1 %> </span>
+                 </div>
+                 
+                </div>
+
+            </div>
+
+        
+    </div>
+                
+                <!--
+                <div id="avatar-card" class="avatar-card">
+                    <div class="avatar">
+                            <div class="gravatar-wrapper-164">
+                                <img id="output" src="images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='images/contact.png'"/>  
+                            </div>
+                        </a>
+                    </div>
+                    <div class="reputation" title="reputation">
+                        271,449 <span class="label-uppercase">reputation</span>
+                    </div>
+                </div>
+                !-->
+
+                <!-- <img class="card-img-top" src="<%= avatar %>" alt="Card image cap"> !-->
+              
+                
+        <div id="second" class="container-fluid no-padding">
+
+            <div id="secondone"> <!-- class="card text-xs-center"> !-->
+                
+                <ul class="nav md-pills nav-justified pills-secondary">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#panel11" role="tab"> Overview </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#panel12" role="tab"> Instruments </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#panel13" role="tab"> Lessons</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#panel14" role="tab"> Songs </a>
+                        </li>
+
+                    </ul>
+                    
+                    <!-- Tab panels -->
+                    <div class="tab-content">
+                    
+                        <!--Panel 1-->
+                        <div class="tab-pane fade in show active" id="panel11" role="tabpanel">
+                            <br>
+                    
+                            <section class="text-center">
+
+                                    <!--Section heading-->
+                                    <h1 class="py-5 font-weight-bold"> Overview of your activites </h1>
+                                    <!--Section description-->
+                                    <p class="px-5 mb-5 pb-3 lead grey-text"> 
+                                        Presenting to you your data below!
+                                    </p>
+                        
+                                    <!--Grid row-->
+                                    <div class="rowGrid">
+                        
+                                        <!--Grid column-->
+                                        <div class="col-md-4">
+                                            <!-- <i class="fa fa-area-chart fa-3x red-text"></i> !-->
+                                            <h1 id="noOfInstruments" class="font-weight-bold mt-3"> 15+ </h1>
+                                            <h5 class="font-weight-bold mt-1"> Instruments </h5>
+                                            <p class="grey-text"> This is the total number of instruments you have listed!
+                                            </p>
+                                        </div>
+                                        <!--Grid column-->
+                        
+                                        <!--Grid column-->
+                                        <div class="col-md-4">
+                                            <!--<i class="fa fa-book fa-3x cyan-text"></i> !-->
+                                            <h1 id="noOfLessons" class="font-weight-bold mt-3"> 7+ </h1>
+                                            <h5 class="font-weight-bold mt-1"> Lessons </h5>
+                                            <p class="grey-text"> This is the total number of lessons you have taken!
+                                            </p>
+                                        </div>
+                                        <!--Grid column-->
+                        
+                                        <!--Grid column-->
+                                        <div class="col-md-4"> 
+                                            <h1 id="noOfSong" class="font-weight-bold mt-3"> </h1> 
+                                            <h5 class="font-weight-bold mt-1"> Songs </h5> 
+                                            <p class="grey-text"> This is the total number of songs you have shared!
+                                            </p>
+                                        </div>
+                                        <!--Grid column-->
+                        
+                                    </div>
+                                    <!--Grid row-->
+                        
+                                </section>
+
+                                <div id="visual">
+                                <section class="text-center">
+
+                                
+                            
+                                        <!--Grid row-->
+                                        <div class="rowGrid">
+                            
+                                            <!--Grid column-->
+                                            <div class="col-md-6">
+                                                <!-- <i class="fa fa-area-chart fa-3x red-text"></i> !-->
+                                                
+                                                <canvas id="pie-chart" width="auto" height="auto"></canvas>
+
+                                            </div>
+                                            <!--Grid column-->
+                            
+                                            <!--Grid column-->
+                                            <div class="col-md-6">
+                                                <canvas id="myChart" width="auto" height="auto"></canvas>
+                                            </div>
+                                            <!--Grid column-->
+                            
+                                          
+                                            <!--Grid column-->
+                            
+                                        </div>
+                                        <!--Grid row-->
+                            
+                                    </section>
+                                    </div>
+                                
+                        </div>
+                        <!--/.Panel 1-->
+                    
+                        <!--Panel 2-->
+                        <div class="tab-pane fade" id="panel12" role="tabpanel">
+                            <br>
+                    
+                            <p> Second Panel </p>
+                    
+                        </div>
+                        <!--/.Panel 2-->
+                    
+                        <!--Panel 3-->
+                        <div class="tab-pane fade" id="panel13" role="tabpanel">
+                            <br>
+                    
+                            <p> 3rd panel p </p>
+                    
+                        </div>
+                        <!--/.Panel 3-->
+                    
+                        <!--Panel 4-->
+                        <div class="tab-pane fade" id="panel14" role="tabpanel">
+                            <br>
+                    
+                          
+                            <p> INCOMING SONGS LOOLOLOLOL </p>
+                    
+                        </div>
+                        <!--/.Panel 4-->
+                    
+                    </div>
+
+            </div>
+             <!-- div "details"-->
+        </div>  <!-- div "container"-->
+      
+        
+    <% include sendfooter %>
+        <script>
+            
+            function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                }
+
+            var myUser = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));   
+        /*
+        var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(comments) %>"));
+        console.log(myVar);
+        console.log(myVar[2].user_id);
+        
+        
+        console.log( " Current user id is : " + myUser.id);
+        var userCommentsCounter = 0;
+        for (i= 0; i<myVar.length; i++) {
+            if (myVar[i].user_id == myUser.id) {
+                userCommentsCounter += 1;
+            }
+        }
+        console.log( " Total no of comments : " + userCommentsCounter + " from " + myUser.email , "user id: " + myUser.id);
+        document.getElementById('experience').innerHTML = 'Experience: ' +  userCommentsCounter*500 +"  < client calculation database > "; // 4*500 = 2000
+        console.log("Total exp is : " + userCommentsCounter + " * " + "500 = " + userCommentsCounter*500 ); 
+        
+        console.log(myUser.experience);
+
+        var myExp = myUser.experience;
+        console.log("myHEAD" + myExp);  // from ejs variable exp = 4800
+        document.getElementById('experience').innerHTML += myExp - 1000;  // 4800-1000 = 3800
+        
+        */
+        
+        var loadFile = function(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        }; 
+
+        console.log("HI");
+        console.log("HI" + document.cookie);
+/* 
+        function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+       
+            var mySong = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
+        console.log(mySong[0]);
+        var audioFooter = document.querySelector(".audioPlayer");
+        //audioFooter.src = "songs/" +  mySong[0].songName;
+        console.log("audio footer src > > " + audioFooter.src)
+        console.log(audioFooter.currentTime);
+
+        var timing = getCookie("songCookie");
+        audioFooter.currentTime = timing;
+    console.log("next song > " + document.querySelectorAll(".sourcePlayer")[1]);
+            var i = 0;
+    
+         audioFooter.addEventListener('ended',function() {
+                i++;
+                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
+                audioFooter.src = "songs/" + nextSong;
+                audioFooter.load();
+                audioFooter.play();
+                console.log("??wot" + nextSong);
+                
+                document.getElementById("songName").innerHTML = mySong[i].songName.slice(0,-4);
+                if (i==2) {
+                    i = -1;
+                }
+            },false); 
+*/
+
+/*
+    const nowDate = (new Date().toISOString());
+    const lastLogin = myUser.last_login_date;
+    console.log("user last login > " + lastLogin);
+   
+    console.log(" right now date > " + nowDate); //nowDate.getHours() / getMinutes / getSeconds()
+    */
+   
+    /*
+    var currentProfileOnlineUserId = myUser.id;
+    console.log("user Navbar " + currentProfileOnlineUserId);
+    var socket = io();
+    socket.emit("newUser", currentProfileOnlineUserId); 
+*/  
+
+    
+
+    /* 
+    var obj = [ [1,2000], [2, 5000] , [3, 6000] , [4,8000] ];
+    objLength = Object.keys(obj).length;
+
+    myUserNextLevel = myUser.level + 1;
+
+  
+    for (i=0; i< objLength;i++) {
+        if ((myUserNextLevel) == obj[i][0]) {
+            console.log("user next lv exp >> to lv up " + obj[i][1]);
+            
+        }
+    }
+ */
+    totalExpForNextLevel = myUser.experience + myUser.expNeeded;
+    currentExpInPercentage = Math.round(myUser.experience / totalExpForNextLevel * 100);
+
+    $("div.progress-bar").width(currentExpInPercentage + "%");
+    document.getElementById("progressPercentage").innerHTML = currentExpInPercentage + "%";
+    console.log(document.getElementById("progressPercentage").innerHTML)
+    console.log(currentExpInPercentage);
+    console.log(totalExpForNextLevel);
+
+    // Tooltips Initialization
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+    
+    var totalSongs = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));  
+    console.log("total songs ==> " + totalSongs.length)
+
+    document.getElementById("noOfSong").innerHTML =  totalSongs.length + "+";
+
+
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ["Instruments", "Lessons", "Songs"],
+        datasets: [{
+            label: 'Data you have created',
+            data: [15,7, totalSongs.length],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                  'rgba(255, 159, 64, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+    });
+
+
+    new Chart(document.getElementById("pie-chart"), {
+    type: 'pie',
+    data: {
+      labels: ["Instruments","Lessons","Songs"],
+      datasets: [{
+        label: "Population (millions)",
+        backgroundColor: ["#c45850","#3cba9f","#3e95cd"],
+        data: [15,7,totalSongs.length]
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Hover over the chart to see your instruments,lessons,songs!'
+      }
+    }
+});
+
+</script>
+
+
+    
+    <script src="/javascripts/test.js"></script> 
+    </body>
+    </html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+    <script src="/javascripts/socket.io.js"></script>
+</head>
+
+<style>
+ .userID {
+    /*  visibility:hidden;  or color:white/transparent;*/
+     font-size:9px;
+ }
+ #output{
+    border-radius:50%;
+    /*display: inline; */
+    width: 140px;
+    height: 140px;
+}
+
+#dot{
+    height:10px; /* can try 10 px */
+    width: 10px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+#first{
+    padding:10px 0 100px;   
+     background-color:white;
+}
+
+#second{
+    background-color:#f7f7f7;
+    padding:60px 0 100px;
+}
+
+#firstone{
+     background-color:white;  
+     margin-left:190px;
+}
+
+ #secondone { 
+    background-color:#f7f7f7;
+}
+
+
+
+.container-fluid {
+   padding-left:0; /* or padding:0 !important */
+   padding-right:0;
+    margin-right:auto;
+    margin-left:auto
+ }
+ 
+ a.nav-link.active{
+     color:#ff6050;
+     border-bottom: 3px solid #ff6050 !important;
+ }
+
+ .nav-link{
+    color:#4e5860;
+ }
+ .nav-justified .nav-item{
+     display:flex;
+   align-items: flex-start;
+margin-left:150px;
+ }
+
+ .rowGrid{
+     display:flex;
+     flex-wrap:wrap;
+     margin-right:15px;
+     margin-left:15px;
+ }
+
+ .font-weight-bold.mt-3{
+     font-family:'Droid Serif','Helvetica Neue',Helvetica,Arial,sans-serif;
+     font-style:itatlic;
+     font-size:72px;
+     color:blue;
+ }
+
+ .font-weight-bold.mt-1{
+     color:lightseagreen;
+     font-size:35px;
+     font-family:itatlic;
+ }
+
+ .flex-menu {
+			display:flex;
+            list-style-type: none;
+            padding-left:0;
+            margin-left:0;
+		}
+
+	.flex-menu li:not(:last-child) {
+		margin-right:40px;
+    }
+
+
+
+</style>
+
+<body>
+    <% include ../partials/header %>
+
+
+    <div id="first" class="container-fluid no padding">
+
+        
+
+
+        <div id="firstone">
+
+           
+            <div class="container">
+                <div class="row m-b-r m-t-3">
+          
+
+                <div class="col-md-2 offset-md-1">
+                <img id="output" class="card-img-top" src="/images/<%= usersProfile.userImage %>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/>   
+                </div>
+
+                <div class="col-md-9 p-t-2">
+
+                <h2 class="h2-responsive"> @<%=usersProfile.name%> 
+                    <button type="button" class="btn btn-outline-info waves-effect"> Follow </button>
+                </h2> 
+
+                <div> <span id="dot"> </span>   <strong id="userLoginDate"> online  </strong> </div>
+
+                <p style="color:blueviolet"><%=usersProfile.rank%>  | <%=usersProfile.coin%> coins  | level <%=usersProfile.level%> </p> 
+                <ul class="flex-menu"> 
+                    <li> <strong> 41 </strong> posts </li>
+                    <li> <strong> 47k </strong> followers </li>
+                    <li> <strong> 208 </strong> following </li>
+                </ul>
+                </div>
+    
+            </div>
+            </div>
+            
+                        
+
+
+                <!--
+            <span class="text-xs-center"> <%= user.name %> </span> 
+            <span class="text-xs-center"> experience : <%= user.experience %> </span>
+                    !-->
+            <div class="row">
+            
+
+            
+             
+            </div>
+
+        </div>
+
+    
+</div>
+            
+            <!--
+            <div id="avatar-card" class="avatar-card">
+                <div class="avatar">
+                        <div class="gravatar-wrapper-164">
+                            <img id="output" src="images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='images/contact.png'"/>  
+                        </div>
+                    </a>
+                </div>
+                <div class="reputation" title="reputation">
+                    271,449 <span class="label-uppercase">reputation</span>
+                </div>
+            </div>
+            !-->
+
+            
+          
+            
+    <div id="second" class="container-fluid no-padding">
+
+        <div id="secondone"> <!-- class="card text-xs-center"> !-->
+            
+            <ul class="nav md-pills nav-justified pills-secondary">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#panel11" role="tab"> Overview </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#panel12" role="tab"> Instruments </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#panel13" role="tab"> Lessons</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#panel14" role="tab"> Songs </a>
+                    </li>
+
+                </ul>
+                
+                <!-- Tab panels -->
+                <div class="tab-content">
+                
+                    <!--Panel 1-->
+                    <div class="tab-pane fade in show active" id="panel11" role="tabpanel">
+                        <br>
+                        
+                        <section class="text-center">
+
+                                <!--Section heading-->
+                                <h1 class="py-5 font-weight-bold"> Overview of your activites </h1>
+                                <!--Section description-->
+                                <p class="px-5 mb-5 pb-3 lead grey-text"> 
+                                    Presenting to you your data below!
+                                </p>
+                                
+                                <!--Grid row-->
+                                <!-- <div class="rowGrid"> !-->
+                    
+                                    <!--Grid column-->
+                                    <!--
+                                    <div class="col-md-4"> !-->
+                                        <!-- <i class="fa fa-area-chart fa-3x red-text"></i> !-->
+                                        <!--
+                                        <h1 id="noOfInstruments" class="font-weight-bold mt-3"> 15+ </h1>
+                                        <h5 class="font-weight-bold mt-1"> Instruments </h5>
+                                        <p class="grey-text"> This is the total number of instruments you have listed!
+                                        </p>
+                                    </div> !-->
+                                    <!--Grid column-->
+                    
+                                    <!--Grid column-->
+                                    <!--
+                                    <div class="col-md-4">
+                                        <!--<i class="fa fa-book fa-3x cyan-text"></i> !-->
+                                        <!--
+                                        <h1 id="noOfLessons" class="font-weight-bold mt-3"> 7+ </h1>
+                                        <h5 class="font-weight-bold mt-1"> Lessons </h5>
+                                        <p class="grey-text"> This is the total number of lessons you have taken!
+                                        </p>
+                                    </div> !-->
+                                    <!--Grid column-->
+                    
+                                    <!--Grid column-->
+                                    <!--
+                                    <div class="col-md-4"> 
+                                        <h1 id="noOfSong" class="font-weight-bold mt-3"> </h1> 
+                                        <h5 class="font-weight-bold mt-1"> Songs </h5> 
+                                        <p class="grey-text"> This is the total number of songs you have shared!
+                                        </p>
+                                    </div> !-->
+                                    <!--Grid column-->
+                    
+                                </div>
+                                <!--Grid row-->
+                    
+                            </section>
+
+                            <div id="visual">
+                            <section class="text-center">
+
+                            
+                        
+                                    <!--Grid row-->
+                                    <div class="rowGrid">
+                        
+                                        <!--Grid column-->
+                                        <div class="col-md-6">
+                                            <!-- <i class="fa fa-area-chart fa-3x red-text"></i> !-->
+                                            
+                                           <p>HELLO </p> 
+
+                                        </div>
+                                        <!--Grid column-->
+                        
+                                        <!--Grid column-->
+                                        <div class="col-md-6">
+                                            
+                                            <P> HELLO</P>
+                                        </div>
+                                        <!--Grid column-->
+                        
+                                      
+                                        <!--Grid column-->
+                        
+                                    </div>
+                                    <!--Grid row-->
+                        
+                                </section>
+                                </div>
+                            
+                    </div>
+                    <!--/.Panel 1-->
+                
+                    <!--Panel 2-->
+                    <div class="tab-pane fade" id="panel12" role="tabpanel">
+                        <br>
+                
+                        <p> Second Panel </p>
+                
+                    </div>
+                    <!--/.Panel 2-->
+                
+                    <!--Panel 3-->
+                    <div class="tab-pane fade" id="panel13" role="tabpanel">
+                        <br>
+                
+                        <p> 3rd panel p </p>
+                
+                    </div>
+                    <!--/.Panel 3-->
+                
+                    <!--Panel 4-->
+                    <div class="tab-pane fade" id="panel14" role="tabpanel">
+                        <br>
+                
+                      
+                        <p> INCOMING SONGS LOOLOLOLOL </p>
+                
+                    </div>
+                    <!--/.Panel 4-->
+                
+                </div>
+
+        </div>
+         <!-- div "details"-->
+    </div>  <!-- div "container"-->
+
+
+
+    <!--
+    <div class="container">
+        <h1><%= title %></h1>
+        <div class="details">
+        
+            <div class="card text-xs-center">
+                <br> 
+
+                <img id="output" class="card-img-top" src="/images/<%= usersProfile.userImage %>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/>
+                <p> <%= usersProfile.userImage%></p>
+                <div class="card-block">
+                    <h4 class="card-title">User Details</h4>
+                    <p class="card-text">
+                        <div> <span id="dot"> </span>  <strong>Name</strong>: <%= usersProfile.name %><br> </div>
+                        <strong> ID in database is </strong>: <%=usersProfile.id %> <br>
+                        <strong>Email</strong>: <%= usersProfile.email %> <br>
+                        <strong id="experience"> Experience:  <%= usersProfile.experience %> </strong> <br>
+                        <!-- <strong> Last seen : <%= usersProfile.last_login_date %> </strong> <br> !-->
+                        <!--
+                        <strong id="status"> Status : <%=usersProfile.status %> </strong> <br> 
+                        <strong id="userLoginDate"> online  </strong>
+                    </p>
+                    <% comments.forEach(function(comments){ %>
+                        <h1 class="userID">    <%= comments.title %>  </h1>
+                        <% }); %>
+                    <a href="/logout" class="btn btn-default">Logout</a>
+                </div>
+            </div>
+     
+        </div>
+    </div>
+!-->
+        <% include ../partials/footer %>
+      
+
+     
+    <script>
+
+            
+            function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                }
+
+
+    var myUser = JSON.parse(htmlDecode("<%= JSON.stringify(usersProfile) %>"));
+
+    var nowDate = new Date()
+    var nowDateISO = nowDate.toISOString();
+    var lastLogin = myUser.last_login_date;
+    
+    console.log("user last login > " + lastLogin);
+    
+    //var momentOfCurrentDate = moment(nowDate).format('LLL');
+    //var momentOfCurrentDate = moment(nowDate.T);
+    //console.log("moment of currentDate > > " + momentOfCurrentDate);
+    console.log(" right now date > " + nowDateISO); //nowDate.getHours() / getMinutes / getSeconds() or getDate
+
+    var momentOfLastLogin = moment(lastLogin).format("LLL") // or .split("/")
+
+    console.log("HI " + momentOfLastLogin);
+
+    var momentOfNowDateISO = moment(nowDateISO);
+    var momentOfLastLoginISO = moment(lastLogin);
+
+    var differenceInWeeks = momentOfNowDateISO.diff(momentOfLastLoginISO,'weeks');
+    var differenceInDays = momentOfNowDateISO.diff(momentOfLastLoginISO,'days');
+    var differenceInHours = momentOfNowDateISO.diff(momentOfLastLoginISO,'hours');
+    var differenceInMinutes = momentOfNowDateISO.diff(momentOfLastLoginISO,'minutes'); // 1 minute
+    var differenceInSeconds = momentOfNowDateISO.diff(momentOfLastLoginISO,'seconds'); // even if 110 seconds , round down to 1 min
+
+    console.log("difference in weeks is " + differenceInWeeks);
+    console.log("difference in days is " + differenceInDays);
+    console.log("difference in hours is " + differenceInHours);
+    console.log("difference in minutes is " + differenceInMinutes);
+    console.log("difference in seconds is " + differenceInSeconds); 
+
+    var minutesAndSeconds = Math.round((differenceInSeconds/60 - differenceInMinutes)*60) ; // 1100 / 60 = 18.333
+    
+    var hoursAndMinutes = Math.round((differenceInMinutes/60 - differenceInHours)*60);
+
+    console.log("number of hours and minutes : " + hoursAndMinutes);
+    console.log("number of seconds total: " + minutesAndSeconds/60);
+    console.log("number of seconds : " + minutesAndSeconds);
+    
+    // calculate if else , if minutes && hours && days && weeks == 0 then only show last seen : 47 seconds ,
+   
+    
+        if (differenceInWeeks == 0 && differenceInDays == 0 && differenceInHours == 0 && differenceInMinutes == 0) {
+            document.getElementById("userLoginDate").innerHTML += minutesAndSeconds + " seconds ago";
+            console.log("HEY");
+        }
+
+        else if (differenceInWeeks == 0 && differenceInDays == 0 && differenceInHours == 0 && differenceInMinutes > 0) {
+            document.getElementById("userLoginDate").innerHTML += differenceInMinutes + " minutes ago"; // was + minutesandseconds --> 1 minute 10 sec
+        }
+
+        else if (differenceInWeeks == 0 && differenceInDays == 0 && differenceInHours > 0) {
+            document.getElementById("userLoginDate").innerHTML += differenceInHours + " hours ago" // was + hoursandminutes --> 1 hour 10 min
+        }
+    
+
+    /*
+    var onlineOfOtherPeopleUserId = myUser.id;
+    console.log("user Navbar " + onlineOfOtherPeopleUserId);
+    var socket = io();
+    socket.emit("newUser", onlineOfOtherPeopleUserId);
+*/
+    var socket = io();
+    socket.on('onlineUser', function(onlineUser) {
+        if (onlineUser == myUser.id) {
+            socket.on('userStatus', function(userStatus) {
+                if (userStatus == "offline") {
+                document.getElementById("dot").style.backgroundColor = "rgb(255,156,26)";
+                document.getElementById("userLoginDate").innerHTML = "online " + minutesAndSeconds + " sec ago";
+                }
+                else{
+                    document.getElementById("dot").style.backgroundColor = "rgb(102, 181, 80)";
+                    document.getElementById("userLoginDate").innerHTML = "online now" 
+                }
+            })
+        }
+    })
+    
+    if (document.getElementById("userLoginDate").innerHTML.indexOf("ago") >= 0) {
+        document.getElementById("dot").style.backgroundColor = "rgb(255,156,26)";
+    }
+   
+    
+    </script>
+    </body>
+    </html>
