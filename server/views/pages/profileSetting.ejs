@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <title><%= title %></title>
+  
+</head>
+<body>
+    <% include ../partials/header %>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-20 col-md-12">
+                <div class="well well-sm">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <img src="../images/user.png" height="40%" width="60%" class="img-rounded img-responsive" />
+                        </div>
+                        <div class="col-sm-6 col-md-8">
+                            <h4 style = "font-size: 16px"><strong> <%= user.name %></strong></h4>
+                            <img src="../images/review stars.png" height="10%" width="25%"/>
+                            <br />
+                            <small><cite title="Woodlands, Singapore">Woodlands, Singapore <i class="glyphicon glyphicon-map-marker">
+                            </i></cite></small>
+                            <p>
+                                <i class="glyphicon glyphicon-envelope"></i>  <%= user.email %> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <a href="/chatMsg" class="btn btn-success">Send Message</a>
+                                <br />
+                                <i class="glyphicon glyphicon-time"></i> Available on Sat & Sun 
+                                <br />
+                                <i class="glyphicon glyphicon-earphone"></i>+65 93238671 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <button type="button" class="btn btn-warning">Warning</button>
+                                <br />
+                                </p>
+                                <a href="/logout" class="btn btn-default">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <% include ../partials/footer %>
+       
+    </body>
+    </html>

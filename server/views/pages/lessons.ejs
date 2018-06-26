@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title><%= title %></title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+form.search input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 80%;
+    background: #f1f1f1;
+}
+
+form.search button {
+    float: left;
+    width: 20%;
+    padding: 10px;
+    background: rgb(5, 212, 178);
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+form.search button:hover {
+    background: #BB8FCE ;
+}
+
+form.search::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+th, td {
+    padding: 5px;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+</style>
+</head>
+<body>
+    <% include ../partials/header %>
+
+    <img src ="../images/violin.jpg" style="width:100%; height:400px;"/>
+    <br />
+    <br />
+    <center><p style="font-family:'Times New Roman', Times, serif; font-size: 24px;">Looking for Affordable Music Lessons? Our teachers are ready to help you Learn.</p></center>
+    <center><p style="font-family:'Times New Roman', Times, serif; font-size: 24px;"><strong>Search for your instructor today!</strong></p></center>
+    <form class="search" action="/action_page.php" style="margin:auto;max-width:300px">
+        <input type="text" placeholder="Type of Lesson.." name="search2">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+    <br />
+    <br />
+    <center>
+    <table style="width:50%">
+        <tr>
+          <td style="width:25%; height:100px"><img src = "../images/singing.jpg"  style="width:100%; height:150px"></td>
+          <td style="width:25%; height:100px"><img src = "../images/guitar.jpg" style="width:100%; height:150px"></td> 
+          <td style="width:25%; height:100px"><img src = "../images/piano.jpg" style="width:100%; height:150px"></td>
+        </tr>
+        <tr>
+          <td style="width:25%; height:100px"><img src = "../images/violin2.jpg" style="width:100%; height:150px"></td>
+          <td style="width:25%; height:100px"><img src = "../images/ukulele.jpg" style="width:100%; height:150px"></td>
+          <td style="width:25%; height:100px"><img src = "../images/flute.jpg" style="width:100%; height:150px"></td> 
+        </tr>
+        <tr>
+          <td style="width:25%; height:100px"><img src = "../images/saxophone.jpg" style="width:100%; height:150px"></td>
+          <td style="width:25%; height:100px"><img src = "../images/drums.jpg" style="width:100%; height:150px"></td> 
+          <td style="width:25%; height:100px"><img src = "../images/cello.jpeg" style="width:100%; height:150px"></td>
+        </tr>
+        <tr>
+          <td style="width:25%; height:100px"><img src = "../images/bass-guitar.jpg" style="width:100%; height:150px"></td>
+          <td style="width:25%; height:100px"><img src = "../images/broadway-singing.jpg" style="width:100%; height:150px"></td> 
+          <td style="width:25%; height:100px"><img src = "../images/view all lessons.png" style="width:100%; height:150px"></td>
+        </tr>
+      </table>
+</center>
+    <% include ../partials/footer %>
+ 
+</body>
+</html>

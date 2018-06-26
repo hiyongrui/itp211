@@ -85,6 +85,16 @@ exports.viewprofile = function(req,res) {
     })
 }
 
+
+exports.profileSettings = function(req,res) {  /* kamali profile settings */
+    var user_num = req.user.id;
+    res.render('profileSetting', {
+        title: "Profile settings!!",
+        user:req.user
+    })
+}
+
+
 // Logout function
 exports.logout = function () {
     req.logout();

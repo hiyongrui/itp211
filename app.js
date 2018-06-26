@@ -40,6 +40,9 @@ var chatMessages = require('./server/controllers/chatMsg');
 
 var studentsController = require("./server/controllers/studentsController"); //from p5db
 
+//Import lessons controller kamali
+var lessons = require('./server/controllers/lessons');
+
 var Users = require('./server/models/users');
 // Modules to store session
 var myDatabase = require('./server/controllers/database');
@@ -283,6 +286,14 @@ app.get("/p5db/edit/:id" , studentsController.editRecord);
 app.post("/p5db/new" , studentsController.insert);
 app.post("/p5db/edit/:id" , studentsController.update);
 app.delete("/p5db/:id" , studentsController.delete);
+
+
+app.get('/profileSettings', auth.isLoggedIn , auth.profileSettings);
+app.get('/lessons', lessons.hasAuthorization, lessons.show);
+
+
+
+
 
 
 
