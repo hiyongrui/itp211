@@ -21,6 +21,7 @@ exports.list = function(req,res) {
         })
     })
 }
+
 // Profile GET
 exports.profile = function(req, res) {
     //validate(req,res);

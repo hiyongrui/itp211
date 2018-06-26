@@ -46,9 +46,9 @@ audioFooter.addEventListener('ended',function() {
     audioFooter.load();
     audioFooter.play();
     //document.getElementById("nameOfSong").innerHTML = myVar[i].songName.slice(0,-4); <-- another method other than using cookie
+    setCookie('songName' , nextSong);   // at first was setCookie after the document.getelement, might be buggy but ^ is reliable
     var getCurrentName = getCookie("songName");
     document.getElementById("nameOfSong").innerHTML = getCurrentName.slice(0,-4);
-    setCookie('songName' , nextSong);   
     if (i==2) {
         i = -1;
     }
