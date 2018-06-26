@@ -55,17 +55,7 @@
             </div>
             <hr>
             
-            <div class="row">
-                <% images.forEach(function(images){ %>
-                    <div class="col-lg-4">
-                        <figure class="figure">
-                            <img src="images/<%= images.imageName %>" class="figure-img img-fluid img-rounded" alt="<%= images.imageName %>">
-                            <figcaption class="figure-caption"><%= images.title %></figcaption>
-                            <small>Upload by: <%= images.user_id %></small>
-                        </figure>
-                    </div>
-                <% }); %>
-            </div>
+        
             <div class="lead">
                 <div class="list-group">
                     <% comments.forEach(function(comments){ %>

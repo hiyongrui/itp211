@@ -52,14 +52,11 @@ exports.list = function(req,res) {
     sequelize.query('select c.id , c.title , c.content , u.email AS user_id from Comments c join Users u on c.user_id = u.id'
     , { model : Comments}).then((comments) => {
         
-        sequelize.query('select i.id, i.title, i.imageName, u.email AS user_id from Images i join Users u on i.user_id = u.id ',
-    { model : Images} ).then((images) => {
     // or Select * from Comments 
 
         res.render('comments', {
             title: 'Comments Page',
             comments : comments, //data : comments
-            images: images,
             gravatar : gravatar.url(comments.user_id, { s : '80' , r:'x' , d:'retro'},true),
             urlPath : req.protocol + "://" + req.get("host") + req.url
         })
@@ -68,7 +65,7 @@ exports.list = function(req,res) {
             message: err
         });
     });
-})}; 
+}; 
 
 
 const comments = sequelize.query('select c.id , c.title , c.content , u.email AS user_id from Comments c join Users u on c.user_id = u.id'

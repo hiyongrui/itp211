@@ -17,18 +17,11 @@ exports.show = function (req, res) {
 
     sequelize.query('select i.id, i.title, i.imageName, u.email AS user_id from Images i join Users u on i.user_id = u.id ',
     { model : Images} ).then((images) => {
-        sequelize.query('select * from Songs' ,
-        {model: Songs}).then((songs)=> {
             res.render('images-gallery', {
             title: 'Images Gallery',
             images: images,
-            songs:songs,
             gravatar: gravatar.url(images.user_id, { s: '80', r: 'x', d: 'retro' }, true)
         }); 
-        })
-
-       
-
     }).catch((err) => {
             return res.status(400).send({
                 message: err
