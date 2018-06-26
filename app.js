@@ -193,9 +193,6 @@ app.use(function(req,res,next) {
     next();
 })
 
-app.get('/helloworld', function(req,res) {
-    res.render('helloworld');
-});
 
 app.get('/footer', footer.list);
 
@@ -288,6 +285,7 @@ app.post("/p5db/edit/:id" , studentsController.update);
 app.delete("/p5db/:id" , studentsController.delete);
 
 
+// kamali profileSettings , lessons
 app.get('/profileSettings', auth.isLoggedIn , auth.profileSettings);
 app.get('/lessons', lessons.hasAuthorization, lessons.show);
 

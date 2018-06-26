@@ -33,7 +33,7 @@ const lessons = sequelize.define('lessons', {
 });
 
 // force: true will drop the table if it already exists
-lessons.sync({ force: true, logging: console.log}).then(() => {
+lessons.sync({ force: false, logging: console.log}).then(() => {
     // Table created
     console.log("lessons table synced");
 });
