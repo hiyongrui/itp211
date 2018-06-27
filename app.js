@@ -44,6 +44,8 @@ var studentsController = require("./server/controllers/studentsController"); //f
 var lessons = require('./server/controllers/lessons');
 
 var Users = require('./server/models/users');
+var Songs = require('./server/models/songs');
+
 // Modules to store session
 var myDatabase = require('./server/controllers/database');
 var expressSession = require('express-session');
@@ -193,6 +195,15 @@ app.use(function(req,res,next) {
     next();
 })
 
+/* app.locals to make the song sequelize object available for all pages
+app.use(function(req,res,next) {
+    Songs.findAll().then((songs=> {
+        app.locals.songs = songs
+    }
+))
+next();
+})
+*/
 
 app.get('/footer', footer.list);
 
@@ -285,8 +296,8 @@ app.post("/p5db/edit/:id" , studentsController.update);
 app.delete("/p5db/:id" , studentsController.delete);
 
 
-// kamali profileSettings , lessons
-app.get('/profileSettings', auth.isLoggedIn , auth.profileSettings);
+// kamali profileSetting , lessons
+app.get('/profileSetting', auth.isLoggedIn , auth.profileSettings);
 app.get('/lessons', lessons.hasAuthorization, lessons.show);
 
 
