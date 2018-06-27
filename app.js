@@ -195,7 +195,7 @@ app.use(function(req,res,next) {
     next();
 })
 
-/* app.locals to make the song sequelize object available for all pages , req.locals no work?
+/* app.locals to make the song sequelize object available for all pages , req.locals no work??
 app.use(function(req,res,next) {
     Songs.findAll().then((songs=> {
         app.locals.songs = songs
