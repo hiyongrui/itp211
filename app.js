@@ -4,6 +4,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var cookie = require('cookie');
 
 const COOKIE_SECRET = 'keyboard cat??' // at first dh
 
@@ -87,6 +88,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // #express.static func
 // required for passport
 // secret for session
 // https://stackoverflow.com/questions/32025173/nodejs-access-sessions-inside-socket
+
 var sessionMiddleware = expressSession({
     secret: "keyboard cat",
     resave: true,
@@ -95,8 +97,8 @@ var sessionMiddleware = expressSession({
 
   app.use(sessionMiddleware);
   
-
 /*
+
 var sessionMiddleware = expressSession({ //was app.use(expressSession)... 
     //key:'user_sid',
     secret: COOKIE_SECRET, //sometextgohere wtf password is this???
@@ -153,6 +155,7 @@ app.use(function(req, res, next) { // from stackoverflow, simple middleware , pr
 app.use(function(req,res,next) {
     if (req.isAuthenticated()) {
     id = req.user.id;
+    console.log("current id is wat??? " + id);
     Users.findById(id).then((users)=> {
          /* users.status = "online";
          users.save(); */
@@ -347,11 +350,29 @@ let offlineUsersFinal = [];
 //let onlineU = [];
 //let offlineU= [];
 
+// io engine override socket id , but how does this work?
+/*
+io.engine.generateId = function(req) {
+    //socket.id = cookiefinal.userid;
+    console.log("req headers cookie " + cookie.parse(req.headers.cookie).userid)
+    //console.log(socket.req)
+    //var cookief = socket.handshake.headers.cookie;
+    //var cookiefinal = cookie.parse(cookief);
+    //console.log("cookie final > > > " + cookiefinal.userid)
+        //return cookiefinal.userid
+    return cookie.parse(req.headers.cookie).userid;
+    } */
+    
 io.use(function(socket,next) {
     sessionMiddleware(socket.request, socket.request.res , next);
+    //socket.id = cookiefinal.userid;
+    //var cookief = socket.handshake.headers.cookie;
+    //var cookiefinal = cookie.parse(cookief);
+    //console.log("cookie final > > > " + cookiefinal.userid)
     console.log("socket id > > > " + socket.id);
     //console.log(socket.request.headers)
 })
+
 
 /*
 io.on('connection', function(socket) {
@@ -400,7 +421,10 @@ users = {} //key value instead of array
 
 io.on('connection', function(socket) {
      socket.user_id = socket.request.session.useridhehe;
-     socket.on('newUser',function() {
+     console.log("handshake \n before"  + JSON.stringify(socket.handshake.headers.cookie))
+     console.log("socket session > > " + (socket.user_id));
+     console.log("socket cookie lolol " + cookie.parse(socket.handshake.headers.cookie).userid);
+     //socket.on('newUser',function() {
         //socket.user_id = userid;
         users[socket.user_id] = socket.user_id;
         Users.findById(socket.user_id).then(user=> {
@@ -414,13 +438,13 @@ io.on('connection', function(socket) {
         console.log("\n");
         console.log(JSON.stringify(users) + " wat is user id from client - " + socket.user_id);
         console.log("\n");
-        console.log(socket.request.session.useridhehe)
-    })
+        //console.log(socket.request.session)
+    //})
 
     
     socket.on('disconnect',function() {
-        console.log(socket.user_id + "  disconnected");
-        if (typeof users != null) {
+        console.log(socket.user_id + "  disconnected");   
+        //find user by id , then put status offline , then delete from object only when browser close??
             Users.findById(socket.user_id).then(user=> {
                 user.status = "offline";
                 user.last_login_date = Date.now();
@@ -428,10 +452,15 @@ io.on('connection', function(socket) {
                 io.sockets.emit('userStatus', user.status);
                 io.sockets.emit('onlineUser', socket.user_id);
                 
-            })
-        }
+        });
+        //console.log(socket.handshake);
+
         delete users[socket.user_id];
+            
+        console.log("handshake \n after"  + JSON.stringify(socket.handshake.headers.cookie))   
+        console.log("socket cookie lolol " + cookie.parse(socket.handshake.headers.cookie).userid);
         console.log(JSON.stringify(users) + " <<<<<< user DELETED FINALLYS ")
+        console.log("socket request after disconn " + socket.request.session.useridhehe);
     });
 
 

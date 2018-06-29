@@ -98,7 +98,7 @@ exports.uploadImage = function (req, res) {
                     message: "error"
                 });
             }
-            res.redirect('images-gallery');
+            res.redirect('images-gallery'); // or /images-gallery or {..}
         })
 
         // remove from temp folder
