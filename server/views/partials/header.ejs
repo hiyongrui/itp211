@@ -236,6 +236,13 @@
     //var currentProfileOnlineUserId =  myVar.id;
     console.log("user Navbar " + currentProfileOnlineUserId);
     var socket = io();
+
+    /* socket.on('connect',function() {
+        console.log("socket id is : " + socket.id)
+        socket.id = currentProfileOnlineUserId;  //does not change socket id on the server though?
+        console.log("socket id after setting it : " + socket.id);
+    }) */
+
     socket.emit("newUser", currentProfileOnlineUserId); 
 
 </script>
