@@ -456,7 +456,7 @@ io.on('connection', function(socket) {
         console.log("total rooms after disconnect>>>>>>>> " + JSON.stringify(io.sockets.adapter.sids));
         //find user by id , then put status offline , then delete from object only when browser close??
         delete users[socket.user_id]; // if users[socket.id] = socket.user_id then must delete users[socket.id] to work.
-        // wan to delete only when browser close!!! , if room gone(?).
+        // wan to delete only when browser close!!! , if room gone(?)
         if (Object.values(users).indexOf(socket.user_id) <= 0) {
             Users.findById(socket.user_id).then(user=> {
                 user.status = "offline";
