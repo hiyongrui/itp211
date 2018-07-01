@@ -422,7 +422,7 @@ users = {} //key value instead of array
 io.on('connection', function(socket) {
      socket.user_id = socket.request.session.useridhehe;
      socket.join(socket.user_id,function() { //by default socket join its own room identified by its own socket.id
-         console.log("\n socket rooms new !! " + JSON.stringify(socket.rooms));
+         console.log("\n socket rooms new !! " + JSON.stringify(socket.rooms)); //rooms of current socket
          console.log("room length > > " + JSON.stringify(io.sockets.adapter.rooms[socket.user_id])) //.length
          console.log("total clients " + Object.keys(io.sockets.connected)); // socket id of clients connected 
          console.log("total wat is tis " + JSON.stringify(io.sockets.adapter.rooms)); // or adapter.sids , 2 rooms after joining or adapter.sids[socket.id]
