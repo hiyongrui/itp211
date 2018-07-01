@@ -421,14 +421,16 @@ users = {} //key value instead of array
 
 io.on('connection', function(socket) {
      socket.user_id = socket.request.session.useridhehe;
+
      socket.join(socket.user_id,function() { //by default socket join its own room identified by its own socket.id
          console.log("\n socket rooms new !! " + JSON.stringify(socket.rooms)); //rooms of current socket
          console.log("room length > > " + JSON.stringify(io.sockets.adapter.rooms[socket.user_id])) //.length
          console.log("total clients " + Object.keys(io.sockets.connected)); // socket id of clients connected 
-         console.log("total wat is tis " + JSON.stringify(io.sockets.adapter.rooms)); // or adapter.sids , 2 rooms after joining or adapter.sids[socket.id]
+         console.log("total wat is tis " + JSON.stringify(io.sockets.adapter.rooms) + "\n"); // or adapter.sids , 2 rooms after joining or adapter.sids[socket.id]
+         //io.sockets.adapter.rooms[socket.user_id].length += 1;
      });
      console.log("handshake \n before"  + JSON.stringify(socket.handshake.headers.cookie))
-     console.log("socket session > > " + (socket.user_id));
+     console.log("socket session > > " + socket.user_id);
      console.log("socket cookie lolol " + cookie.parse(socket.handshake.headers.cookie).userid);
      //socket.on('newUser',function() {
         //socket.user_id = userid;
@@ -445,44 +447,53 @@ io.on('connection', function(socket) {
         })
         console.log("\n");
         console.log(JSON.stringify(users) + " wat is user id from client - " + socket.user_id);
-        console.log("\n");
+        console.log(' %s sockets connected' , io.engine.clientsCount);
+        console.log(Object.keys(io.engine.clients));
         //console.log(socket.request.session)
+        //console.log("length before is ? " + io.sockets.adapter.rooms[socket.user_id].length);
     //})
 
+   
+    
+    
     // or socket.on('leave') for room leave , then disconnected aka offline?
-
     socket.on('disconnect',function() {
         console.log(socket.user_id + "  disconnected");   
         console.log("total rooms after disconnect>>>>>>>> " + JSON.stringify(io.sockets.adapter.sids));
+        //io.sockets.adapter.rooms[socket.user_id].length = io.sockets.adapter.rooms[socket.user_id].length - 1;
         //find user by id , then put status offline , then delete from object only when browser close??
-        delete users[socket.user_id]; // if users[socket.id] = socket.user_id then must delete users[socket.id] to work.
+        //delete users[socket.id]; // if users[socket.id] = socket.user_id then must delete users[socket.id] to work.
         // wan to delete only when browser close!!! , if room gone(?)
-        if (Object.values(users).indexOf(socket.user_id) <= 0) {
-            Users.findById(socket.user_id).then(user=> {
-                user.status = "offline";
-                user.last_login_date = Date.now();
-                user.save();
-                io.sockets.emit('userStatus', user.status);
-                io.sockets.emit('onlineUser', socket.user_id);
-                
-        });
+            console.log(' %s sockets connected after --------- ' , io.engine.clientsCount);
+            console.log(Object.keys(io.engine.clients));
+            if (Object.values(users).indexOf(socket.user_id) <= 0) {
+            //if (io.sockets.adapter.rooms[socket.user_id].length === null) {
+                Users.findById(socket.user_id).then(user=> {
+                    user.status = "offline";
+                    user.last_login_date = Date.now();
+                    user.save();
+                    io.sockets.emit('userStatus', user.status);
+                    io.sockets.emit('onlineUser', socket.user_id);    
+                });
         //console.log(socket.handshake);
-
-        
-    }
+            }
             
         console.log("handshake \n after"  + JSON.stringify(socket.handshake.headers.cookie))   
         console.log("socket cookie lolol " + cookie.parse(socket.handshake.headers.cookie).userid);
         console.log(JSON.stringify(users) + " <<<<<< user DELETED FINALLYS ")
-        console.log("socket request after disconn " + socket.request.session.useridhehe);
+        console.log("socket request.session.useridhehe after disconn " + socket.request.session.useridhehe);
     
         console.log("\n socket rooms after !! " + JSON.stringify(socket.rooms));
         console.log("room length > > " + JSON.stringify(io.sockets.adapter.rooms[socket.user_id])) //.length
         console.log("total clients " + Object.keys(io.sockets.connected)); // socket id of clients connected 
         console.log("socket id after ## " + socket.id + " users object $$ " + Object.values(users));
-    });
+    
+     
+    }); 
+    
 
-
+   
+   
 });
 
 
