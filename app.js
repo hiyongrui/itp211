@@ -417,7 +417,7 @@ io.on('connection', function(socket) {
 */
 
 users = {} //key value instead of array
-//offlineUsers = {}
+//offlineUsers = {} 
 
 io.on('connection', function(socket) {
      socket.user_id = socket.request.session.useridhehe;
@@ -433,7 +433,7 @@ io.on('connection', function(socket) {
      console.log("socket session > > " + socket.user_id);
      console.log("socket cookie lolol " + cookie.parse(socket.handshake.headers.cookie).userid);
      //socket.on('newUser',function() {
-        //socket.user_id = userid;
+        // socket.user_id = userid;
      users[socket.id] = socket.user_id; // key value , previously socket.user_id = socket.user_id?
      console.log("socket id ## " + socket.id + " users object $$ " + Object.values(users));
 
