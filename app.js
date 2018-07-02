@@ -426,7 +426,7 @@ io.on('connection', function(socket) {
          console.log("\n socket rooms new !! " + JSON.stringify(socket.rooms)); //rooms of current socket
          console.log("room length > > " + JSON.stringify(io.sockets.adapter.rooms[socket.user_id])) //.length
          console.log("total clients " + Object.keys(io.sockets.connected)); // socket id of clients connected 
-         console.log("total wat is tis " + JSON.stringify(io.sockets.adapter.rooms) + "\n"); // or adapter.sids , 2 rooms after joining or adapter.sids[socket.id]
+         console.log("\n total wat is tis " + JSON.stringify(io.sockets.adapter.rooms) + "\n"); // or adapter.sids , 2 rooms after joining or adapter.sids[socket.id]
          //io.sockets.adapter.rooms[socket.user_id].length += 1;
      });
      console.log("handshake \n before"  + JSON.stringify(socket.handshake.headers.cookie))
@@ -437,7 +437,8 @@ io.on('connection', function(socket) {
      users[socket.id] = socket.user_id; // key value , previously socket.user_id = socket.user_id?
      console.log("socket id ## " + socket.id + " users object $$ " + Object.values(users));
 
-        Users.findById(socket.user_id).then(user=> {
+   
+          Users.findById(socket.user_id).then(user=> {
             user.status ="online";
             user.last_login_date = Date.now();
             user.save();
@@ -445,9 +446,10 @@ io.on('connection', function(socket) {
             io.sockets.emit('onlineUser', socket.user_id);
             //io.sockets.emit('lastSeen', user.last_login_date);
         })
+   
         console.log("\n");
         console.log(JSON.stringify(users) + " wat is user id from client - " + socket.user_id);
-        console.log(' %s sockets connected' , io.engine.clientsCount);
+        console.log('\n %s sockets connected' , io.engine.clientsCount);
         console.log(Object.keys(io.engine.clients));
         //console.log(socket.request.session)
         //console.log("length before is ? " + io.sockets.adapter.rooms[socket.user_id].length);
@@ -466,24 +468,32 @@ io.on('connection', function(socket) {
         // wan to delete only when browser close!!! , if room gone(?)
             console.log(' %s sockets connected after --------- ' , io.engine.clientsCount);
             console.log(Object.keys(io.engine.clients));
-            if (Object.values(users).indexOf(socket.user_id) <= 0) {
-            //if (io.sockets.adapter.rooms[socket.user_id].length === null) {
+        
+            if (io.sockets.adapter.rooms[socket.user_id] ===  {}) {
+            //if ( Object.values(users).indexOf(socket.user_id) <=0) {
                 Users.findById(socket.user_id).then(user=> {
-                    user.status = "offline";
-                    user.last_login_date = Date.now();
-                    user.save();
-                    io.sockets.emit('userStatus', user.status);
-                    io.sockets.emit('onlineUser', socket.user_id);    
-                });
-        //console.log(socket.handshake);
+                user.status = "offline";
+                user.last_login_date = Date.now();
+                user.save();
+                io.sockets.emit('userStatus', user.status);
+                io.sockets.emit('onlineUser', socket.user_id);    
+                
+                })
             }
+            
+              
+               
+            
+        //console.log(socket.handshake);
+            //}
             
         console.log("handshake \n after"  + JSON.stringify(socket.handshake.headers.cookie))   
         console.log("socket cookie lolol " + cookie.parse(socket.handshake.headers.cookie).userid);
         console.log(JSON.stringify(users) + " <<<<<< user DELETED FINALLYS ")
         console.log("socket request.session.useridhehe after disconn " + socket.request.session.useridhehe);
-    
+                
         console.log("\n socket rooms after !! " + JSON.stringify(socket.rooms));
+        console.log(io.sockets.adapter.rooms[socket.user_id]);
         console.log("room length > > " + JSON.stringify(io.sockets.adapter.rooms[socket.user_id])) //.length
         console.log("total clients " + Object.keys(io.sockets.connected)); // socket id of clients connected 
         console.log("socket id after ## " + socket.id + " users object $$ " + Object.values(users));
