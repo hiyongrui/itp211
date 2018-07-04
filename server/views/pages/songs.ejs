@@ -159,7 +159,7 @@ function setCookie(cname,cvalue,exdays)
             
             //$("#audioPlayer")[0].src.play();
             var audioPlayer = document.querySelector(".audioPlayer");
-            var audioPlayerFooter = document.querySelector(".kys");
+          
             var audioPlayer1 = document.querySelectorAll(".audioPlayer");
             //var firstPlayer = audioPlayer[1].src;
             console.log(audioPlayer);
@@ -175,16 +175,6 @@ function setCookie(cname,cvalue,exdays)
             console.log(songs);
 
             var i = 0;
-
-            //var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
-           
-            /*
-            audioPlayer.addEventListener('play',function() {
-                document.getElementById("footerSong").innerHTML = "HELLO";
-                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
-                console.log("YO" + nextSong);
-                //audioPlayerFooter.play();
-            }) */
 
             audioPlayer.addEventListener('ended',function() {
                 i++;
@@ -203,25 +193,6 @@ function setCookie(cname,cvalue,exdays)
                 }
             },false); 
             
-            
-         /*   audioPlayerFooter.addEventListener('ended',function() {
-                i++;
-                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
-                audioPlayerFooter.src = nextSong;
-                audioPlayer.src = nextSong;
-                audioPlayerFooter.load();
-                audioPlayerFooter.play();
-                audioPlayer.play();
-                console.log("??" + nextSong);
-                setCookie('songName' , nextSong)  
-                //document.getElementById("songName").innerHTML = myVar[i].songName.slice(0,-4);
-                if (i==2) {
-                    i = -1;
-                }
-            },false); 
-            */
-       
-
         }
 
         function levelUp() {
@@ -260,49 +231,28 @@ function setCookie(cname,cvalue,exdays)
     }
 
     console.log(" document cookie >> " + document.cookie);
+
     var songFirst = document.querySelector(".sourcePlayer").src.slice(28);
-    
-        //var audioFooter = document.querySelector(".kys");
-        //audioFooter.src =   myVar[0].songName;
-        //console.log(audioFooter.src)
-        //console.log(audioFooter.currentTime);
-        //var timing = getCookie("songCookie");
-        //audioFooter.currentTime = timing;
-        //document.querySelector(".kys").src =  myVar[0].songName;
-        console.log(document.getElementsByClassName("sourcePlayer")[0]);
-        //console.log(myVar[0].songName);
-        //console.log(currentUser.level)
-
-
-
     var song = document.getElementsByTagName('audio')[0];
-    var audioFooter = document.querySelector(".kys");
 
     window.onload = function() {
 
         var getThis = getCookie('songCookie');
         var getSong = getCookie('songName');
-        //var getOne = getCookie('songCookie11');
-         if (getSong == 0) {
+
+        if (getSong == 0) {
         document.getElementById("songName").innerHTML = "song: " +  getSong;
         song.src =  songFirst;
         song.currentTime = getThis;
         song.play();
 
-        /* audioFooter.src = songFirst;
-        audioFooter.currentTime = getThis;
-        audioFooter.play(); */
-         }
-         else{
+        }
+        else{
         document.getElementById("songName").innerHTML =  "song playing: " + getSong.slice(0,-4);
         song.src = getSong;
         song.currentTime = getThis;
-        //audioFooter.currentTime = getOne;
         song.play();
-       /*  audioFooter.src = getSong;
-        audioFooter.currentTime = getThis;
-        //audioFooter.currentTime = getOne;
-        audioFooter.play(); */
+ 
         }
     }
 
@@ -310,7 +260,6 @@ function setCookie(cname,cvalue,exdays)
 
         var songNameBeforeExit = document.querySelector(".audioPlayer").src.slice(28);
         setCookie('songCookie',song.currentTime);
-        //setCookie('songCookie11', audioFooter.currentTime);
         setCookie('songName', songNameBeforeExit);
 
     }
@@ -328,7 +277,7 @@ function setCookie(cname,cvalue,exdays)
        
 
        <script>
-           console.log("<%-urlPath%>");
+           console.log("<%-urlPath%>")
         $('.deleteBtn').click(function() {
                 var songs_id = $(this).val();      
                 console.log("<%-urlPath%>" + songs_id);

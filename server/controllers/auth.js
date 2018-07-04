@@ -67,17 +67,12 @@ exports.profile = function(req, res) {
 exports.viewprofile = function(req,res) {  
         var user_num = req.params.id; // or var user_num = req.params.id;  or req.params.user;
     console.log("params data >>> " + user_num);
-    Comments.findAll({
-        where: { user_id: user_num }
-    }).then(comments=> {
     Users.findById(user_num).then( usersProfile => {
         res.render('viewprofile', {
             title: "profile page of others ppl",
             usersProfile: usersProfile,
-            comments: comments,
             hostpath: req.protocol + "://" + req.get("host")
         })
-    })
     }).catch((err) => {
         return res.status(400).send({
             message: err
