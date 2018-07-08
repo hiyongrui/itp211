@@ -106,9 +106,10 @@
        <% }); %> 
 
        <% songs.forEach(function(songs){ %>
-            <div class="col-lg-10 list-group-item" data-id="<%=songs.id %>"> 
+            <div id="song_name" class="col-lg-10 list-group-item" data-id="<%=songs.id %>"> 
 
-                <h4> <%=songs.songName%> </h4>
+            <form action="/songs/addsongs" method="post" enctype="multipart/form-data">
+                <h4 class="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4>
                 
             </div>
 
@@ -118,9 +119,13 @@
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
+
+                    
                     <% playlists.forEach(function(playlists){ %>
-                        <a class="dropdown-item" href="#"> Add to <%=playlists.title%> </a>
+                        <a id="addId" data-id="<%=playlists.playlist_id%>" class="dropdown-item" href="#" onclick=saveChanges()> Add to <%=playlists.title%> </a>
+                        <%=playlists.playlist_id%>
                     <% }); %>
+                        </form>
                     <a class="dropdown-item" href="#">Action</a>
                 
                     <div class="dropdown-divider"></div>
@@ -345,7 +350,35 @@ function setCookie(cname,cvalue,exdays)
             }
         
         </script>
-
+    
+        <script>
+        function saveChanges() {
+            console.log("url path >> " + "<%=urlPath%>")
+            var url = "<%=urlPath%>addsongs";
+           
+            var newValues = {
+                playlist_id: $(this).closest('.dropdown-menu').find('#addId').data('id'),
+                song_id: $(this).closest(".song_name").data('id')
+            }
+            console.log("new values " + JSON.stringify(newValues));
+            console.log("playlist id >> " + $(this).closest(".song_name").data('id'));
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                dataType: "json",
+                contentType: "application/json",
+                success: function(result){
+                    alert("Song added to playlist successfully");
+                
+                },
+                error: function(result){
+                    alert("Error adding to playlist");
+                    //discardChanges();
+                }
+            })
+        }
+        </script>
 
        <script>
            console.log("<%-urlPath%>")

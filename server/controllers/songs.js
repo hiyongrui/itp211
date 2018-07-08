@@ -39,6 +39,22 @@ exports.show = function (req,res) {
     });
 };
 
+exports.addSong = function(req,res) {
+    var addToPlayList = {
+        playlist_id: req.body.playlist_id,
+        song_id: req.body.song_id,
+        user_id: req.user.id
+    }
+    Playlists.create(addToPlayList).then((addSong,created)=> {
+        if (!addSong) {
+            return res.send(400, {
+                message:"error"
+            })
+        }
+        res.redirect('songs');
+    })
+}
+
 exports.footer = function(req,res) {
     sequelize.query('select * from Songs' , {model : Songs}).then((songs)=> {
         res.render('../partials/footer' , {

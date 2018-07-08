@@ -287,6 +287,7 @@ app.post('/videos' , videos.hasAuthorization , upload.single('video') , videos.u
 app.get('/songs' , songs.hasAuthorization , songs.show);
 app.post('/songs' , songs.hasAuthorization , upload.single('song') , songs.uploadSong);
 app.delete('/songs/:songs_id' , songs.hasAuthorization , songs.delete);
+app.post('/songs/addsongs', songs.hasAuthorization , songs.addSong);
 
 app.get('/playlists', playlists.hasAuthorization , playlists.list);
 app.post('/playlists', playlists.hasAuthorization , playlists.create);
