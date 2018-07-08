@@ -15,19 +15,23 @@ var sequelize = myDatabase.sequelize;
 
 var Users = require('../models/users');
 
+var Playlists = require('../models/playlists');
+
 // List songs
 exports.show = function (req,res) {
+    var user_num = req.user.id;
     sequelize.query('select s.id , s.title , s.songName , u.email AS user_id from Songs s join Users u on s.user_id = u.id' , 
         { model : Songs}).then((songs) => {
-
+    Playlists.findAll( { where: {user_id: user_num} } ).then((playlists) => {
         res.render('songs' , {
             title:'Songs Page',
             songs: songs,
+            playlists:playlists,
             user: req.user,
             gravatar: gravatar.url(songs.user_id, { s: '80', r:'x' , d:'retro'},true),
             urlPath : req.protocol + "://" + req.get("host") + req.url 
         });
-
+    })
     }).catch((err) => {
             return res.status(400).send({
                 message: err

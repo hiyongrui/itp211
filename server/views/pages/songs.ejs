@@ -87,7 +87,7 @@
         <div class="row">
             <% songs.forEach(function(songs){ %>
 
-                <a href="#" class="list-group-item" data-id="<%= songs.id%>">
+            <a href="#" class="list-group-item" data-id="<%= songs.id%>">
 
                 <div class="col-lg-12">    
                             <form action="/songs" method="delete">
@@ -100,15 +100,35 @@
                     <button type="button" class="btn-primary deleteBtn" value="<%=songs.id%>"> Delete  </button>
                    
                             </form> 
-                </div> </a>
+                </div> 
+            </a>
            
        <% }); %> 
 
        <% songs.forEach(function(songs){ %>
-            <div class="col-lg-12 list-group-item" data-id="<%=songs.id %>"> 
+            <div class="col-lg-10 list-group-item" data-id="<%=songs.id %>"> 
 
                 <h4> <%=songs.songName%> </h4>
+                
             </div>
+
+            <div class="btn-group dropright">
+                <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->
+                <button type="button" class="btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                    <% playlists.forEach(function(playlists){ %>
+                        <a class="dropdown-item" href="#"> Add to <%=playlists.title%> </a>
+                    <% }); %>
+                    <a class="dropdown-item" href="#">Action</a>
+                
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Separated link</a>
+                </div>
+            </div>
+            
+            
         <% }); %>
             
             
@@ -320,7 +340,7 @@ function setCookie(cname,cvalue,exdays)
                 var source = document.getElementById('audioSourceSOF');
                 source.src = elm.getAttribute('data-value');
 
-                audio.load(); //call this to just preload audio before playing , ifh dh then wont work.
+                audio.load(); //call this to just preload audio before playing , if dh then wont work.
                 audio.play(); // call this to play song right away
             }
         
