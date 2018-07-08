@@ -29,8 +29,8 @@ const Playlists = sequelize.define('Playlists', {
     song_id: {
         type: Sequelize.INTEGER,
         allowNull:false,
-        defaultValue: 1,
-        primaryKey: true, //composite key with playlist_id?
+        defaultValue: 1, // once i put reference to song , i cant delete first song cos its foreign key.
+        primaryKey: true, //composite key with playlist_id? 
         references: {
             model: 'Songs',
             key: 'id'
