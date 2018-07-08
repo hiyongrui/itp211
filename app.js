@@ -30,6 +30,9 @@ var videos = require('./server/controllers/videos');
 //Import song controller :)
 var songs = require('./server/controllers/songs');
 
+//Import playlist controller (7/8/2018)
+var playlists = require('./server/controllers/playlists');
+
 // upload profile image when you sign up 
 var uploader = require('./server/controllers/userUpload');
 
@@ -251,7 +254,7 @@ app.post('/userRole' , uploader.hasAuthorization , uploader.role);
 
 app.post('/profile' , upload.single('image'), uploader.uploadImage, uploader.hasAuthorization);
 app.get('/profile', auth.isLoggedIn, auth.profile);
-app.get('/users/profile/:id', auth.isLoggedIn, auth.viewprofile);  // or /users/profile/:id  or /users/profile/:users_id
+app.get('/users/profile/:name', auth.isLoggedIn, auth.viewprofile);  // or /users/profile/:id  or /users/profile/:users_id
 
 // Logout Page
 app.get('/logout', function (req, res) {
@@ -284,6 +287,11 @@ app.post('/videos' , videos.hasAuthorization , upload.single('video') , videos.u
 app.get('/songs' , songs.hasAuthorization , songs.show);
 app.post('/songs' , songs.hasAuthorization , upload.single('song') , songs.uploadSong);
 app.delete('/songs/:songs_id' , songs.hasAuthorization , songs.delete);
+
+app.get('/playlists', playlists.hasAuthorization , playlists.list);
+app.post('/playlists', playlists.hasAuthorization , playlists.create);
+app.get('/playlists/:id', playlists.hasAuthorization , playlists.viewOnePlaylist);
+
 
 // Set up routes for images 6666
 //app.post('/images', images.hasAuthorization, upload.single('image'), images.uploadImage);

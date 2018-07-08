@@ -81,7 +81,9 @@
                 </div>
             </div>
         </div>
+
         <hr>
+
         <div class="row">
             <% songs.forEach(function(songs){ %>
 
@@ -108,9 +110,32 @@
                 <h4> <%=songs.songName%> </h4>
             </div>
         <% }); %>
-          
-    </div>
-        </div>
+            
+            
+            <div class="col-lg-12 list-group-item" data-id="<%=songs.id %>">
+
+                <ul style="list-style: none">
+                    <li> Audio Files
+                      <ul id="list">
+                        <li><a href="#" data-value="http://media.w3.org/2010/07/bunny/04-Death_Becomes_Fur.oga">Death_Becomes_Fur.oga</a></li>
+                        <li><a href="#" data-value="http://media.w3.org/2010/07/bunny/04-Death_Becomes_Fur.mp4">Death_Becomes_Fur.mp4</a></li>
+                        <li><a href="#" data-value="http://media.w3.org/2010/11/rrs006.oga">rrs006.oga</a></li>
+                        <li><a href="#" data-value="http://media.w3.org/2010/05/sound/sound_90.mp3">sound_90.mp3</a></li>
+                      </ul>
+                    </li>
+                </ul>
+
+                <audio id="audioSOF" controls="controls">
+                        <source id="audioSourceSOF" src=""></source>
+                        Your browser does not support the audio format.
+                </audio>
+
+            </div>
+
+
+        </div> <!-- end of row -->
+
+    </div> <!-- end of container -->
 
         <% include ../partials/footer %>
     
@@ -180,10 +205,7 @@ function setCookie(cname,cvalue,exdays)
                 i++;
                 nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
                 audioPlayer.src = nextSong;
-              /*  audioPlayerFooter.src = nextSong;
-                audioPlayerFooter.load();
-                audioPlayerFooter.play(); */
-                console.log("??" + nextSong);
+                console.log("next song src --  " + nextSong);
                 audioPlayer.load();
                 audioPlayer.play();
                 setCookie('songName' , nextSong)   
@@ -192,8 +214,19 @@ function setCookie(cname,cvalue,exdays)
                     i = -1;
                 }
             },false); 
-            
-        }
+            /*
+          
+            document.addEventListener('play', function(e){ // listen to play event , pause all video file except target one
+                var audios = document.getElementsByTagName('audio');
+                console.log(e);
+                for(var i = 0; i < audios.length; i++){
+                    if(audios[i] != e.target){
+                        audios[i].pause();
+                    }
+                }
+            }, true); */
+
+        } //end of function audioPlayer()
 
         function levelUp() {
         var obj = [[1,2000], [2, 5000] , [3, 6000] , [4,8000] ];
@@ -232,6 +265,8 @@ function setCookie(cname,cvalue,exdays)
 
     console.log(" document cookie >> " + document.cookie);
 
+// onload , onbeforeunload , cookies
+
     var songFirst = document.querySelector(".sourcePlayer").src.slice(28);
     var song = document.getElementsByTagName('audio')[0];
 
@@ -264,10 +299,10 @@ function setCookie(cname,cvalue,exdays)
 
     }
 
-    /*
-        $(".audioPlayer:not(:first)").hide();
-       $(".byWho:not(:first)").hide();
-        $(".songTitle:not(:first)").hide(); */
+
+       $(".audioPlayer:not(:first)").hide(); 
+    //   $(".byWho:not(:first)").hide();
+      //  $(".songTitle:not(:first)").hide(); 
 //console.log(docment.getElementsByClassName("deleteBtn"))
         
 
@@ -275,6 +310,22 @@ function setCookie(cname,cvalue,exdays)
 
        <!-- <script src="/javascripts/test.js"></script> !-->
        
+        <script>
+            document.getElementById("list").onclick = function(e) {
+                e.preventDefault();
+
+                var elm = e.target;
+                var audio = document.getElementById('audioSOF');
+
+                var source = document.getElementById('audioSourceSOF');
+                source.src = elm.getAttribute('data-value');
+
+                audio.load(); //call this to just preload audio before playing , ifh dh then wont work.
+                audio.play(); // call this to play song right away
+            }
+        
+        </script>
+
 
        <script>
            console.log("<%-urlPath%>")

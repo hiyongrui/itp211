@@ -35,8 +35,8 @@
           <div class="col-xs-6 col-md-4">
            
                 <img id="output" class="card-img-top" src="images/<%= users.userImage %>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'">
-
-               <a href="users/profile/<%=users.id%>"> <button type="button" class="btn btn-outline-success waves-effect"> visit </button>
+                                    <!-- users.id if is FindById , params is the user_id-->
+               <a href="users/profile/<%=users.name%>"> <button type="button" class="btn btn-outline-success waves-effect"> visit </button>
                 
                 <p class="text-center user"> username: <%= users.name %> </p>
 
@@ -49,7 +49,7 @@
         </div>
         
       </div>   
-      <!-- /.container -->
+      <!-- /end of container -->
        
 <!-- 
                 <div class="list-group">
@@ -81,7 +81,7 @@
       
         <script>
             $('#viewBtn').click(function () {
-              var user_num = $(this).closest("a").data('id');
+              var user_num = $(this).closest("a").data('name');   // data('id');
               location.href = "<%-urlPath %>/profile/"+user_num;
             });
             console.log(document.getElementById("output"));

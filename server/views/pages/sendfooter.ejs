@@ -63,46 +63,6 @@
     return "";
 }
 
-         /* function audioPlayer() {
-            
-          
-            //$("#audioPlayer")[0].src.play();
-            var audioPlayer = document.querySelector(".audioPlayer");
-         
-            var audioPlayer1 = document.querySelectorAll(".audioPlayer");
-            //var firstPlayer = audioPlayer[1].src;
-            console.log(audioPlayer);
-            console.log(audioPlayer1);
-            var firstPlayer = document.querySelectorAll(".sourcePlayer")[1];
-            var secondPlayer = document.querySelectorAll(".audioPlayer")[1];
-            //var sliced = firstPlayer.src.slice(28);
-            //var slicedSecond = secondPlayer.src.slice(29);
-            //console.log(firstPlayer.src);
-            //console.log("?? source player " + sliced);
-            //console.log("hey" + slicedSecond);
-      
-        //var timing = getCookie("songCookie");
-        //audioPlayer.currentTime = timing;
-         
-          var i = 0;
-
-            //var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
-        
-            audioPlayer.addEventListener('ended',function() {
-                i++;
-                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
-                audioPlayer.src = "songs/" + nextSong;
-                console.log("??aaa" + nextSong);
-                audioPlayer.load();
-                audioPlayer.play();
-                //document.getElementById("songName").innerHTML = myVar[i].songName.slice(0,-4);
-                if (i==2) {
-                    i = -1;
-                }
-            },false); 
-            
-           
-        }  */
      
 var getCurrentName = getCookie("songName");
 console.log("current cookie song name is " + getCurrentName);

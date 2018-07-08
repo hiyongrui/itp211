@@ -65,9 +65,10 @@ exports.profile = function(req, res) {
 
 //view other people profile , not your own one. page is /users
 exports.viewprofile = function(req,res) {  
-        var user_num = req.params.id; // or var user_num = req.params.id;  or req.params.user;
-    console.log("params data >>> " + user_num);
-    Users.findById(user_num).then( usersProfile => {
+        var user_num = req.params.name; // or var user_num = req.params.id;  or req.params.user;
+    console.log("params data >>> " + user_num); // or use findone to return an object , then dont need use usersProfile[0];
+    Users.findAll( { where: {name: user_num} } ).then( usersProfile => { //findAll,where clause return one row only thats why must usersProfile[0]
+        console.log("users profile > > " + usersProfile[0].name);
         res.render('viewprofile', {
             title: "profile page of others ppl",
             usersProfile: usersProfile,
