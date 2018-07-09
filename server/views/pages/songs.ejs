@@ -106,10 +106,11 @@
        <% }); %> 
 
        <% songs.forEach(function(songs){ %>
-            <div id="song_name" class="col-lg-10 list-group-item" data-id="<%=songs.id %>"> 
+            <div class="col-lg-10 list-group-item addSongId" data-id="<%=songs.id %>"> 
 
-            <form action="/songs/addsongs" method="post" enctype="multipart/form-data">
-                <h4 class="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4>
+            <form action="/addsongs" method="post" enctype="multipart/form-data">
+                <!-- <h4 id="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4> !-->
+                <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
                 
             </div>
 
@@ -122,8 +123,10 @@
 
                     
                     <% playlists.forEach(function(playlists){ %>
-                        <a id="addId" data-id="<%=playlists.playlist_id%>" class="dropdown-item" href="#" onclick=saveChanges()> Add to <%=playlists.title%> </a>
-                        <%=playlists.playlist_id%>
+                        <div class="addPlaylist" data-id="<%=playlists.id%>">
+                        <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" onclick=saveChanges()> Add to <%=playlists.title%> </a>
+                        <%=playlists.id%>
+                        </div>
                     <% }); %>
                         </form>
                     <a class="dropdown-item" href="#">Action</a>
@@ -330,7 +333,7 @@ function setCookie(cname,cvalue,exdays)
       //  $(".songTitle:not(:first)").hide(); 
 //console.log(docment.getElementsByClassName("deleteBtn"))
         
-
+setInterval(function() { console.log(document.querySelector(":focus")); }, 1000);
         </script>
 
        <!-- <script src="/javascripts/test.js"></script> !-->
@@ -347,6 +350,7 @@ function setCookie(cname,cvalue,exdays)
 
                 audio.load(); //call this to just preload audio before playing , if dh then wont work.
                 audio.play(); // call this to play song right away
+              
             }
         
         </script>
@@ -354,19 +358,25 @@ function setCookie(cname,cvalue,exdays)
         <script>
         function saveChanges() {
             console.log("url path >> " + "<%=urlPath%>")
-            var url = "<%=urlPath%>addsongs";
-           
+            var url = "http://localhost:3000/addsongs";
             var newValues = {
-                playlist_id: $(this).closest('.dropdown-menu').find('#addId').data('id'),
-                song_id: $(this).closest(".song_name").data('id')
+                //song_id: $(".aSong").attr("data-id"),
+                playlist_id: $("a:focus").attr("data-id")
             }
+            $(".aSong").focus();
+            var song_id = $("a:focus").attr("data-id");
+            var newValuesFinal = Object.assign({"song_id":song_id},newValues);
             console.log("new values " + JSON.stringify(newValues));
-            console.log("playlist id >> " + $(this).closest(".song_name").data('id'));
+            console.log("newfinal " + JSON.stringify(newValuesFinal))
+            console.log("playlist id >> " + $('.addPlaylist').data('id'));
+            console.log($(this).closest("div").attr('data-id'));
+            
+            console.log("col-lg-10 songid>> " + $('.col-lg-10.list-group-item.addSongId').attr('data-id'));
             $.ajax({
                 url: url,
                 type: "POST",
-                data: JSON.stringify(newValues),
-                dataType: "json",
+                data: JSON.stringify(newValuesFinal),
+                dataType: "json", //remove this to successfully add playlist??? lol
                 contentType: "application/json",
                 success: function(result){
                     alert("Song added to playlist successfully");

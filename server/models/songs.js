@@ -9,10 +9,6 @@ const Songs = sequelize.define('Songs', {
         autoIncrement: true,
         primaryKey: true
     },
-    created: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
-    },
     title: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -36,13 +32,14 @@ const Songs = sequelize.define('Songs', {
 Songs.sync({ force: false, logging: console.log }).then(() => {
     // Table created
     console.log("songs table synced")
+    /*
     return Songs.upsert({
         id: 1,
         title: 'First song synced',
         songName: 'Broken Reality.mp3',
         user_id: 1
         //experience: 10
-    })
+    }) */
 });
 
 module.exports = sequelize.model('Songs', Songs);

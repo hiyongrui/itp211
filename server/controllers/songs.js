@@ -17,6 +17,8 @@ var Users = require('../models/users');
 
 var Playlists = require('../models/playlists');
 
+var songsAndPlaylist = require('../models/songAndPlaylist'); //add duplicate song and playlist
+
 // List songs
 exports.show = function (req,res) {
     var user_num = req.user.id;
@@ -45,7 +47,9 @@ exports.addSong = function(req,res) {
         song_id: req.body.song_id,
         user_id: req.user.id
     }
-    Playlists.create(addToPlayList).then((addSong,created)=> {
+    console.log("addtoPlaylistbefore>>> " + JSON.stringify(addToPlayList));
+    songsAndPlaylist.create(addToPlayList).then((addSong,created)=> {
+        console.log("addtoPlaylistafter>>> " + JSON.stringify(addToPlayList));
         if (!addSong) {
             return res.send(400, {
                 message:"error"

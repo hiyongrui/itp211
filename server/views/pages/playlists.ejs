@@ -59,7 +59,7 @@
             <div class="lead">
                 <div class="list-group">
                     <% playlists.forEach(function(playlists){ %>
-                        <a href="playlists/<%=playlists.playlist_id%>" class="list-group-item" data-id="<%= playlists.id%>">
+                        <a href="playlists/<%=playlists.id%>" class="list-group-item" data-id="<%= playlists.id%>">
                           
                             <div class="comments">
                                 <form action="/playlists" method="delete">

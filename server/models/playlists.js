@@ -7,14 +7,14 @@ var Sequelize = myDatabase.Sequelize;
 const Playlists = sequelize.define('Playlists', {
     id: {
         type: Sequelize.INTEGER,
-        //autoIncrement: true,
-        //primaryKey: true
+        autoIncrement: true,
+        primaryKey: true
     },
-    playlist_id: {
+    /* playlist_id: {
         type: Sequelize.INTEGER,
         autoIncrement:true,
         primaryKey: true
-    },
+    }, */
     title: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -26,6 +26,7 @@ const Playlists = sequelize.define('Playlists', {
         defaultValue: '',
         trim: true
     },
+    /*
     song_id: {
         type: Sequelize.INTEGER,
         allowNull:false,
@@ -34,8 +35,7 @@ const Playlists = sequelize.define('Playlists', {
         references: {
             model: 'Songs',
             key: 'id'
-        }
-    },
+    }, */
     user_id:{
         type: Sequelize.INTEGER,
         allowNull: false,

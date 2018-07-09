@@ -7,7 +7,7 @@ var Users = require('../models/users');
 
 exports.list = function(req,res) {
     // List all comments and sort by date
-    var user_num = req.user.id;
+    var user_num = req.user.id;  //select * where clause , distinct for unique playlist
     Playlists.findAll( { where: {user_id: user_num} } ).then( playlists => { //findAll,where clause return one row only thats why must usersProfile[0]
         console.log("playlist data>>>  " + JSON.stringify(playlists));
         res.render('playlists', {
@@ -24,7 +24,7 @@ exports.list = function(req,res) {
 exports.viewOnePlaylist = function(req,res) {  
     var playlist_num = req.params.id; // or var user_num = req.params.id;  or req.params.user;
     console.log("params playlist>>> " + playlist_num); // or use findone to return an object , then dont need use usersProfile[0];
-    Playlists.findOne( { where: {playlist_id: playlist_num} } ).then( onePlayList => { //findAll,where clause return one row only thats why must usersProfile[0]
+    Playlists.findOne( { where: {id: playlist_num} } ).then( onePlayList => { //findAll,where clause return one row only thats why must usersProfile[0]
     console.log(" one playlist>>> " + onePlayList);
     res.render('viewplaylist', {
         onePlayList: onePlayList,
@@ -38,7 +38,7 @@ exports.viewOnePlaylist = function(req,res) {
 }
 
 exports.create = function(req,res) {
-    console.log("creating playlists")
+    console.log("creating playlists");
 
     var playlistData = {
         title: req.body.title,
