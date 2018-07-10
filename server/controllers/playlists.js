@@ -5,6 +5,7 @@ var sequelize = myDatabase.sequelize;
 
 var Users = require('../models/users');
 
+var songAndPlaylist = require('../models/songAndPlaylist');
 exports.list = function(req,res) {
     // List all comments and sort by date
     var user_num = req.user.id;  //select * where clause , distinct for unique playlist
@@ -25,11 +26,17 @@ exports.viewOnePlaylist = function(req,res) {
     var playlist_num = req.params.id; // or var user_num = req.params.id;  or req.params.user;
     console.log("params playlist>>> " + playlist_num); // or use findone to return an object , then dont need use usersProfile[0];
     Playlists.findOne( { where: {id: playlist_num} } ).then( onePlayList => { //findAll,where clause return one row only thats why must usersProfile[0]
-    console.log(" one playlist>>> " + onePlayList);
+    //sequelize.query('select * from Playlists where id = ' + playlist_num).then(onePlayList => {
+    sequelize.query('select * from songsandplaylists sp inner join Songs s on sp.song_id = s.id where playlist_id = :status', {replacements: {status:playlist_num}, type:sequelize.QueryTypes.SELECT} ).then(allSongsToThisPlaylist => {
+    //songAndPlaylist.findAll({where: {playlist_id:playlist_num} }).then( allSongsToThisPlaylist => {
+    console.log(" one playlist>>> " + JSON.stringify(onePlayList));
+    console.log("all the songs number wrong>>>>>>>>>>>> " + JSON.stringify(allSongsToThisPlaylist));
     res.render('viewplaylist', {
         onePlayList: onePlayList,
+        allSongs: allSongsToThisPlaylist,
         hostpath: req.protocol + "://" + req.get("host")
     })
+})
 }).catch((err) => {
     return res.status(400).send({
         message: err

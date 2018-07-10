@@ -15,7 +15,12 @@
         <div>
             <h1> Hello one playlist </h1>
            <h2> Playlist name :  <%= onePlayList.title %> </h2>
-           
+
+           <h1>
+           <% allSongs.forEach(function(allSongs){ %>
+                 WhyIsThisTwo <%=allSongs.songName%>
+            <% }); %>
+           </h1>
         </div> 
 
         <% include ../partials/footer %>
