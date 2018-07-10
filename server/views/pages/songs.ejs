@@ -108,7 +108,7 @@
        <% songs.forEach(function(songs){ %>
             <div class="col-lg-10 list-group-item addSongId" data-id="<%=songs.id %>"> 
 
-            <form action="/addsongs" method="post" enctype="multipart/form-data">
+            <form action="/addsongs" method="post" enctype="multipart/form-data"> <!-- form is unnecessary , can still work without formaction-->
                 <!-- <h4 id="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4> !-->
                 <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
                 
