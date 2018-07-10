@@ -116,7 +116,7 @@
 
             <div class="btn-group dropright">
                 <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->
-                <button type="button" class="btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="<%=songs.id%>" onclick=getSongId(this.id)>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
@@ -356,18 +356,24 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
         </script>
     
         <script>
+            var final_song_id = "";
+            function getSongId(clicked_id) {
+                final_song_id = clicked_id;
+                console.log("clicked song_id >> " + final_song_id);
+            }
+            
         function saveChanges() {
             console.log("url path >> " + "<%=urlPath%>")
             var url = "http://localhost:3000/addsongs";
             var newValues = {
                 //song_id: $(".aSong").attr("data-id"),
+                song_id: final_song_id,
                 playlist_id: $("a:focus").attr("data-id")
             }
-            $(".aSong").focus();
-            var song_id = $("a:focus").attr("data-id");
-            var newValuesFinal = Object.assign({"song_id":song_id},newValues);
+            //$(".aSong").focus();
+            //var song_id = $("a:focus").attr("data-id");
+            //var newValuesFinal = Object.assign({"song_id":song_id},newValues);
             console.log("new values " + JSON.stringify(newValues));
-            console.log("newfinal " + JSON.stringify(newValuesFinal))
             console.log("playlist id >> " + $('.addPlaylist').data('id'));
             console.log($(this).closest("div").attr('data-id'));
             
@@ -375,8 +381,8 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
             $.ajax({
                 url: url,
                 type: "POST",
-                data: JSON.stringify(newValuesFinal),
-                dataType: "json", //remove this to successfully add playlist??? lol
+                data: JSON.stringify(newValues),
+                //dataType: "json", //remove this to successfully add playlist??? lol
                 contentType: "application/json",
                 success: function(result){
                     alert("Song added to playlist successfully");
