@@ -116,6 +116,7 @@
 
             <div class="btn-group dropright">
                 <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->
+                <button type="button" class="btn btn-primary" id="<%=songs.songName%>" onclick=changeSong(this.id)> Play </button>
                 <button type="button" class="btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="<%=songs.id%>" onclick=getSongId(this.id)>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
@@ -360,6 +361,15 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
             function getSongId(clicked_id) {
                 final_song_id = clicked_id;
                 console.log("clicked song_id >> " + final_song_id);
+            }
+            
+            function changeSong(change_id) {
+                new_song_id = change_id;
+                console.log("new song id >>> " + new_song_id);
+                var audioPlayer = document.querySelector(".audioPlayer");
+                audioPlayer.src = new_song_id;
+                audioPlayer.load();
+                audioPlayer.play();
             }
             
         function saveChanges() {
