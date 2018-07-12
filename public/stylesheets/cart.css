@@ -1,0 +1,14 @@
+.Border {
+    margin: 50px 50px 50px 50px; 
+    border-color: black;
+    border: 1px solid black;
+    height: 70%;
+}
+
+.wrapper {
+    padding-top: 60px;
+}
+
+.header {
+    padding-left: 50px;
+}
