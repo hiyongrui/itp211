@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/cardDetails.css'/>
+  <script src='/javascripts/jquery.min.js'></script>
+  <script src='/javascripts/bootstrap.min.js'></script>
+</head>
+
+<body>
+    <% include ../partials/header %>
+<div class="cardDetails">
+    <form action="/insertCard" method="POST">
+        <fieldset class="form-group">
+            <label for="inputCardNumber"> Card Number </label>
+            <input type="text" id="inputCardNumber" name="cardNumber" class="form-control" placeholder="Card Number" required="true">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputCardholder"> Cardholder </label>
+            <input type="text" id="inputCardholder" name="cardholder" class="form-control" placeholder="Cardholder" required="true">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputCVV"> CVV </label>
+            <input type="text" id="inputCVV" name="cvv" class="form-control" placeholder="CVV" required="true">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputExpiryDate"> Expiry Date </label>
+            <input type="text" id="inputExpiryDate" name="expiryDate" class="form-control" placeholder="Expiry Date" required="true">
+        </fieldset>
+        <div>
+            <button type="submit" class="btn btn-primary"> Submit Card Details </button>
+            <button type="button" class="btn btn-secondary"> Back </button>
+        </div>
+
+    </form>
+</div>
+
+  <!-- <div id="header" class="col-lg-5">
+  <div class="modal fade" id="createProduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form action="/new" method="post">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Create New Product Record</h4>
+          </div>
+          <div class="modal-body">
+            <fieldset class="form-group">
+              <label for="inputProductID">Product ID</label>
+              <input type="text" id="inputProductID" name="productId" class="form-control" placeholder="Product Id" required="true">
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="inputProductName">Product Name</label>
+              <input type="text" id="inputProductName" name="productName" class="form-control" placeholder="Product Name" required="true">
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="inputSellerName">Seller Name</label>
+              <input type="text" id="inputSellerName" name="sellerName" class="form-control" placeholder="Seller Name" required="true">
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="inputPricing">Pricing</label>
+              <input type="text" id="inputPricing" name="pricing" class="form-control" placeholder="Pricing" required="true">
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> -->
+
+
+
+  
+
+  <script>
+    
+  </script>
+</body>
+
+</html>

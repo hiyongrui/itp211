@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'>
+  <link rel='stylesheet' href='/stylesheets/style.css'>
+  <link rel='stylesheet' href='/stylesheets/cart.css' />
+  <link rel='stylesheet' href='/stylesheets/listCards.css' />
+  <script src='/javascripts/jquery.min.js'></script>
+  <script src='/javascripts/bootstrap.min.js'></script>
+</head>
+<body>
+        <% include ../partials/header %>
+        <div class="wrapper" id="wrapper">
+          <h2 class="header"> Your Cards </h2>
+          <div class="Border">
+            <table class="table">
+              <thread>
+                <tr>
+                  <th>Card Number</th>
+                  <th>Cardholder</th>
+                  <th>Balance</th>
+                  <th>Action</th>
+                </tr>
+                <% for(var i=0; i < cardList.length; i++){ %>
+                  <tr class="rowRecord" data-id="<%= cardList[i].id %>">
+                    <td class="cardNumber">
+                      <%= cardList[i].cardNumber %>
+                    </td>
+                    <td class="cardholder">
+                      <%= cardList[i].cardholder %>
+                    </td>
+                    <td class="balance">
+                      <%= cardList[i].balance %>
+                    </td>
+                    <td>
+                        <input type="button" class="selectCardBtn"  value="Add Balance">
+      
+                    </td>
+                    
+                  </td>
+                </tr>
+                          
+                <% } %>
+                        
+              </thread>
+            </table>
+          </div>
+        </div>
+
+    <div id="modal" class="modal">
+
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <br><br>
+            <h3> Insert Balance </h3>
+            <br><br>
+            <p> Card Number: </p> <p id="cardNumber"></p>
+            <p id="cardholder"></p>
+            <p id="balance"></p>
+            <p> Amount to insert </p>
+            <input type="text" id="inputBalanceAmt" name="balanceAmt" class="form-control" placeholder="$10" required="true">
+            <br>
+            <input type="submit" class="addBalBtn" value="Add Balance">
+        </div>
+
+    </div>
+    
+    
+    <script>
+    $(".selectCardBtn").click(function (event) {
+        var card_id = $(this).closest("tr").data('id');
+        var cardInfo = {
+            cardNumber: $(this).closest("tr").find('.cardNumber').text().trim(),
+            cardholder: $(this).closest("tr").find('.cardholder').text().trim(),
+            balance: $(this).closest("tr").find('.balance').text().trim()
+        }
+        console.log(cardInfo.cardholder);
+        modal.style.display="block";
+        $("#cardNumber").text(cardInfo.cardNumber);
+        $("#cardholder").text("Cardholder: " +cardInfo.cardholder);
+        $("#balance").text("Balance: " +cardInfo.balance)
+    });
+
+    $(".addBalBtn").click(function () {
+        var url = "<%=hostPath%>/addBalance";
+        var balAmt = {
+            balance : $("#inputBalanceAmt").val(),
+            cardNumber: $("#cardNumber").text()
+        }
+        console.log(balAmt.cardNumber);
+        console.log(balAmt.balance);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(balAmt),
+            contentType: "application/json",
+            success: function(result){
+                alert("Student record updated successfully");
+                location.href = "<%=hostPath%>";
+            },
+            error: function(result){
+                alert("Error");
+            }
+        })
+    })
+    
+    
+    window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+    }
+  </script>
+  </body>
+  </html>

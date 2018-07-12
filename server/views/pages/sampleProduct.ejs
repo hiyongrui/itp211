@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+ 
+</head>
+
+<body>
+    <% include ../partials/header %>
+  <div id="header" class="col-lg-5">
+    <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#createProduct">
+      New Record
+    </button>
+  </div>
+  <div class="modal fade" id="createProduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form action="/new" method="post">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Create New Product Record</h4>
+          </div>
+          <div class="modal-body">
+            <fieldset class="form-group">
+              <label for="inputProductID">Product ID</label>
+              <input type="text" id="inputProductID" name="productId" class="form-control" placeholder="Product Id" required="true">
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="inputProductName">Product Name</label>
+              <input type="text" id="inputProductName" name="productName" class="form-control" placeholder="Product Name" required="true">
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="inputSellerName">Seller Name</label>
+              <input type="text" id="inputSellerName" name="sellerName" class="form-control" placeholder="Seller Name" required="true">
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="inputPricing">Pricing</label>
+              <input type="text" id="inputPricing" name="pricing" class="form-control" placeholder="Pricing" required="true">
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <table class="table">
+    <thread>
+      <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Seller Name</th>
+        <th>Pricing</th>
+        <th>Action</th>
+      </tr>
+      <% for(var i=0; i < itemList.length; i++){ %>
+        <tr class="rowRecord" data-id="<%= itemList[i].id %>">
+          <td class="productId" data-id="<%= itemList[i].productId %>">
+            <%= itemList[i].productId %>
+          </td>
+          <td class="productName">
+            <%= itemList[i].productName %>
+          </td>
+          <td class="sellerName">
+            <%= itemList[i].sellerName %>
+          </td>
+          <td class="pricing">
+            <%= itemList[i].pricing %>
+          </td>
+          <td>
+     
+            <input type="button" class="appendBtn" value="Add to Cart">
+       
+            <input type="button" class="deleteBtn"  value="Delete">
+          </td>
+        </tr>
+        <% } %>
+    </thread>
+  </table>
+
+  
+
+  <script>
+    $('.appendBtn').click(function () {
+        var url = "<%=hostPath%>/new";
+        var record_num = $(this).closest("tr").data('id');
+        var cartRecords = {
+            productId: $(this).closest("tr").find('.productId').text().trim(),
+            productName: $(this).closest("tr").find('.productName').text().trim(),
+            sellerName: $(this).closest("tr").find('.sellerName').text().trim(),
+            pricing: $(this).closest("tr").find('.pricing').text().trim()
+        }
+        
+        console.log(url);
+        console.log($(this).closest("tr").find('.productId').text().trim());
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(cartRecords),
+            contentType: "application/json",
+            success: function(result){
+                alert("Student record updated successfully");
+                location.href = "<%=hostPath%>"
+            },
+            error: function(result){
+                alert("Error");
+                discardChanges();
+            }
+        })
+
+});
+
+function discardChanges() {
+            location.href = "<%=hostPath%>"
+        }
+    
+
+    $('.deleteBtn').click(function () {
+      var record_num = $(this).closest("tr").data('id');
+      var productId = $(this).closest("tr").find('.productId').text().trim();
+      console.log(productId)
+      $.ajax({
+        url: '<%-hostPath%>/' + productId,
+        type: 'DELETE',
+        success: function (result) {
+          console.log(result.message);
+          var itemToRemove = '.rowRecord[data-id=' + record_num + ']';
+          $(itemToRemove).remove();
+        },
+        error: function (result) {
+          alert("Unable to delete Product record.");
+          console.log(result.message);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

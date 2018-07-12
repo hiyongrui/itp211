@@ -44,8 +44,17 @@ var chatMessages = require('./server/controllers/chatMsg');
 
 var studentsController = require("./server/controllers/studentsController"); //from p5db
 
-//Import lessons controller kamali
+// Import lessons controller kamali
 var lessons = require('./server/controllers/lessons');
+// end of kamali controller
+
+// Import products controller jiarong
+var productsController = require("./server/controllers/sampleProduct");
+var cart = require("./server/controllers/cart");
+var transaction = require("./server/controllers/transaction");
+var cardDetails = require("./server/controllers/cardDetails");
+// end of jiarong controller
+
 
 var Users = require('./server/models/users');
 var Songs = require('./server/models/songs');
@@ -311,13 +320,24 @@ app.delete("/p5db/:id" , studentsController.delete);
 // kamali profileSetting , lessons
 app.get('/profileSetting', auth.isLoggedIn , auth.profileSettings);
 app.get('/lessons', lessons.hasAuthorization, lessons.show);
+// end of kamali router
 
+// jiarong product router
+app.get("/products", productsController.list);
+app.post("/new", productsController.insert);
+app.delete('/products/:id', productsController.delete);
 
+app.get("/cart", cart.list);
+app.post("/products/new", cart.insert);
+app.delete("/cart/:id", cart.cartDelete);
 
+app.post("/cart/transaction", transaction.transaction);
 
-
-
-
+app.get("/insertCard", cardDetails.list);
+app.get("/cardInfo", cardDetails.listCards);
+app.get("/cardInfo/:id");
+app.post("/cardInfo/addBalance", cardDetails.addBalance);
+// end of jiarong router
 
 
 //Set up route for chat messages 666666 can do this in another controller but they lazy
