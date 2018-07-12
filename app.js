@@ -334,6 +334,7 @@ app.delete("/cart/:id", cart.cartDelete);
 app.post("/cart/transaction", transaction.transaction);
 
 app.get("/insertCard", cardDetails.list);
+app.post("/insertCard", cardDetails.insertCard);
 app.get("/cardInfo", cardDetails.listCards);
 app.get("/cardInfo/:id");
 app.post("/cardInfo/addBalance", cardDetails.addBalance);
