@@ -108,16 +108,16 @@
        <% songs.forEach(function(songs){ %>
             <div class="col-lg-10 list-group-item addSongId" data-id="<%=songs.id %>"> 
 
-            <form action="/addsongs" method="post" enctype="multipart/form-data"> <!-- form is unnecessary , can still work without formaction-->
+            <form action="/addsongs" method="post" enctype="multipart/form-data"> <!-- form is unnecessary , can still work without formaction !-->
                 <!-- <h4 id="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4> !-->
                 <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
                 
             </div>
 
             <div class="btn-group dropright">
-                <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->
-                <button type="button" class="btn btn-primary" id="<%=songs.songName%>" onclick=changeSong(this.id)> Play </button>
-                <button type="button" class="btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="<%=songs.id%>" onclick=getSongId(this.id)>
+                <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->                                  <!--previously changeSong(this.id) !-->
+                <button type="button" class="btn btn-primary" id="<%=songs.songName%>" data-value="<%=songs.title%>" onclick=changeSong(this);changeImage()> Play </button>                <!--use this.id previously !-->
+                <button type="button" class="btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-cool ="<%=songs.songName%>" data-id="<%=songs.title%>" id="<%=songs.id%>" onclick=getSongId(this)>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
@@ -162,9 +162,9 @@
             </div>
 
 
-        </div> <!-- end of row -->
+        </div> <!-- end of row !-->
 
-    </div> <!-- end of container -->
+    </div> <!-- end of container !-->
 
         <% include ../partials/footer %>
     
@@ -358,18 +358,30 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
     
         <script>
             var final_song_id = "";
-            function getSongId(clicked_id) {
-                final_song_id = clicked_id;
+            function getSongId(clicked_id) { //press to get song_id to add to playlist
+                //final_song_id = clicked_id;
+                final_song_id = event.srcElement.id;
                 console.log("clicked song_id >> " + final_song_id);
+                console.log("click id data id >> " + $(clicked_id).data("id"));
+                changed_song_name = $(clicked_id).data("cool");
+                console.log("click value songName >> " + $(clicked_id).data("cool"));
             }
             
-            function changeSong(change_id) {
-                new_song_id = change_id;
+            function changeSong(change_id) { //when you press play then change song
+                //new_song_id = change_id;
+                new_song_id = event.srcElement.id;
                 console.log("new song id >>> " + new_song_id);
                 var audioPlayer = document.querySelector(".audioPlayer");
                 audioPlayer.src = new_song_id;
                 audioPlayer.load();
                 audioPlayer.play();
+                changed_song_name = $(change_id).data("value");
+                document.getElementById("songName").innerHTML = changed_song_name;
+            }
+
+            function changeImage() {
+                console.log("looooo " + $(this).data().value);
+    
             }
             
         function saveChanges() {
