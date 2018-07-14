@@ -26,7 +26,7 @@ var IMAGE_TYPES = ['image/jpeg' , 'image/jpg' , 'image/png'];
 // List songs
 exports.show = function (req,res) {
     var user_num = req.user.id;
-    sequelize.query('select s.id , s.title , s.songName , u.email AS user_id from Songs s join Users u on s.user_id = u.id' , 
+    sequelize.query('select s.id , s.title , s.songName , s.songImage, u.name AS user_id from Songs s join Users u on s.user_id = u.id' , 
         { model : Songs}).then((songs) => {
     Playlists.findAll( { where: {user_id: user_num} } ).then((playlists) => {
         res.render('songs' , {

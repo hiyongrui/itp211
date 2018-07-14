@@ -8,6 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 </head>
 
 <style>
@@ -81,6 +83,28 @@ width:71% !important;
    text-decoration: underline;
    text-transform: uppercase;
    font-weight: bold;
+}
+
+.col-lg-2{
+    padding-left:0px !important; /* if not got small gap between col-lg-10 and col-lg-2 delete btn*/
+}
+
+#songImageSize{
+    width: 250px;
+    height: 150px;
+    float:left;
+    margin-right:10px;
+}
+
+#cssDeleteBtn{
+    padding:6px;
+    margin-top:60px;
+}
+
+.byWho{
+    font-size:18px;
+    font-weight: bold;
+    padding: 10px; 
 }
 </style>
 
@@ -161,17 +185,20 @@ width:71% !important;
 
        <% songs.forEach(function(songs){ %>
             <div class="col-lg-10 list-group-item addSongId" data-id="<%=songs.id %>"> 
-
+                
             <form action="/addsongs" method="post" enctype="multipart/form-data"> <!-- form is unnecessary , can still work without formaction !-->
                 <!-- <h4 id="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4> !-->
+                <img id="songImageSize" src="/images/<%= songs.songImage %>"/> 
                 <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
-                
+                <a href="/users/profile/<%=songs.user_id%>"> <small class="byWho"> Upload by: <%= songs.user_id %></small> </a>
+                <button type="button" id="cssDeleteBtn" class="btn-danger deleteBtn" value="<%=songs.id%>"> <i class="far fa-trash-alt"> Delete </i>  </button>
             </div>
 
-            <div class="btn-group dropright">
+            <div class="col-lg-2 btn-group dropright">
+               
                 <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->                                  <!--previously changeSong(this.id) !-->
-                <button type="button" class="btn btn-primary" id="<%=songs.songName%>" data-value="<%=songs.title%>" onclick=changeSong(this);changeImage()> Play </button>                <!--use this.id previously !-->
-                <button type="button" class="btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-cool ="<%=songs.songName%>" data-id="<%=songs.title%>" id="<%=songs.id%>" onclick=getSongId(this)>
+                <button type="button" class="list-group-item btn btn-primary" data-id="<%=songs.id%>" id="<%=songs.songName%>" data-value="<%=songs.title%>" onclick=changeSong(this);changeImage()> Play </button>
+                <button type="button" class="list-group-item btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-cool ="<%=songs.songName%>" data-id="<%=songs.id%>" id="<%=songs.id%>" onclick=getSongId(this)>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
