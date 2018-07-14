@@ -120,7 +120,7 @@ width:71% !important;
                                 
                                 <hr>
                             
-                                <input type="file" id="image" name="image" required="" onchange="loadFile(event)">
+                                <input type="file" id="image" name="image" required="" onchange="loadFile(event);checkextensionImage()">
                                 <span class="file-customImage"></span>
 
                                  <img id="output"/> <p id="textForImage"> </p>
@@ -501,11 +501,8 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
                         } 
                     });  
             });
-            
-        function checkextension() {
-            var file = document.querySelector("#song");
-            if ( /\.(mp3|mp4|ogg|ogv)$/i.test(file.files[0].name) === false ) {
-                toastr.options = {
+
+            toastr.options = {
             "debug": false,
             "positionClass": "toast-top-center",
             "onclick": null,
@@ -513,9 +510,23 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
             "fadeOut": 1000,
             "timeOut": 2000,
             }
+
+        function checkextension() {
+            var file = document.querySelector("#song");
+            if ( /\.(mp3|mp4|ogg|ogv)$/i.test(file.files[0].name) === false ) {
                 toastr.error('Only mp3, mp4,ogg, ogv','Song file is not acceptable!');
                 file.value = "";
-            } 
+            }
+        }
+
+        function checkextensionImage() {
+            var imageFile = document.querySelector("#image");
+            if ( /\.(jpg|jpeg|png)$/i.test(imageFile.files[0].name) === false ) {
+                toastr.error("Only jpg , jpeg , png ", "Image file is not acceptable sorry!");
+                imageFile.value = "";
+                document.getElementById("textForImage").innerHTML = "";
+                document.getElementById("output").style.display = "none";
+            }
         }
 
         var loadFile = function(event) {
