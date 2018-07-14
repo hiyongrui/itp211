@@ -18,6 +18,9 @@ const Songs = sequelize.define('Songs', {
     songName: {
         type: Sequelize.STRING
     },
+    songImage: {
+        type: Sequelize.STRING
+    },
     user_id:{
         type: Sequelize.INTEGER,
         allowNull: false,

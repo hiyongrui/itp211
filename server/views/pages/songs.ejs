@@ -3,14 +3,19 @@
 <head>
     <title><%= title %></title>
   
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 </head>
 
 <style>
     .file-custom:after {
         content: "Choose song...";
+    }
+    .file-customImage:after {
+        content: "Choose image...";
     }
     footer.page-footer{
         margin-top:400px !important;
@@ -36,6 +41,17 @@
   border-top: 1px solid #E9EEF1;
   overflow: hidden;
 }
+
+.toast-top-center {
+top: 12px;
+margin: 0 auto;
+left: 33%;
+width:900px !important;
+}
+#toast-container > div {
+    width: 40%;
+}
+
 </style>
 
 <body>
@@ -69,8 +85,14 @@
                                 <input type="text" id="inputitle" name="title" class="form-control" placeholder="Song Title" required="">
                             </fieldset>
                             <label class="file" style="width: 100%" onclick="$('input[id=lefile]').click();">
-                                <input type="file" id="song" name="song" required="">
+                                <input type="file" id="song" name="song" required="" onchange="checkextension()">
                                 <span class="file-custom"></span>
+                                
+                                <hr>
+                            
+                                <input type="file" id="image" name="image" required="">
+                                <span class="file-customImage"></span>
+                                
                             </label>
                         </div>
                         <div class="modal-footer">
@@ -437,7 +459,22 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
                         } 
                     });  
             });
-       
+            
+        function checkextension() {
+            var file = document.querySelector("#song");
+            if ( /\.(mp3|mp4|ogg|ogv)$/i.test(file.files[0].name) === false ) {
+                toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-center",
+            "onclick": null,
+            "fadeIn": 300,
+            "fadeOut": 1000,
+            "timeOut": 2000,
+            }
+                toastr.error('Only mp3, mp4,ogg, ogv','Song file is not acceptable!');
+                file.value = "";
+            } 
+        }
        </script>
        
     </body>

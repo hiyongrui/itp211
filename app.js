@@ -10,7 +10,9 @@ const COOKIE_SECRET = 'keyboard cat??' // at first dh
 
 // import multer 666
 var multer = require('multer');  //                               15 mb now i added another 0 to it cos of the song "exit premise" 6mb..
-var upload = multer({dest:'./public/uploads/', limits: {fileSize: 15000000, files:1}});   //1.5 megabyte file size limit , file only can 1
+var upload = multer({dest:'./public/uploads/', limits: {fileSize: 15000000, files:5}});   //1.5 megabyte file size limit , file only can 1
+
+
 
 var footer = require('./server/controllers/footer');
 
@@ -294,7 +296,7 @@ app.post('/videos' , videos.hasAuthorization , upload.single('video') , videos.u
 
 // Set up  routes for songs ////
 app.get('/songs' , songs.hasAuthorization , songs.show);
-app.post('/songs' , songs.hasAuthorization , upload.single('song') , songs.uploadSong);
+app.post('/songs' , songs.hasAuthorization , upload.fields([{name: 'song', maxCount:1}, {name:"image", maxCount:1}]) , songs.uploadSong);
 app.delete('/songs/:songs_id' , songs.hasAuthorization , songs.delete);
 app.post('/addsongs', songs.hasAuthorization , songs.addSong);
 

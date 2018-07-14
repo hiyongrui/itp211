@@ -246,4 +246,10 @@
 
     socket.emit("newUser", currentProfileOnlineUserId); 
 
+
+    console.log("user role>>>gg " + myVar.role);
+    if (myVar.role == "instructor") {
+        document.getElementById("profilePictureHeader").style.borderColor = "green";
+    }
+ ;
 </script>
