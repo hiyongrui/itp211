@@ -46,12 +46,42 @@
 top: 12px;
 margin: 0 auto;
 left: 33%;
-width:900px !important;
+width:71% !important;
 }
 #toast-container > div {
     width: 40%;
 }
 
+.toast-top-right{
+    font-size:18px;
+    left:73%;
+    margin-top:60px;
+    width:60%;
+    opacity: 1;
+}
+.toast-success {
+    background-color:#4BB543;
+}
+
+#output{
+    /* border-radius:50%; */
+    /*display: inline; */
+    position: relative;
+    top:30px;
+    display:none;
+    width: 140px;
+    height: 140px;
+    float:left;
+    margin-right:15px;
+}
+#textForImage{
+   position: relative;
+   top:66px;
+   color:blue;
+   text-decoration: underline;
+   text-transform: uppercase;
+   font-weight: bold;
+}
 </style>
 
 <body>
@@ -90,8 +120,10 @@ width:900px !important;
                                 
                                 <hr>
                             
-                                <input type="file" id="image" name="image" required="">
+                                <input type="file" id="image" name="image" required="" onchange="loadFile(event)">
                                 <span class="file-customImage"></span>
+
+                                 <img id="output"/> <p id="textForImage"> </p>
                                 
                             </label>
                         </div>
@@ -147,7 +179,7 @@ width:900px !important;
                     
                     <% playlists.forEach(function(playlists){ %>
                         <div class="addPlaylist" data-id="<%=playlists.id%>">
-                        <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" onclick=saveChanges()> Add to <%=playlists.title%> </a>
+                        <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" data-song="<%=playlists.title%>" onclick=saveChanges()> Add to <%=playlists.title%> </a>
                         <%=playlists.id%>
                         </div>
                     <% }); %>
@@ -422,6 +454,8 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
             console.log($(this).closest("div").attr('data-id'));
             
             console.log("col-lg-10 songid>> " + $('.col-lg-10.list-group-item.addSongId').attr('data-id'));
+            var songTitleAlert = $("a:focus").attr("data-song");
+            
             $.ajax({
                 url: url,
                 type: "POST",
@@ -429,8 +463,16 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
                 //dataType: "json", //remove this to successfully add playlist??? lol
                 contentType: "application/json",
                 success: function(result){
-                    alert("Song added to playlist successfully");
-                
+                    //alert("Song added to your " + songTitleAlert + " playlist successfully");
+                    toastr.options = {
+                    "debug": false,
+                    "positionClass": "toast-top-right",
+                    "fadeIn": 300,
+                    "fadeOut": 1000,
+                    "timeOut": 6000,
+                    }
+                    toastr.success("song added to your playlist successfully!");
+
                 },
                 error: function(result){
                     alert("Error adding to playlist");
@@ -475,6 +517,14 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
                 file.value = "";
             } 
         }
+
+        var loadFile = function(event) {
+        var output = document.getElementById('output');
+        output.style.display = "block";
+        output.src = URL.createObjectURL(event.target.files[0]);
+        document.getElementById("textForImage").innerHTML += "this will be how the photo of your song will be shown to others!";
+        };
+
        </script>
        
     </body>
