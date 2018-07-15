@@ -203,9 +203,11 @@ width:71% !important;
                 <img id="songImageSize" src="/images/<%= songs.songImage %>"/> 
                 <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
                 <h2 class="likeCount" data-value="<%=songs.songLikeNo%>"> <%=songs.songLikeNo%> </h2>
-                <a href="/users/profile/<%=songs.user_id%>"> <small class="byWho"> Upload by: <%= songs.user_id %></small> </a>
+                <a href="/users/profile/<%=songs.user_id%>"> <small class="byWho"> Upload by: <%=songs.createdAt%></small> </a>
+                <% if (songs.user_id != user.id) { %>
                 <button type="button" class="unmarked" data-id="<%=songs.id%>" data-value="<%=songs.songLikeNo%>"> 
                     <i class="fa fa-heart-o"> </i> <%=songs.songLikeNo%>  </button>
+                <% } %>
                 <button type="button" id="cssDeleteBtn" class="btn-danger deleteBtn" value="<%=songs.id%>"> <i class="far fa-trash-alt"> Delete </i>  </button>
             </div>
 
@@ -673,6 +675,7 @@ function setCookie(cname,cvalue,exdays)
             userIdArray.push(userArrayOfLikeSong[i].song_id);
         };
         console.log(userIdArray);
+        console.log(myVar);
 
         $(".unmarked").each(function() {
             var checkId = $(this).data("id");

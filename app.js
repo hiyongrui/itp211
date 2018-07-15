@@ -228,7 +228,7 @@ next();
 app.use(function(req,res,next) {
     console.log("app use ---------------- ");
     var changecool = req.session.useridhehe;
-    sequelize.query("select s.title AS song_id , u.name AS user_id , u.userImage AS id from Songlikes sl inner join Users u on sl.user_id = u.id inner join Songs s on sl.song_id = s.id where u.id <> :status",
+    sequelize.query("select s.title AS createdAt , u.name AS user_id  , u.userImage AS id , s.user_id lol from Songlikes sl inner join Users u on sl.user_id = u.id inner join Songs s on sl.song_id = s.id where u.id <> :status",
     {replacements: {status:changecool}, type:sequelize.QueryTypes.SELECT} 
     , {model: Songlike}).then(songlikes=> {
         app.locals.songlike = songlikes

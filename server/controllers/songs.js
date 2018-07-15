@@ -26,8 +26,8 @@ var Songlike = require('../models/songlike');
 
 // List songs
 exports.show = function (req,res) {
-    var user_num = req.user.id;                           //previously u.email
-    sequelize.query('select s.id , s.title , s.songName , s.songImage, s.songLikeNo, u.name AS user_id from Songs s join Users u on s.user_id = u.id' , 
+    var user_num = req.user.id;                           //previously u.email ,    u.name AS user_id
+    sequelize.query('select s.id , s.title , s.songName , s.songImage, s.songLikeNo, s.user_id , u.name as createdAt from Songs s join Users u on s.user_id = u.id' , 
         { model : Songs}).then((songs) => {
     Playlists.findAll({ where: {user_id: user_num} }).then((playlists) => {
         Songlike.findAll( { where: {user_id: user_num} }).then(songlikeuser => {

@@ -96,16 +96,18 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-5">
                         <% songlike.forEach(function(songlike){ %>
+                            <% if ((songlike.user_id != user.name) && (songlike.lol != user.id)) { %>
                         <div class="notification">
                             <ul>
                                 <li>
-                                    <img class="profilePictureHeader" src="/images/<%=songlike.id%>">
+                                    <img class="profilePictureHeader" src="/images/<%=songlike.id%>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'">
                                     <a id="userLike" href="/users/profile/<%=songlike.user_id%>"> <%=songlike.user_id%> </a> 
                                     <h4> liked your <%=songlike.song_id%> playlist </h4>
                                     <p> hi <%=songlike.id%></p>
                                 </li>
                             </ul>
                         </div>
+                            <% } %>
                         <% }); %>
                     </div>
                 </li>
