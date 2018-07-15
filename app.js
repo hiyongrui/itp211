@@ -299,6 +299,9 @@ app.get('/songs' , songs.hasAuthorization , songs.show);
 app.post('/songs' , songs.hasAuthorization , upload.fields([{name: 'song', maxCount:1}, {name:"image", maxCount:1}]) , songs.uploadSong);
 app.delete('/songs/:songs_id' , songs.hasAuthorization , songs.delete);
 app.post('/addsongs', songs.hasAuthorization , songs.addSong);
+app.post('/likesong', songs.hasAuthorization , songs.likeSong);
+app.post('/unlikesong', songs.hasAuthorization , songs.unlikeSong);
+
 
 app.get('/playlists', playlists.hasAuthorization , playlists.list);
 app.post('/playlists', playlists.hasAuthorization , playlists.create);

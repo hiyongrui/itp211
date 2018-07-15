@@ -21,6 +21,10 @@ const Songs = sequelize.define('Songs', {
     songImage: {
         type: Sequelize.STRING
     },
+    songLikeNo: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
     user_id:{
         type: Sequelize.INTEGER,
         allowNull: false,

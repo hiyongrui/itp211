@@ -106,6 +106,18 @@ width:71% !important;
     font-weight: bold;
     padding: 10px; 
 }
+
+.marked {
+  background-color: lightgreen;
+  font-size:20px;
+}
+
+.unmarked {
+  background-color: lightblue;
+  color:blue;
+  font-size:20px;
+}
+
 </style>
 
 <body>
@@ -190,7 +202,10 @@ width:71% !important;
                 <!-- <h4 id="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4> !-->
                 <img id="songImageSize" src="/images/<%= songs.songImage %>"/> 
                 <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
+                <h2 class="likeCount" data-value="<%=songs.songLikeNo%>"> <%=songs.songLikeNo%> </h2>
                 <a href="/users/profile/<%=songs.user_id%>"> <small class="byWho"> Upload by: <%= songs.user_id %></small> </a>
+                <button type="button" class="unmarked" data-id="<%=songs.id%>" data-value="<%=songs.songLikeNo%>"> 
+                    <i class="fa fa-heart-o"> </i> <%=songs.songLikeNo%>  </button>
                 <button type="button" id="cssDeleteBtn" class="btn-danger deleteBtn" value="<%=songs.id%>"> <i class="far fa-trash-alt"> Delete </i>  </button>
             </div>
 
@@ -415,7 +430,7 @@ function setCookie(cname,cvalue,exdays)
       //  $(".songTitle:not(:first)").hide(); 
 //console.log(docment.getElementsByClassName("deleteBtn"))
         
-setInterval(function() { console.log(document.querySelector(":focus")); }, 1000);
+//setInterval(function() { console.log(document.querySelector(":focus")); }, 1000);
         </script>
 
        <!-- <script src="/javascripts/test.js"></script> !-->
@@ -528,7 +543,8 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
                         } 
                     });  
             });
-
+            
+            //make toastr error same for validation of song and image input.
             toastr.options = {
             "debug": false,
             "positionClass": "toast-top-center",
@@ -562,6 +578,139 @@ setInterval(function() { console.log(document.querySelector(":focus")); }, 1000)
         output.src = URL.createObjectURL(event.target.files[0]);
         document.getElementById("textForImage").innerHTML += "this will be how the photo of your song will be shown to others!";
         };
+        
+        
+        
+        $('button.unmarked').on('click', function(e) {
+        var $targetButton = $(e.target);
+        if ($targetButton.hasClass('marked')) { // if mark , unmark it
+            onMarkedButtonClick($targetButton);
+            console.log("marking to unmark>> ");
+            var url = "http://localhost:3000/unlikesong";
+            var newValues = {
+                likesong_id:$(this).data("id")
+            }
+            console.log(url);
+            console.log(JSON.stringify(newValues));
+            var thisCount = $(this).data("value");
+            var thisButton = $(this);
+            console.log("thiscount affter" + thisCount);
+            console.log(thisButton[0].innerHTML);
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                //dataType: "json", //remove this to successfully add playlist??? lol
+                contentType: "application/json",
+                success: function(result){
+                    alert("Song unliked successfully");
+                    thisCount = thisCount - 50;
+                    thisButton.data("value",thisCount);
+                    console.log("after unliking >> " + thisCount);
+                    //document.getElementsByClassName("likeCount").innerHTML = thisCount;
+                    thisButton[0].innerHTML = "<i class='fa fa-heart-o'> </i> " + thisCount;
+                    
+                },
+                error: function(result){
+                    alert("Error unliking song");
+                    //discardChanges();
+                }
+            })
+        } 
+        else if ($targetButton.hasClass('unmarked')) { //if unmark , mark it
+            onUnmarkedButtonClick($targetButton);
+            console.log("unmarking to mark >> ");
+            var url = "http://localhost:3000/likesong";
+            var newValues = {
+                likesong_id:$(this).data("id")
+            }
+            console.log(url);
+            console.log(JSON.stringify(newValues));
+            var thisCount = $(this).data("value");
+            var thisButton = $(this);
+            console.log("this count >> " + thisCount);
+            console.log(thisButton[0].innerHTML);
+            //console.log("nearest button " + (this).closest("h2").text(data));
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                //dataType: "json", //remove this to successfully add playlist??? lol
+                contentType: "application/json",
+                success: function(result){
+                    alert("Song Liked successfully"); 
+                    thisCount = thisCount + 50;
+                    thisButton.data("value",thisCount);
+                    console.log("after liking >> " + thisCount);
+                    //document.getElementsByClassName("likeCount").innerHTML = "<i class='fa fa-heart-o'> </i>" + thisCount;
+                    thisButton[0].innerHTML = "<i class='fa fa-heart-o'> </i> " + thisCount;
+                },
+                error: function(result){
+                    alert("Error liking song");
+                    //discardChanges();
+                }
+            })
+        }
+
+    });
+
+        function onMarkedButtonClick($button) {
+            $button.removeClass('marked');
+            $button.addClass('unmarked');
+        }
+
+        function onUnmarkedButtonClick($button) {
+            $button.removeClass('unmarked');
+            $button.addClass('marked');
+        }
+        
+
+        var userArrayOfLikeSong = JSON.parse(htmlDecode("<%= JSON.stringify(songlikeuser) %>"));
+        console.log(JSON.stringify(userArrayOfLikeSong));
+
+        userIdArray = [];
+        for (i = 0; i< userArrayOfLikeSong.length; i++) {
+            userIdArray.push(userArrayOfLikeSong[i].song_id);
+        };
+        console.log(userIdArray);
+
+        $(".unmarked").each(function() {
+            var checkId = $(this).data("id");
+            console.log("check id>> " + checkId);
+            console.log("this .... ");
+            console.log($(this));
+            for (k=0; k< userIdArray.length; k++) {
+                if (userIdArray[k] == checkId) {
+                    $(this).removeClass('unmarked');
+                    $(this).addClass('marked');
+                }
+            }
+        })
+        /* 
+       function likeChange(like_id) {
+        console.log("url path >> " + "<%=urlPath%>")
+            var url = "http://localhost:3000/likesong";
+            var newValues = {
+                likesong_id:$(like_id).data("id")
+            }
+            console.log(url);
+            console.log("like song id " + JSON.stringify(newValues));
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                //dataType: "json", //remove this to successfully add playlist??? lol
+                contentType: "application/json",
+                success: function(result){
+                    alert("Song liked successfully");
+                },
+                error: function(result){
+                    alert("Error liking song");
+                    //discardChanges();
+                }
+            })
+       }
+       */
 
        </script>
        

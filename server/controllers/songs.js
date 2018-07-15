@@ -22,21 +22,25 @@ var songsAndPlaylist = require('../models/songAndPlaylist'); //add duplicate son
 // set image file types
 var IMAGE_TYPES = ['image/jpeg' , 'image/jpg' , 'image/png'];
 
+var Songlike = require('../models/songlike');
 
 // List songs
 exports.show = function (req,res) {
-    var user_num = req.user.id;
-    sequelize.query('select s.id , s.title , s.songName , s.songImage, u.name AS user_id from Songs s join Users u on s.user_id = u.id' , 
+    var user_num = req.user.id;                           //previously u.email
+    sequelize.query('select s.id , s.title , s.songName , s.songImage, s.songLikeNo, u.name AS user_id from Songs s join Users u on s.user_id = u.id' , 
         { model : Songs}).then((songs) => {
-    Playlists.findAll( { where: {user_id: user_num} } ).then((playlists) => {
+    Playlists.findAll({ where: {user_id: user_num} }).then((playlists) => {
+        Songlike.findAll( { where: {user_id: user_num} }).then(songlikeuser => {
         res.render('songs' , {
             title:'Songs Page',
             songs: songs,
             playlists:playlists,
+            songlikeuser: songlikeuser,
             user: req.user,
             gravatar: gravatar.url(songs.user_id, { s: '80', r:'x' , d:'retro'},true),
             urlPath : req.protocol + "://" + req.get("host") + req.url 
         });
+    })
     })
     }).catch((err) => {
             return res.status(400).send({
@@ -64,6 +68,35 @@ exports.addSong = function(req,res) {
         res.redirect('songs');
     })
 }
+
+exports.likeSong = function(req,res) {
+    var likesong_id = req.body.likesong_id;
+    var addToSongLike = {
+        song_id: req.body.likesong_id,
+        user_id: req.user.id
+    }
+    console.log("like song >>>> " + likesong_id);
+    Songs.findById(likesong_id).then((song) => {
+        Songlike.create(addToSongLike).then(songLikeUser => {
+        song.songLikeNo += 50;
+        song.save();
+        console.log("successfully update song like ");
+        res.redirect('songs');
+        })
+    })
+};
+
+exports.unlikeSong = function(req,res) {
+    var likesong_id = req.body.likesong_id;
+    console.log("unlike song >>> " + likesong_id);
+    Songs.findById(likesong_id).then(song=> {
+        Songlike.destroy({where: {song_id: likesong_id, user_id: req.user.id}});
+        song.songLikeNo -= 50;
+        song.save();
+        console.log("sucecssfully unlike song ");
+        res.redirect("songs");
+    })
+};
 
 exports.footer = function(req,res) {
     sequelize.query('select * from Songs' , {model : Songs}).then((songs)=> {
