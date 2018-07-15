@@ -24,7 +24,7 @@
     .navbar{
         margin-bottom: 18px !important;
     } */
-    #profilePictureHeader{
+    .profilePictureHeader{
         border-radius:50%;
     /*display: inline; */
     width: 32px;
@@ -37,8 +37,11 @@
        margin-left:30px;
        border-left:1px solid grey;
    }
-    
-   
+ 
+   #userLike{
+       color:blue !important;
+       font-size:24px;
+   }
 </style>
 <!-- new navbar !-->
 
@@ -86,11 +89,33 @@
                     </a>
                 </li>
 
+                <% if (user) { %>
+                <li class="nav-item-dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bell"> </i> 
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-5">
+                        <% songlike.forEach(function(songlike){ %>
+                        <div class="notification">
+                            <ul>
+                                <li>
+                                    <img class="profilePictureHeader" src="/images/<%=songlike.id%>">
+                                    <a id="userLike" href="/users/profile/<%=songlike.user_id%>"> <%=songlike.user_id%> </a> 
+                                    <h4> liked your <%=songlike.song_id%> playlist </h4>
+                                    <p> hi <%=songlike.id%></p>
+                                </li>
+                            </ul>
+                        </div>
+                        <% }); %>
+                    </div>
+                </li>
+                <% } %>
+
             <% if (user) { %>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img id="profilePictureHeader" src="/images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
+                        <img class="profilePictureHeader" src="/images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
                          <%=user.name %> 
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
@@ -249,7 +274,10 @@
 
     console.log("user role>>>gg " + myVar.role);
     if (myVar.role == "instructor") {
-        document.getElementById("profilePictureHeader").style.borderColor = "green";
+        var allInstructor = document.querySelectorAll(".profilePictureHeader");
+        var instructorAvatar = allInstructor[allInstructor.length - 1];
+        instructorAvatar.style.borderColor = "green";
+        //document.getElementsByClassName("profilePictureHeader").style.borderColor = "green";
     }
- ;
+
 </script>

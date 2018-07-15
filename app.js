@@ -60,9 +60,11 @@ var cardDetails = require("./server/controllers/cardDetails");
 
 var Users = require('./server/models/users');
 var Songs = require('./server/models/songs');
+var Songlike = require('./server/models/songlike');
 
 // Modules to store session
 var myDatabase = require('./server/controllers/database');
+var sequelize = myDatabase.sequelize;
 var expressSession = require('express-session');
 var SessionStore = require('express-session-sequelize')(expressSession.Store);
 var sequelizeSessionStore = new SessionStore({
@@ -221,6 +223,18 @@ app.use(function(req,res,next) {
 next();
 })
 */
+app.use(function(req,res,next) {
+    console.log("app use ---------------- ");
+    var changecool = req.session.useridhehe;
+    sequelize.query("select s.title AS song_id , u.name AS user_id , u.userImage AS id from Songlikes sl inner join Users u on sl.user_id = u.id inner join Songs s on sl.song_id = s.id where u.id <> :status",
+    {replacements: {status:changecool}, type:sequelize.QueryTypes.SELECT} 
+    , {model: Songlike}).then(songlikes=> {
+        app.locals.songlike = songlikes
+        console.log("\n song like DATA =============== ");
+        console.log(JSON.stringify(songlikes));
+    })
+next();
+})
 
 app.get('/footer', footer.list);
 
