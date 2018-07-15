@@ -27,6 +27,7 @@ exports.list = function (req, res) {
             user_id: req.user.id
         }
     }).then(function (cartItems) {
+        
         res.render('cart', {
             title: "Cart List",
             cartItemList: cartItems,

@@ -1,0 +1,65 @@
+html,body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.cardDetails {
+    width: 55%;
+    float: left;
+    padding-top: 60px;
+}
+
+.itemDetails {
+    margin-left: 55%;
+    background-color: #F4F6F7;
+    height: 100%;
+    border-left: 1px solid #CCD1D1;
+    padding-top: 50px;
+}
+
+form {
+    margin-left: 30%;
+    width: 465px;
+}
+
+.wrapper {
+    height: 100%;
+}
+
+table.items {
+    width: 60%;
+    margin-left: 50px;
+    padding-bottom: 30%;
+    border-bottom: 1px solid black;
+}
+
+table.total {
+    width: 60%;
+    margin-left: 50px;
+}
+
+td {
+    height: 80px;
+}
+
+td.pricing {
+    width: 20px;
+    direction: rtl;
+}
+
+td.textTotal {
+    font-size: 20px;
+}
+
+td.totalPrice {
+    width: 20px;
+    direction: rtl;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+
+
+

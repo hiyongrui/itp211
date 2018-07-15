@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+
+</head>
+
+<body>
+    <% include ../partials/header %>
+
+    <table class="table">
+            <thread>
+              <tr>
+                <th> Product Id</th>
+                <th>Product Name</th>
+                <th>Pricing</th>
+    
+              </tr>
+              <% for(var i=0; i < transactionDetails.length; i++){ %>
+                <tr class="rowRecord" data-id="<%= transactionDetails[i].id %>">
+                  <td class="transactionId" data-id="<%= transactionDetails[i].productId %>">
+                    <%= transactionDetails[i].productId %>
+                  </td>
+                  <td class="productName">
+                      <%= transactionDetails[i].productName %>
+                  </td>
+                  <td class="pricing">
+                    $<%= transactionDetails[i].pricing %>
+                  </td>
+                </tr>
+                <% } %>
+            </thread>
+          </table>
+          <a href="http://localhost:3000/transactions"> Back to Order History</a>
+
+<script>
+ 
+</script>
+
+    
+</body>

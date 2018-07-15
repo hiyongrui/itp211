@@ -12,6 +12,8 @@
 </head>
 <body>
   <% include ../partials/header %>
+
+  <% if(cartItemList.length > 0) { %>
   <div class="wrapper" id="wrapper">
     <h2 class="header"> Shopping Cart</h2>
     <div class="Border">
@@ -54,6 +56,18 @@
     <h1 id="totalPrice"> Total Price: </h1>
     <input type="button" class="Checkout" value="Checkout">
   </div>
+  <% } else {%>
+    <div class="noItemsWrapper">
+        <img src ="images/emptycart.png" alt="emptycart" width="80" height="80" class="emptycartimg">
+        <br>
+        <br>
+        <h2 class="textHeaderEmptyCart"> Your Shopping cart is empty</h2>
+        <p class="textLineEmptyCart">Let's add some stuff to it. Check out our products!</p>
+        <br>
+        <br>
+        <button class="viewShop"type="button"> Our Products</button>
+    </div>
+    <% } %>
   
   <script>
   totalPrice = 0;
@@ -67,30 +81,35 @@
   document.getElementById('totalPrice').innerHTML = totalPrice;
   
   $('.Checkout').click(function () {
-    var url = "<%=hostPath%>" + '/' + 'transaction';
-    var Records = {
-      cartPricing: document.getElementById('totalPrice').innerHTML
-    }
-    console.log(Records.cartPricing);
-    $.ajax({
-      url: url,
-      type: "POST",
-      data: JSON.stringify(Records),
-      contentType: "application/json",
-      success: function(result){
-        alert("Added successfully");
-        location.href = "<%=hostPath%>"
-      },
-      error: function(result){
-        alert("Unsuccessful");
-        location.href = "<%=hostPath%>"
-      }
-    })
+    location.href = "http://localhost:3000/payment";
+  });
+  //   var url = "<%=hostPath%>" + '/' + 'transaction';
+  //   var Records = {
+  //     cartPricing: document.getElementById('totalPrice').innerHTML
+  //   }
+  //   console.log(Records.cartPricing);
+  //   $.ajax({
+  //     url: url,
+  //     type: "POST",
+  //     data: JSON.stringify(Records),
+  //     contentType: "application/json",
+  //     success: function(result){
+  //       alert("Added successfully");
+  //       location.href = "<%=hostPath%>"
+  //     },
+  //     error: function(result){
+  //       alert("Unsuccessful");
+  //       location.href = "<%=hostPath%>"
+  //     }
+  //   })
 
-  })
+  // })
 
   $('.deleteBtn').click(function () {
     var record_num = $(this).closest("tr").data('id');
+    var itemPricing = $(this).closest("tr").find('.pricing').text().trim();
+    console.log(itemPricing);
+    
     $.ajax({
       url: '<%=urlPath%>' + '/' + record_num,
       type: 'DELETE',
@@ -98,6 +117,8 @@
         console.log(result.message);
         var itemToRemove = '.rowRecord[data-id=' + record_num + ']';
         $(itemToRemove).remove();
+        totalPrice = totalPrice - itemPricing;
+        $('#totalPrice').text(totalPrice);
       },
       error: function (result) {
         alert("Unable to delete student record.");

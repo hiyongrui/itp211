@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/payment.css'/>
+  <script src='/javascripts/jquery.min.js'></script>
+  <script src='/javascripts/bootstrap.min.js'></script>
+</head>
+
+<body>
+    <% include ../partials/header %>
+    <div class="wrapper" style="width: 100%; overflow: hidden;">
+<div class="cardDetails">
+    <form action="/insertCard" method="POST">
+        <fieldset class="form-group">
+            <label for="inputCardNumber"> Card Number </label>
+            <input type="text" id="inputCardNumber" name="cardNumber" class="form-control" placeholder="Card Number" required="true">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputCardholder"> Cardholder </label>
+            <input type="text" id="inputCardholder" name="cardholder" class="form-control" placeholder="Cardholder" required="true">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputCVV"> CVV </label>
+            <input type="text" id="inputCVV" name="cvv" class="form-control" placeholder="CVV" required="true">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="inputExpiryDate"> Expiry Date </label>
+            <input type="text" id="inputExpiryDate" name="expiryDate" class="form-control" placeholder="Expiry Date" required="true">
+        </fieldset>
+        <div>
+            <button type="submit" class="btn btn-primary"> Confirm Order </button>
+            <button type="button" class="btn btn-secondary"> Back </button>
+        </div>
+
+    </form>
+</div>
+
+<div class="itemDetails">
+    <table class="items">
+        <% for(var i=0; i < cartItemList.length; i++){ %>
+            <tr class="rowRecord" data-id="<%= cartItemList[i].id %>">
+                <td class="productName">
+                    <%= cartItemList[i].productName %>
+                </td>
+                <td class="pricing">
+                    $<%= cartItemList[i].pricing %>
+                </td>
+            </tr>
+        
+        <% } %>
+    </table>
+    <table class="total">
+        <tr>
+            <td class="textTotal">
+                Total
+            </td>
+            <td class="totalPrice">
+                        
+            </td>
+        </tr>
+    </table>
+</div>
+        </div>
+       
+</body>
+
+<script>
+var totalPrice = 0;
+var pricing = document.getElementsByClassName('pricing');
+for (i=0; i<pricing.length; i++) {
+    price = document.getElementsByClassName('pricing')[i].innerHTML;
+    price = price.trim();
+    price = price.substr(1);
+    price = parseInt(price);
+    totalPrice += price;
+    console.log(pricing);
+}
+console.log(totalPrice);
+$('.totalPrice').text("$" +totalPrice);
+
+function cartClear() {
+    $.ajax({
+        url: 'http://localhost:3000/payment/cartDelete',
+        type: 'DELETE',
+        success: function (result) {
+          console.log(result.message);
+
+        },
+        error: function (result) {
+          alert("Unable to delete Product record.");
+          console.log(result.message);
+        }
+      });
+}
+
+
+$("form").submit(function(e) {
+    e.preventDefault();
+    var url = "<%=hostPath%>" + '/' + 'transaction';
+   
+    var Records = {
+        cartPricing: totalPrice
+    }
+    console.log(Records.cartPricing);
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: JSON.stringify(Records),
+        contentType: "application/json",
+        success: function(result){
+            alert("Added successfully");
+            location.href = "http://localhost:3000/transactions";
+            cartClear();
+        },
+        error: function(result){
+            alert("Unsuccessful");
+            location.href = "<%=hostPath%>"
+      }
+    });
+  });
+
+</script>
+</html>

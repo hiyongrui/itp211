@@ -1,5 +1,5 @@
-var transaction = require('../models/transaction');
-var transactionHistory = require('../models/transactionHistory')
+var Transaction = require('../models/transaction');
+var TransactionHistory = require('../models/transactionHistory')
 var Cart = require('../models/cart');
 var myDatabase = require('./database');
 var sequelize = myDatabase.sequelize;
@@ -20,7 +20,7 @@ exports.transaction = function (req, res) { // Checkout button
             user_id: req.user.id
         }
         // Create new transaction
-        transaction.create(transactionData).then((newRecord, created) => {
+        Transaction.create(transactionData).then((newRecord, created) => {
             if (!newRecord) {
                 return res.send(400, {
                     message: "error"
@@ -41,11 +41,74 @@ exports.transaction = function (req, res) { // Checkout button
                 console.log(">>>>>>>>>>"+updatedRecord.transactionId);
                 // Insert cart items into purchase history
                 sequelize.query("INSERT INTO transactionhistories select * from Carts");
-                res.redirect('/cart');
-            })
-        })
+            
+
+                res.redirect('/transactions');
+                exports.deleteCart();
+                });
+            });
+        
+    
     }).catch(function(err) {
         console.log(err);
     });
 
+    
 };
+exports.deleteCart = function(req, res,) {
+    Cart.destroy({where: { user_id: req.user.id} }).then((deletedRecord) => {
+        if (!deletedRecord) {
+            return res.send(400, {
+                message: "error"
+            });    
+    }
+    res.status(200).send({ message: "Deleted student record: "});
+
+})
+};
+
+exports.listOrders = function (req, res) {
+    Transaction.findAll({
+        attributes: ['id', 'transactionId', 'cartPricing'],
+        where: {
+            user_id: req.user.id
+        }
+    }).then(function (transactionNum) {
+        res.render('orderHistory', {
+            title: "Order History",
+            transactionNum: transactionNum,
+            hostPath: req.protocol + "://" + req.get("host") + req.url,
+            urlPath: req.protocol + "://" + req.get("host") + req.url
+        });
+        
+    }).catch((err) => {
+        return res.status(400).send({
+            message: err
+        });
+    });
+    
+};
+
+exports.listOrderDetails = function (req, res) {
+    var orderNum = req.params.transactionId;
+    console.log("rodernumodrudernumordeenumordernumodernum"+orderNum);
+    TransactionHistory.findAll({
+        attributes: ['id', 'productId', 'productName', 'pricing'],
+        where: {
+            user_id: req.user.id,
+            transactionId: orderNum
+        }
+    }).then(function (transactionDetails) {
+        res.render('orderDetails', {
+            title: "Order Details",
+            transactionDetails: transactionDetails,
+            hostPath: req.protocol + "://" + req.get("host") + req.url,
+            urlPath: req.protocol + "://" + req.get("host") + req.url
+        });
+    }).catch((err) => {
+        return res.status(400).send({
+            message: err
+        });
+    });
+
+}

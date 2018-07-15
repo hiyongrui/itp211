@@ -54,7 +54,7 @@ var lessons = require('./server/controllers/lessons');
 var productsController = require("./server/controllers/sampleProduct");
 var cart = require("./server/controllers/cart");
 var transaction = require("./server/controllers/transaction");
-var cardDetails = require("./server/controllers/cardDetails");
+var payment = require("./server/controllers/payment");
 // end of jiarong controller
 
 
@@ -341,23 +341,27 @@ app.get('/profileSetting', auth.isLoggedIn , auth.profileSettings);
 app.get('/lessons', lessons.hasAuthorization, lessons.show);
 // end of kamali router
 
+
 // jiarong product router
+app.post("/new", upload.single('image'),  productsController.insert );
+
 app.get("/products", productsController.list);
-app.post("/new", productsController.insert);
+//app.post("/new", productsController.insert);
 app.delete('/products/:id', productsController.delete);
 
 app.get("/cart", cart.list);
 app.post("/products/new", cart.insert);
 app.delete("/cart/:id", cart.cartDelete);
 
-app.post("/cart/transaction", transaction.transaction);
+var payment = require('./server/controllers/payment');
+app.get("/payment", payment.payment);
 
-app.get("/insertCard", cardDetails.list);
-app.post("/insertCard", cardDetails.insertCard);
-app.get("/cardInfo", cardDetails.listCards);
-app.get("/cardInfo/:id");
-app.post("/cardInfo/addBalance", cardDetails.addBalance);
+app.get("/transactions", transaction.listOrders);
+app.post("/payment/transaction", transaction.transaction);
+app.delete("/payment/cartDelete", transaction.deleteCart);
+app.all("/transactions/:transactionId", transaction.listOrderDetails);
 // end of jiarong router
+
 
 
 //Set up route for chat messages 666666 can do this in another controller but they lazy

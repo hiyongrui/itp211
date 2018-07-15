@@ -22,6 +22,17 @@ const Product = sequelizeInstance.define('Product', {
     },
     pricing: {
         type: Sequelize.INTEGER
+    },
+    imageName: {
+        type: Sequelize.STRING
+    },
+    user_id:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Users',
+            key: 'id'
+        }
     }
 })
 
@@ -32,21 +43,24 @@ Product.sync({ force: false, logging: console.log }).then(() => {
         productId: "123a",
         productName: "Product1",
         sellerName: "seller1",
-        pricing: 10
+        pricing: 10,
+        user_id: 1
     });
     Product.upsert({
         id: 2,
         productId: "123b",
         productName: "Product2",        
         sellerName: "seller2",
-        pricing: 20
+        pricing: 20,
+        user_id: 1
     });
     Product.upsert({
         id: 3,
         productId: "123c",
         productName: "Product3",        
         sellerName: "seller3",
-        pricing: 30
+        pricing: 30,
+        user_id: 1
     });
 
 });

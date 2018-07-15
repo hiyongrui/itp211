@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src='/javascripts/jquery.min.js'></script>
+  <script src='/javascripts/bootstrap.min.js'></script>
+</head>
+
+<body>
+    <% include ../partials/header %>
+
+    <table class="table">
+            <thread>
+              <tr>
+                <th> Order Number</th>
+                <th>Amount Paid</th>
+                <th> Action</th>
+    
+              </tr>
+              <% for(var i=0; i < transactionNum.length; i++){ %>
+                <tr class="rowRecord" data-id="<%= transactionNum[i].id %>">
+                  <td class="transactionId">
+                    <%= transactionNum[i].transactionId %>
+                  </td>
+                  <td class="totalAmt">
+                    $<%= transactionNum[i].cartPricing %>
+                  </td>
+                  <td>
+             
+                    <input type="button" class="viewOrder" value="View Details">
+               
+                  </td>
+                </tr>
+                <% } %>
+            </thread>
+          </table>
+
+<script>
+    $('.viewOrder').click(function () {
+        var orderNum = $(this).closest("tr").find('.transactionId').text().trim();
+        console.log(orderNum);
+        var url = "<%=hostPath%>/" + orderNum;
+        
+        console.log(url);
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(result){
+                location.href = "<%=hostPath%>/" + orderNum;
+            },
+            error: function(result){
+                alert("Error");
+                discardChanges();
+            }
+        })
+
+});
+
+</script>
+
+    
+</body>
