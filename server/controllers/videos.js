@@ -5,8 +5,8 @@ var mime = require('mime');
 // get gravatar icon from email
 var gravatar = require('gravatar');
 
-// set video file types    audio/mpeg = mp3 :)
-var VIDEO_TYPES = ['video/mp4' , 'audio/mpeg' , 'video/webm' , 'video/ogg' , 'video/ogv'];
+// set video file types
+var VIDEO_TYPES = ['video/mp4' , 'video/webm' , 'video/ogg' , 'video/ogv'];
 
 // get video model
 var Videos = require('../models/videos');
@@ -22,7 +22,8 @@ exports.show = function (req,res) {
         res.render('videos' , {
             title:'Videos Page',
             videos: videos,
-            gravatar: gravatar.url(videos.user_id, { s: '80', r:'x' , d:'retro'},true)
+            gravatar: gravatar.url(videos.user_id, { s: '80', r:'x' , d:'retro'},true),
+            urlPath: req.protocol + "://" + req.get("host")+ req.url
         });
 
     }).catch((err) => {
@@ -80,6 +81,7 @@ exports.uploadVideo = function (req,res) {
             title: req.body.title,
             videoName: req.file.originalname,
             user_id: req.user.id
+
         }
 
         // Save to database
@@ -101,18 +103,32 @@ exports.uploadVideo = function (req,res) {
             }
 
             // Redirect to gallery's page
-            res.redirect('videos');
+            //res.redirect('videos');
 
         });
     });
 };
 
-// Videos authorization middleware
-exports.hasAuthorization = function (req, res, next) {
-    if (req.isAuthenticated())
-        return next();
-    res.redirect('/login');
-};
+exports.delete = function (req,res) {
+    var record_num = req.params.videos_id;
+
+    console.log("deleting videos" + record_num);
+    Videos.destroy({where: { id: record_num } }).then( (deletedVid ) => {
+        if(!deletedVid) {
+            return res.send(400, {
+                message: "error"
+            });
+        }
+        
+        res.status(200).send({message: "Deleted videos : " + record_num});
+    })
+}
+ // Videos authorization middleware
+ exports.hasAuthorization = function (req, res, next) {
+     if (req.isAuthenticated())
+         return next();
+     res.redirect('/login');
+ }
 
 
 

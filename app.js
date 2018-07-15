@@ -48,6 +48,8 @@ var studentsController = require("./server/controllers/studentsController"); //f
 
 // Import lessons controller kamali
 var lessons = require('./server/controllers/lessons');
+//var viewAllLessons = require('./server/controllers/viewAllLessons');
+var profileSetting = require('./server/controllers/profileSetting');
 // end of kamali controller
 
 // Import products controller jiarong
@@ -307,6 +309,8 @@ app.get('/users',users.hasAuthorization , users.list );
 // Set up  routes for videos ////
 app.get('/videos' , videos.hasAuthorization , videos.show);
 app.post('/videos' , videos.hasAuthorization , upload.single('video') , videos.uploadVideo);
+app.delete('/videos/:videos_id'  ,videos.hasAuthorization, videos.delete); //kamali
+
 
 // Set up  routes for songs ////
 app.get('/songs' , songs.hasAuthorization , songs.show);
@@ -337,8 +341,15 @@ app.delete("/p5db/:id" , studentsController.delete);
 
 
 // kamali profileSetting , lessons
-app.get('/profileSetting', auth.isLoggedIn , auth.profileSettings);
+//app.get('/profileSetting', auth.isLoggedIn , auth.profileSettings);
+//app.get('/lessons', lessons.hasAuthorization, lessons.show);
+app.get('/profileSetting', profileSetting.hasAuthorization, profileSetting.list);
+app.get("/profileSetting/edit/:id" , profileSetting.editprofileSetting);
+app.post("/profileSetting/new" , profileSetting.insert);
+app.post("/profileSetting/edit/:id" , profileSetting.update);
+
 app.get('/lessons', lessons.hasAuthorization, lessons.show);
+app.get('/viewAllLessons', profileSetting.show);
 // end of kamali router
 
 

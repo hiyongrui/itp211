@@ -2,22 +2,19 @@
 <html>
 <head>
     <title><%= title %></title>
-   
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
     <% include ../partials/header %>
     <div class="container">
         <div class="row">
-            <div class="col-lg-6">
-                <h4 class="text-muted">Videos</h4>
-            </div>
-            <div class="col-lg-6">
-                <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#createVideo">
-                    Video Upload
-                </button>
+            <div class="col-lg-12">
+                            <br>
+                            <br>
+                <center><h4 class="text-muted"> Create your Profile </h4></center>
             </div>
         </div>
+    </div>
+            
         <!-- Modal -->
         <div class="modal fade" id="createVideo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -37,6 +34,7 @@
                             </fieldset>
                             <label class="file" style="width: 100%" onclick="$('input[id=lefile]').click();">
                                 <input type="file" id="video" name="video">
+
                                 <span class="file-custom"></span>
                             </label>
                         </div>
@@ -49,72 +47,48 @@
             </div>
         </div>
         <hr>
+            <center><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#createVideo">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Upload Video &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</button></center>
+        <br><br>
         <div class="row">
             <% videos.forEach(function(videos){ %>
+                <a href="#" class="list-group-item" data-id="<%= videos.id%>">
                 <div class="col-lg-4">
-                    <h4 id="videoName" class="list-group-item-heading"><%= videos.title %></h4>
-                   <!-- <video width="320" height="240" controls preload="auto" codecs="avc1.42E01E, mp4a.40.2"> !-->
-                        <!--    <audio controls loop> <source class="audioPlayer" src="<%= videos.videoName %>" type="video/mp4" />  !-->
-
-                        <audio controls class="audioPlayer">
-                      <source class="sourcePlayer" src="<%= videos.videoName %>" type="audio/mpeg" />
-                      </audio>
-
-                    <small>Upload by: <%= videos.user_id %></small>
+                    <form action="/videos" method="delete"> 
+                    <h4 class="list-group-item-heading" data-id="<%=videos.id%>"><%= videos.title %></h4>
+                    <video width="320" height="240" controls preload="auto" codecs="avc1.42E01E, mp4a.40.2">
+                        <source src="<%= videos.videoName %>" type="video/mp4" />
+                    </video>
+                    <small class="list-group-item">Upload by: <%= videos.user_id %></small>
+                    <br/>
+                    <button class="btn btn-secondary pull-right deleteBtn" type="button" data-id="<%= videos.id%>">Delete</button>
+                    </form>
                 </div>
+                </a>
             <% }); %>
         </div>
         </div>
-        <% include ../partials/footer %>
-    
-
+        <a href="/profileSetting,\"><button type="button" class="btn btn-secondary pull-left" id="prevBtn" onclick="nextPrev(-1)">Previous</button></a>
         <script>
-
-                 function htmlDecode(input){
-                var e = document.createElement('div');
-                e.innerHTML = input;
-                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-                }
-
-            audioPlayer();
-          function audioPlayer() {
-            
-            
-            //$("#audioPlayer")[0].src.play();
-            var audioPlayer = document.querySelector(".audioPlayer");
-            var audioPlayer1 = document.querySelectorAll(".audioPlayer");
-            //var firstPlayer = audioPlayer[1].src;
-            console.log(audioPlayer);
-            console.log(audioPlayer1);
-            var firstPlayer = document.querySelectorAll(".sourcePlayer")[0];
-            var secondPlayer = document.querySelectorAll(".audioPlayer")[1];
-            var sliced = firstPlayer.src.slice(29);
-            var slicedSecond = secondPlayer.src.slice(29);
-            console.log(firstPlayer.src);
-            console.log("?? " + sliced);
-            console.log("hey" + slicedSecond);
-            var songs = [sliced,slicedSecond];
-            console.log(songs);
-
-            var i = 0;
-
-            var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(videos) %>"));
-
-            audioPlayer.addEventListener('ended',function() {
-                i++;
-                nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(29);
-                audioPlayer.src = nextSong;
-                audioPlayer.load();
-                audioPlayer.play();
-                document.getElementById("videoName").innerHTML = myVar[i].videoName.slice(0,-4);
-                if (i==2) {
-                    i = -1;
-                }
-            },false); 
-        
-
-        }
-        
+            $('.deleteBtn').click(function() {
+                var videos_id = $(this).data('id'); 
+                console.log(videos_id);
+                console.log('<%-urlPath%>' + videos_id )
+                $.ajax({
+                        url: '<%-urlPath%>'+ videos_id,
+                        type: 'DELETE',
+                        success: function(result) {
+                            console.log(result.message);
+                            var itemToRemove = '.list-group-item[data-id='+videos_id+']';
+                            $(itemToRemove).remove();
+                        },
+                        error: function(result){
+                            alert("Unable to delete video.");
+                            console.log(result.message);
+                        } 
+                    });  
+            });
+           
         </script>
+        <% include ../partials/footer %>
     </body>
     </html>

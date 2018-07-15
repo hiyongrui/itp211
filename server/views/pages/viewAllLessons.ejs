@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title><%= title %></title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+* {box-sizing: border-box;}
+
+.column {
+    float: left;
+    width: 33.33%;
+    height: 100%;
+    padding: 8px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 60%;
+}
+
+td {
+    text-align: left;
+    padding: 5px;
+    width: 33.3%;
+}
+
+
+</style>
+</head>
+<body>
+    <% include ../partials/header %>
+
+    <br />
+    <br />
+    <center><p style="font-family:'Times New Roman', Times, serif; font-size: 40px;">Browse Lessons!</p></center>
+    <center><p style="font-family:'Arial'; font-size: 23px;"><strong>What's Popular Now</strong></p></center>
+    <hr width="60%">
+    <br />
+    <center>
+        <div class="row" style="width:60%">
+            <div>
+                <a href="/guitar"><img src="../images/guitar.jpg" alt="Snow" class="column"></a>
+                
+                <a href=""><img src="../images/ukulele.jpg" alt="Forest" class="column" ></a>
+
+                <a href=""><img src="../images/cello.jpeg" alt="Mountains" class="column"></a>
+
+                
+            </div>
+
+            <div>
+                <a href="/piano"><img src="../images/piano.jpg" alt="Mountains" class="column" ></a>
+                
+                <a href=""><img src="../images/flute.jpg" alt="Mountains" class="column"></a>
+
+                <a href="/singing"><img src="../images/singing.jpg" alt="Singing" class="column" ></a>
+            </div>
+
+        </div>
+        <br/>
+        <br/>
+        <p style="font-family:'Times New Roman', Times, serif; font-size: 30px;">Music</p>
+        <hr width="60%">
+
+        <table>
+                <tr>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Guitar</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Violin</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Ukulele</a></td>
+                </tr>
+                <tr>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Cello</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Singing</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Piano</a></td>
+                </tr>
+                <tr>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Flute</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Saxophone</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Drums</a></td>
+                </tr>
+                <tr>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Clarinet</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Bass-Guitar</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Harmonica</a></td>
+                </tr>
+                <tr>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Tabla</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Opera</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Song Writing</a></td>
+                </tr>
+                <tr>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Percussion</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Trumpet</a></td>
+                  <td><a href="" style="font-family:'Arial'; font-size: 17px;">Trombone</a></td>
+                </tr>
+              </table>
+    </center>
+
+    
+
+    <% include ../partials/footer %>
+ 
+</body>
+</html>

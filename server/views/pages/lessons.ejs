@@ -6,10 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-* {
-    box-sizing: border-box;
+
+/* carousel */
+* {box-sizing: border-box;}
+.mySlides {display: none;}
+img {vertical-align: middle;}
+
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
 }
 
+
+/* The dots/bullets/indicators */
+.dot {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+/* End of carousel */
+
+/* search button*/
 form.search input[type=text] {
     padding: 10px;
     font-size: 17px;
@@ -40,27 +86,51 @@ form.search::after {
     clear: both;
     display: table;
 }
+/* end of search button */
 
-th, td {
-    padding: 5px;
+.column {
+    float: left;
+    width: 33.33%;
+    height: 100%;
+    padding: 8px;
 }
-.centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+/* Clearfix (clear floats) */
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
 }
 
 </style>
 </head>
 <body>
     <% include ../partials/header %>
+    
+    <div class="slideshow-container">
 
-    <img src ="../images/violin.jpg" style="width:100%; height:400px;"/>
-    <br />
-    <br />
-    <center><p style="font-family:'Times New Roman', Times, serif; font-size: 24px;">Looking for Affordable Music Lessons? Our teachers are ready to help you Learn.</p></center>
-    <center><p style="font-family:'Times New Roman', Times, serif; font-size: 24px;"><strong>Search for your instructor today!</strong></p></center>
+        <div class="mySlides fade">
+            <img class="img1" src="../images/carousel1.jpg" style="width:100%">
+        </div>
+        
+        <div class="mySlides fade">
+            <img class="img2" src="../images/carousel2.jpg" style="width:100%">
+        </div>
+        
+        <div class="mySlides fade">
+            <img class="img3" src="../images/carousel3.jpg" style="width:100%">
+        </div>
+        
+    </div>
+        <br>
+    <div style="text-align:center">
+        <span class="dot"></span> 
+        <span class="dot"></span> 
+        <span class="dot"></span> 
+    </div>
+
+    <center><p style="font-family:'Times New Roman', Times, serif; font-size: 20px;">Looking for Affordable Music Lessons? Our teachers are ready to help you Learn.</p></center>
+    <center><p style="font-family:'Times New Roman', Times, serif; font-size: 20px;"><strong>Search for your instructor today!</strong></p></center>
     <form class="search" action="/action_page.php" style="margin:auto;max-width:300px">
         <input type="text" placeholder="Type of Lesson.." name="search2">
         <button type="submit"><i class="fa fa-search"></i></button>
@@ -68,29 +138,64 @@ th, td {
     <br />
     <br />
     <center>
-    <table style="width:50%">
-        <tr>
-          <td style="width:25%; height:100px"><img src = "../images/singing.jpg"  style="width:100%; height:150px"></td>
-          <td style="width:25%; height:100px"><img src = "../images/guitar.jpg" style="width:100%; height:150px"></td> 
-          <td style="width:25%; height:100px"><img src = "../images/piano.jpg" style="width:100%; height:150px"></td>
-        </tr>
-        <tr>
-          <td style="width:25%; height:100px"><img src = "../images/violin2.jpg" style="width:100%; height:150px"></td>
-          <td style="width:25%; height:100px"><img src = "../images/ukulele.jpg" style="width:100%; height:150px"></td>
-          <td style="width:25%; height:100px"><img src = "../images/flute.jpg" style="width:100%; height:150px"></td> 
-        </tr>
-        <tr>
-          <td style="width:25%; height:100px"><img src = "../images/saxophone.jpg" style="width:100%; height:150px"></td>
-          <td style="width:25%; height:100px"><img src = "../images/drums.jpg" style="width:100%; height:150px"></td> 
-          <td style="width:25%; height:100px"><img src = "../images/cello.jpeg" style="width:100%; height:150px"></td>
-        </tr>
-        <tr>
-          <td style="width:25%; height:100px"><img src = "../images/bass-guitar.jpg" style="width:100%; height:150px"></td>
-          <td style="width:25%; height:100px"><img src = "../images/broadway-singing.jpg" style="width:100%; height:150px"></td> 
-          <td style="width:25%; height:100px"><img src = "../images/view all lessons.png" style="width:100%; height:150px"></td>
-        </tr>
-      </table>
-</center>
+        <div class="row" style="width:60%">
+            <div>
+                <a href="/singing"><img src="../images/singing.jpg" class="column" ></a>
+
+                <a href="/guitar"><img src="../images/guitar.jpg" class="column" ></a>
+
+                <a href="/piano"><img src="../images/piano.jpg" class="column" ></a>
+            </div>
+
+            <div>
+                <a href=""><img src="../images/violin.jpg" class="column"></a>
+
+                <a href=""><img src="../images/ukulele.jpg" class="column" ></a>
+
+                <a href=""><img src="../images/flute.jpg" class="column"></a>
+            </div>
+
+            <div >
+                <a href=""><img src="../images/saxophone.jpg" class="column"></a>
+
+                <a href=""><img src="../images/drums.jpg" class="column"></a>
+
+                <a href=""><img src="../images/cello.jpeg" class="column"></a>
+            </div>
+
+            <div>
+                <a href=""><img src="../images/bass-guitar.jpg" class="column"></a>
+
+                <a href=""><img src="../images/clarinet.jpg" class="column"></a>
+
+                <a href="/viewAllLessons"><img src="../images/view all lessons.png" class="column"></a>
+            </div>
+        </div>
+    </center>
+
+<script>
+        var slideIndex = 0;
+        showSlides();
+        
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("dot");
+            for (i = 0; i < slides.length; i++) {
+               slides[i].style.display = "none";  
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) {slideIndex = 1}    
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex-1].style.display = "block";  
+            dots[slideIndex-1].className += " active";
+            setTimeout(showSlides, 2000); // Change image every 2 seconds
+        }
+</script>
+        
+
     <% include ../partials/footer %>
  
 </body>
