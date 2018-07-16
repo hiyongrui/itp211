@@ -12,3 +12,26 @@
 .header {
     padding-left: 50px;
 }
+
+.noItemsWrapper {
+    text-align: center;
+    margin-top: 10%;
+}
+
+.circleBorder {
+    border: 1px solid black;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-border-radius: 200px;
+    -moz-border-radius: 200px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);;
+}
+
+.emptyCartImg {
+    border-radius: 100%;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+}

@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <script src="/javascripts/socket.io.js"></script>
 </head>
 
 <style>
@@ -581,8 +582,9 @@ function setCookie(cname,cvalue,exdays)
         document.getElementById("textForImage").innerHTML += "this will be how the photo of your song will be shown to others!";
         };
         
-        
-        
+        var currentUser = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));
+        var socket = io();
+
         $('button.unmarked').on('click', function(e) {
         var $targetButton = $(e.target);
         if ($targetButton.hasClass('marked')) { // if mark , unmark it
@@ -633,6 +635,7 @@ function setCookie(cname,cvalue,exdays)
             console.log("this count >> " + thisCount);
             console.log(thisButton[0].innerHTML);
             //console.log("nearest button " + (this).closest("h2").text(data));
+            var this_like_song_id = $(this).data("id");
             $.ajax({
                 url: url,
                 type: "POST",
@@ -646,6 +649,10 @@ function setCookie(cname,cvalue,exdays)
                     console.log("after liking >> " + thisCount);
                     //document.getElementsByClassName("likeCount").innerHTML = "<i class='fa fa-heart-o'> </i>" + thisCount;
                     thisButton[0].innerHTML = "<i class='fa fa-heart-o'> </i> " + thisCount;
+
+                    
+                    socket.emit("songLikeByUserId", currentUser.id); 
+                    socket.emit("songLikeId", this_like_song_id);
                 },
                 error: function(result){
                     alert("Error liking song");
@@ -714,6 +721,7 @@ function setCookie(cname,cvalue,exdays)
             })
        }
        */
+
 
        </script>
        

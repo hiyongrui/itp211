@@ -59,7 +59,16 @@ td.totalPrice {
     font-weight: bold;
 }
 
+p#cardNumValidateText {
+    text-align: right;
+    clear: both;
+    float: right;
+    margin-right: 15px;
+}
 
+#inputCardNum {
+    float: left;
+}
 
 
 

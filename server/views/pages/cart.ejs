@@ -58,14 +58,16 @@
   </div>
   <% } else {%>
     <div class="noItemsWrapper">
-        <img src ="images/emptycart.png" alt="emptycart" width="80" height="80" class="emptycartimg">
+        <div class="circleBorder">
+          <img src ="images/emptycart.png" alt="emptycart" width="80" height="80" class="emptyCartImg">
+        </div>
         <br>
         <br>
         <h2 class="textHeaderEmptyCart"> Your Shopping cart is empty</h2>
         <p class="textLineEmptyCart">Let's add some stuff to it. Check out our products!</p>
         <br>
         <br>
-        <button class="viewShop"type="button"> Our Products</button>
+        <button class="viewShop" onclick="viewShop();" type="button"> Our Products</button>
     </div>
     <% } %>
   
@@ -126,6 +128,10 @@
       }
     });
   });
+
+  function viewShop() {
+    location.href = "http://localhost:3000/products";
+  };
   </script>
   </body>
   </html>

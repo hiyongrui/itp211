@@ -18,7 +18,8 @@
     <form action="/insertCard" method="POST">
         <fieldset class="form-group">
             <label for="inputCardNumber"> Card Number </label>
-            <input type="text" id="inputCardNumber" name="cardNumber" class="form-control" placeholder="Card Number" required="true">
+            <input type="text" id="inputCardNumber" name="cardNumber" style="float: left;" class="form-control" placeholder="Card Number" onchange="cardNumValidation(this.value);" required="true">
+            <p id="cardNumValidateText" style="float: right;"></p>
         </fieldset>
         <fieldset class="form-group">
             <label for="inputCardholder"> Cardholder </label>
@@ -123,6 +124,26 @@ $("form").submit(function(e) {
       }
     });
   });
+
+function cardNumValidation(val) {
+      var card_num = val;
+      console.log(card_num);
+      var visaCheck = card_num.charAt(0);
+      console.log(visaCheck);
+      console.log(card_num.length);
+      if (visaCheck == 4) {
+          if (card_num.length == 13) {
+              document.getElementById('cardNumValidateText').innerHTML = "Correct!";
+          }
+          else {
+            document.getElementById('cardNumValidateText').innerHTML = "Invalid Visa Card!";
+          }
+      }
+      else {
+        document.getElementById('cardNumValidateText').innerHTML = "Invalid Card!";
+
+      }
+  }
 
 </script>
 </html>

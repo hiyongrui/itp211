@@ -228,7 +228,7 @@ next();
 app.use(function(req,res,next) {
     console.log("app use ---------------- ");
     var changecool = req.session.useridhehe;
-    sequelize.query("select s.title AS createdAt , u.name AS user_id  , u.userImage AS id , s.user_id lol from Songlikes sl inner join Users u on sl.user_id = u.id inner join Songs s on sl.song_id = s.id where u.id <> :status",
+    sequelize.query("select s.title AS createdAt , u.name AS user_id  , u.userImage AS id , s.user_id lol , sl.user_id haha from Songlikes sl inner join Users u on sl.user_id = u.id inner join Songs s on sl.song_id = s.id where u.id <> :status",
     {replacements: {status:changecool}, type:sequelize.QueryTypes.SELECT} 
     , {model: Songlike}).then(songlikes=> {
         app.locals.songlike = songlikes
@@ -520,7 +520,18 @@ io.on('connection', function(socket) {
     //})
 
    
-    
+    socket.on('songLikeByUserId' , function(songlikebyuser_id) {
+        socket.on("songLikeId", function(songlikeid) {
+            console.log("song love by user id===========");
+            console.log(songlikebyuser_id);
+            sequelize.query("select distinct s.user_id from Songlikes sl inner join Songs s on sl.song_id = s.id where song_id = 2").then(send_to_user => {
+                console.log("send to user >>> " + JSON.stringify(send_to_user));
+                io.sockets.emit("sendToUser", send_to_user);
+            })
+            console.log("song love id========");
+            console.log(songlikeid);
+        })
+    })
     
     // or socket.on('leave') for room leave , then disconnected aka offline?
     socket.on('disconnect',function() {

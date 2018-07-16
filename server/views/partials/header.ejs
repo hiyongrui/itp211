@@ -48,7 +48,7 @@
 <!--Navbar -->
 <nav class="mb-1 navbar navbar-expand-lg navbar-dark bg-dark">
 
-        <a class="navbar-brand" href="#"> Musique </a>
+        <a id="musique" class="navbar-brand" href="#"> Musique </a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4"
             aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,7 @@
             <ul class="navbar-nav ml-auto"> <!-- ml auto for left side !-->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="/products">
                         Instruments
                         <!-- <span class="sr-only">(current)</span> !-->
                     </a>
@@ -90,20 +90,28 @@
                 </li>
 
                 <% if (user) { %>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart">
+                        Carts
+                    </a>
+                </li>
+
                 <li class="nav-item-dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"> </i> 
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-5">
                         <% songlike.forEach(function(songlike){ %>
-                            <% if ((songlike.user_id != user.name) && (songlike.lol != user.id)) { %>
-                        <div class="notification">
+                            <% if (songlike.lol == user.id) { %>
+                        <div id="notification">
                             <ul>
                                 <li>
                                     <img class="profilePictureHeader" src="/images/<%=songlike.id%>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'">
                                     <a id="userLike" href="/users/profile/<%=songlike.user_id%>"> <%=songlike.user_id%> </a> 
-                                    <h4> liked your <%=songlike.song_id%> playlist </h4>
+                                    <h4> liked your <%=songlike.createdAt%> playlist </h4>
                                     <p> hi <%=songlike.id%></p>
+                                    <h2 class="addOn"> </h2>
                                 </li>
                             </ul>
                         </div>
@@ -122,6 +130,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
                         <a class="dropdown-item" href="/profile"> My profile </a>
+                        <a class="dropdown-item" href="/profileSetting"> Profile Setting </a>
                         <a class="dropdown-item" href="/comments"> Comments </a>
                         <a class="dropdown-item" href="/playlists"> My Playlists </a>
                         <a class="dropdown-item" href="/users"> Search users </a>
@@ -271,8 +280,29 @@
         console.log("socket id after setting it : " + socket.id);
     }) */
 
+    var currentUser = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));
+
     socket.emit("newUser", currentProfileOnlineUserId); 
 
+    socket.on("sendToUser", function(sendToUser) {
+        sendToUserArray = [];
+        for (i=0; i< sendToUser.length ; i++) {
+            sendToUserArray.push(sendToUser[i])
+        }
+        console.log("send to user array >> " + JSON.stringify(sendToUserArray[0][0].user_id));
+        console.log("send user >>>> " + JSON.stringify(sendToUser));
+        var sendToUserSpecificId = sendToUser[0][0].user_id;
+        console.log("sepcific > " + sendToUserSpecificId);
+        console.log("hi" + JSON.stringify(currentUser));
+        if (sendToUserSpecificId == currentUser.id) {
+            document.getElementById("musique").innerHTML = "hi";
+            //alert("hi >>> " + currentUser.id);
+            //$(".notification").append(`<h4> ${msg.name} </h4> <p> ${msg.message} -->  User id is :   </p>  `)
+            var changeNotification = document.querySelectorAll(".addOn");
+            var lastNotify = changeNotification[changeNotification.length - 1];
+            lastNotify.innerHTML = `<img class="profilePictureHeader" src="/images/mean.jpg">` + sendToUserSpecificId + " has liked your playlist ";
+        }
+    });
 
     console.log("user role>>>gg " + myVar.role);
     if (myVar.role == "instructor") {
