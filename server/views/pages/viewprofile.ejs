@@ -16,6 +16,7 @@
     /*display: inline; */
     width: 140px;
     height: 140px;
+    border:2px solid lightslategray;
 }
 
 #dot{
@@ -100,7 +101,28 @@ margin-left:150px;
 		margin-right:40px;
     }
 
+ .currentUserProductImage{
+     height: 250px;
+     width:100%;
 
+ }
+
+ .col-md-4.col-sm-4.col-xs-4 {
+     background-color:grey;
+     margin-top:40px;
+ }
+
+ .card-title{
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis; /* make it ... if text too long */
+ }
+
+#noProductsYet{
+    margin: auto;
+    text-align: center;
+    width:80%;
+}
 
 </style>
 
@@ -126,13 +148,18 @@ margin-left:150px;
 
                 <div class="col-md-9 p-t-2">
 
-                <h2 class="h2-responsive"> @<%=usersProfile[0].name%> 
+                <h2 class="h2-responsive"> @<%=usersProfile.name%> 
                     <button type="button" class="btn btn-outline-info waves-effect"> Follow </button>
                 </h2> 
 
                 <div> <span id="dot"> </span>   <strong id="userLoginDate"> online  </strong> </div>
 
                 <p style="color:blueviolet"><%=usersProfile.rank%>  | <%=usersProfile.coin%> coins  | level <%=usersProfile.level%> </p> 
+
+                <div class="viewRatingOfThisUser">
+                    <a href="/users/profile/<%=usersProfile.name%>/rating/<%=usersProfile.id%>"> View rating </a>
+                </div>
+
                 <ul class="flex-menu"> 
                     <li> <strong> 41 </strong> posts </li>
                     <li> <strong> 47k </strong> followers </li>
@@ -185,11 +212,9 @@ margin-left:150px;
             
             <ul class="nav md-pills nav-justified pills-secondary">
 
+                
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#panel11" role="tab"> Overview </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#panel12" role="tab"> Instruments </a>
+                        <a class="nav-link active" data-toggle="tab" href="#panel12" role="tab"> Instruments </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#panel13" role="tab"> Lessons</a>
@@ -201,107 +226,57 @@ margin-left:150px;
                 </ul>
                 
                 <!-- Tab panels -->
-                <div class="tab-content">
                 
-                    <!--Panel 1-->
-                    <div class="tab-pane fade in show active" id="panel11" role="tabpanel">
-                        <br>
-                        
-                        <section class="text-center">
-
-                                <!--Section heading-->
-                                <h1 class="py-5 font-weight-bold"> Overview of your activites </h1>
-                                <!--Section description-->
-                                <p class="px-5 mb-5 pb-3 lead grey-text"> 
-                                    Presenting to you your data below!
-                                </p>
-                                
-                                <!--Grid row-->
-                                <!-- <div class="rowGrid"> !-->
-                    
-                                    <!--Grid column-->
-                                    <!--
-                                    <div class="col-md-4"> !-->
-                                        <!-- <i class="fa fa-area-chart fa-3x red-text"></i> !-->
-                                        <!--
-                                        <h1 id="noOfInstruments" class="font-weight-bold mt-3"> 15+ </h1>
-                                        <h5 class="font-weight-bold mt-1"> Instruments </h5>
-                                        <p class="grey-text"> This is the total number of instruments you have listed!
-                                        </p>
-                                    </div> !-->
-                                    <!--Grid column-->
-                    
-                                    <!--Grid column-->
-                                    <!--
-                                    <div class="col-md-4">
-                                        <!--<i class="fa fa-book fa-3x cyan-text"></i> !-->
-                                        <!--
-                                        <h1 id="noOfLessons" class="font-weight-bold mt-3"> 7+ </h1>
-                                        <h5 class="font-weight-bold mt-1"> Lessons </h5>
-                                        <p class="grey-text"> This is the total number of lessons you have taken!
-                                        </p>
-                                    </div> !-->
-                                    <!--Grid column-->
-                    
-                                    <!--Grid column-->
-                                    <!--
-                                    <div class="col-md-4"> 
-                                        <h1 id="noOfSong" class="font-weight-bold mt-3"> </h1> 
-                                        <h5 class="font-weight-bold mt-1"> Songs </h5> 
-                                        <p class="grey-text"> This is the total number of songs you have shared!
-                                        </p>
-                                    </div> !-->
-                                    <!--Grid column-->
-                    
-                                </div>
-                                <!--Grid row-->
-                    
-                            </section>
-
-                            <div id="visual">
-                            <section class="text-center">
-
-                            
-                        
-                                    <!--Grid row-->
-                                    <div class="rowGrid">
-                        
-                                        <!--Grid column-->
-                                        <div class="col-md-6">
-                                            <!-- <i class="fa fa-area-chart fa-3x red-text"></i> !-->
-                                            
-                                           <p>HELLO </p> 
-
-                                        </div>
-                                        <!--Grid column-->
-                        
-                                        <!--Grid column-->
-                                        <div class="col-md-6">
-                                            
-                                            <P> HELLO</P>
-                                        </div>
-                                        <!--Grid column-->
-                        
-                                      
-                                        <!--Grid column-->
-                        
-                                    </div>
-                                    <!--Grid row-->
-                        
-                                </section>
-                                </div>
-                            
-                    </div>
-                    <!--/.Panel 1-->
                 
                     <!--Panel 2-->
-                    <div class="tab-pane fade" id="panel12" role="tabpanel">
+                    <div class="tab-pane fade in show active" id="panel12" role="tabpanel">
                         <br>
-                
-                        <p> Second Panel </p>
+                        <br>
+                            
+                        <div class="container-fluid"> 
+                            <div class="row">
+                                    <% if (usersProducts.length == 0) { %> 
+                                        <header id="noProductsYet" class="jumbotron my-4">
+                                            <div id="noSearchResultDiv"> 
+                                              
+                                                <h2 class="display-3"> Sorry! </h2>
+                                                <p class="lead"> There are no products uploaded yet by this user </p>
+                                               
+                                            </div>
+                                        </header>
+                                    <% } else { %>
+                                <% usersProducts.forEach(function(products){ %>
+                                <div class="col-md-4 col-sm-4 col-xs-4 list-group-item addProductId" data-id="<%=products.id%>">
+                                    <div class="card h-100">
+
+                                        <div class="card-body">
+                                            <a href="/products/<%=products.id%>"> 
+                                            <img class="currentUserProductImage" src="/images/<%=products.imageName%>">
+                                            
+                                            <h2 class="card-title"> <%=products.productListingName%> </h2>
+                                            </a>
+                                            <p class="card-text"> 
+                                                orem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus
+                                                quam molestias corporis quod, ea minima accusamus.
+                                            </p>
+                                        </div>
+
+                                        <div class="card-footer">
+                                            <a href="/products/<%=products.id%>" class="btn btn-primary"> View </a>
+                                         
+                                        </div>
+
+                                    </div> <!-- end of card h-100 !-->
+                                </div> <!-- end of col-md-4 col-sm-4 col-xs-4 for different devices !-->
+                                <% }); %> <!-- end of for loop !-->
+                            </div> <!-- end of row !-->
+                        </div> <!--end of conatiner fluid-->
+                                <% } %> <!-- end of else statement !-->
                 
                     </div>
                     <!--/.Panel 2-->
+
+
                 
                     <!--Panel 3-->
                     <div class="tab-pane fade" id="panel13" role="tabpanel">
@@ -461,7 +436,10 @@ margin-left:150px;
         document.getElementById("dot").style.backgroundColor = "rgb(255,156,26)";
     }
    
-    
+    console.log(myUser);
+    if (myUser.role == "instructor") {
+        document.getElementById("output").style.borderColor = "green";
+    }
     </script>
     </body>
     </html>

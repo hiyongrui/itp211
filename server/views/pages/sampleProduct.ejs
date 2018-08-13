@@ -4,43 +4,258 @@
   <title>
     <%= title %>
   </title>
- 
+  <!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/javascripts/jquery.elevatezoom.js" type="text/javascript"> </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/imageviewer/1.0.0/viewer.css" rel="stylesheet"> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/imageviewer/1.0.0/viewer.js"> </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.2.0/viewer.js"> </script>
+  
 </head>
+
+<style>
+
+.container1 input[type=text] {
+padding:5px 0px;
+margin:5px 5px 5px 0px;
+padding:6px;
+}
+
+.add_form_field
+{
+    background-color: #1c97f3;
+    border: none;
+    color: white;
+    padding: 8px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+ border:1px solid #186dad;
+}
+
+.addNewTag{
+    border: 1px solid #1c97f3;
+    width: 260px;
+    height: 40px;
+  margin-bottom:14px;
+}
+
+.delete{
+    background-color: #fd1200;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+#inputQuantityTextCenter{
+  width:10%;
+  text-align: center;
+}
+.itemList{
+  height:250px;
+  width:100%;
+}
+
+    .MayLikeLine {
+        display: table;
+        border-spacing: 1rem 0;
+        line-height: .25;
+        margin: 1em 0 .5em;
+        table-layout: auto;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 33px;
+        font-family: 'Droid Serif', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-style: italic;
+        text-transform: uppercase;
+        padding: 33px;
+    }
+
+    .MayLikeLine::before {
+        border-top: 3px double #123;
+        content: "";
+        display: table-cell;
+        width: 50%;
+        border-top-color: slategrey;
+    }
+
+    .MayLikeLine::after {
+        border-top: 3px double #123;
+        content: "";
+        display: table-cell;
+        width: 50%;
+        border-top-color: slategray;
+    }
+
+#newListingBtn{
+
+  margin-right:90px;
+}
+
+  .star-ratings-sprite {
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        font-size: 0;
+        height: 21px;
+        line-height: 0;
+        overflow: hidden;
+        text-indent: -999em;
+        width: 110px;
+        /* margin: 0 auto; */  
+    }
+
+    .star-ratings-sprite-rating {
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        background-position: 0 100%;
+        float: left;
+        height: 21px;
+        display: block;
+    }
+    .likeShapeForPastProduct {
+        color: #007bff;
+
+    }
+
+    .likeShapeForPastProductDiv {
+        text-align: center;
+    }
+
+    .likeShapeForPastProductDiv:hover {
+        background-color: rgba(0, 0, 0, .05);
+        border-color: #ff5722;
+    }
+    .card-footer {
+        cursor: pointer;
+    }
+
+    .card.h-100 {
+        padding: 10px;
+        height:unset !important;
+    }
+
+    .card.h-100:hover {
+        /* box-shadow: 0 0 10px rgba(0,0,0,.2); */
+        border: 1px solid;
+        box-shadow: 5px 10px 8px #888888;
+    }
+    .ratingCount{
+      margin-left:9px;
+      color: #ff5722;
+    }
+
+    #pagin li {
+      display: inline-block;
+      border: 1px solid #a8a8a8;
+      min-width: 28px;
+      text-align: center;
+      border-radius: 4px;
+    }
+    .eachList{
+      color: #404040;
+      font-family: Arial;
+      display: list-item;
+      list-style-type: none;
+    }
+    
+    #pagin li:hover{
+      border-color:#1a9cb7;
+      color:#1a9cb7;
+      cursor: pointer;
+    }
+
+    .card-title{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 1.6rem;
+    }
+    .priceStyle{
+        font-size:244%;
+        max-width:130px;
+        color: #ff5722;
+        font-weight:400
+    }
+    .dollarSign{
+        font-size:144%;
+        color:#ff5722;
+        font-weight:400;
+    }
+    .dollarCenter{
+      text-align: center;
+    }
+    
+    .starSpace{
+      margin-left:36px;
+    }
+</style>
 
 <body>
     <% include ../partials/header %>
-  <div id="header" class="col-lg-5">
-    <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#createProduct">
-      New Record
+  <div id="header" class="col-lg-12">
+    <button id="newListingBtn" type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#createProduct">
+      New Listing
     </button>
   </div>
   <div class="modal fade" id="createProduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <form action="/new" method="post" enctype="multipart/form-data">
+        <form action="/new" method="post" enctype="multipart/form-data" onsubmit="$('.addNewTag').removeAttr('disabled');">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title" id="myModalLabel">Create New Product Record</h4>
+            <h4 class="modal-title" id="myModalLabel">Create New Product Listing</h4>
           </div>
           <div class="modal-body">
+
             <fieldset class="form-group">
-              <label for="inputProductID">Product ID</label>
-              <input type="text" id="inputProductID" name="productId" class="form-control" placeholder="Product Id" required="true">
+              <label for="inputProductName">Product Listing Name</label>
+              <input type="text" id="inputProductName" name="productListingName" class="form-control" placeholder="Product Listing Name" required="true">
             </fieldset>
-            <fieldset class="form-group">
-              <label for="inputProductName">Product Name</label>
-              <input type="text" id="inputProductName" name="productName" class="form-control" placeholder="Product Name" required="true">
-            </fieldset>
-            <fieldset class="form-group">
-              <label for="inputSellerName">Seller Name</label>
-              <input type="text" id="inputSellerName" name="sellerName" class="form-control" placeholder="Seller Name" required="true">
-            </fieldset>
+
             <fieldset class="form-group">
               <label for="inputPricing">Pricing</label>
               <input type="text" id="inputPricing" name="pricing" class="form-control" placeholder="Pricing" required="true">
             </fieldset>
+
+            <fieldset class="form-group">
+              <label for="productListingType"> Product Type </label>
+              <select name="productListingType" id="productListingType">
+                <option value="Guitar">Guitar</option> <!-- Java, Angular, Automation !-->
+                <option value="Violin">Violin</option>
+                <option value="Drum">Drum</option>
+              </select>
+            </fieldset>
+
+            <fieldset class="form-group">
+                <label for="inputRating"> Quantity </label>
+                <input id="inputQuantityTextCenter" type="number" name="quantity" min="1" max="100" value="1">
+            </fieldset>
+
+            <fieldset class="form-group">
+              <label for="productListingCondition"> Product condition </label> <br>
+              <input type="radio" name="optionCondition" value="new" required> New condition 
+              <input type="radio" name="optionCondition" value="old" required> Old condition
+            </fieldset>
+
+            <fieldset class="form-group">
+              <label for="inputProductTags"> Product Tags </label>
+              <div class="container1">
+                <button class="add_form_field"> Add New Tags &nbsp; <span style="font-size:16px; font-weight:bold;"> + </span > </button> 
+                <!-- <div>
+                  <input class="addNewTag" type="text" name="mytext[]" placeholder="  enter the tag here...">  
+                </div> !-->
+              </div>
+            </fieldset>
+
             <fieldset class="form-group">
               <label class="file" style="width: 50%">
                 <input type="file" id="image" name="image" onchange="loadFile(event)">
@@ -49,81 +264,150 @@
                 <img id="output"/>
             </label>
             </fieldset>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Add Record</button>
+            <button type="submit" class="btn btn-primary"> Add Listing </button>
           </div>
         </form>
       </div>
     </div>
   </div>
-  <table class="table">
-    <thread>
-      <tr>
-        <th>Product ID</th>
-        <th>Product Name</th>
-        <th>Seller Name</th>
-        <th>Pricing</th>
-        <th>image</th>
-        <th>Action</th>
-      </tr>
-      <% for(var i=0; i < itemList.length; i++){ %>
-        <tr class="rowRecord" data-id="<%= itemList[i].id %>">
-          <td class="productId" data-id="<%= itemList[i].productId %>">
-            <%= itemList[i].productId %>
-          </td>
-          <td class="productName">
-            <%= itemList[i].productName %>
-          </td>
-          <td class="sellerName">
-            <%= itemList[i].sellerName %>
-          </td>
-          <td class="pricing">
-            <%= itemList[i].pricing %>
-          </td>
-          <td class="images">
-            <img src = "images/<%= itemList[i].imageName %>" style="width: 50%; height: 250px;" >
-          </td>
-          <td>
-            <input type="button" class="appendBtn" value="Add to Cart">
-          </td>
-          <td>
-            <input type="button" class="deleteBtn"  value="Delete">
-          </td>
-        </tr>
-        <% } %>
-    </thread>
-  </table>
+ 
+
+  <div class="container"> 
+      <h1 class="text-center MayLikeLine"> Most recent products </h1>
+      
+      <ul id="pagin">
+      </ul>
+
+      <div class="row">
+          <% itemList.forEach(function(itemList){ %>
+              <div class="col-md-4 mb-4">
+                  <div class="card h-100">
+                      <a href="/products/<%=itemList.id%>">
+                          <div class="card-body">
+                              <img class="itemList" src="/images/<%=itemList.imageName%>">
+                              <h2 class="card-title">
+                                  <%=itemList.productListingName%>
+                              </h2>
+                              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam,
+                                  maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+
+                              <p class="card-text dollarCenter"> 
+                                  <span class="dollarSign"> $ </span> <span class="priceStyle">  <%=itemList.pricing%> </span>
+                              </p>
+
+                              <div class="row justify-content-center moveLeft">
+                            
+                                  <div class="col-4 starSpace"> 
+                                      <div class="star-ratings-sprite">
+                                          <span style="width:52%" class="star-ratings-sprite-rating" data-rating="<%=itemList.rating%>">
+                                              
+                                          </span>
+                                      </div>
+                                  </div>
+
+                                  <div class="col-4">
+                                      <% if (!itemList.ratingCount) { %>
+                                          <p class="ratingCount"> (0) </p>
+                                      <% } 
+                                          else { %>
+                                          <p class="ratingCount"> (<%=itemList.ratingCount%>)</p>
+                                      <% } %>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </a>
+                      <div class="card-footer">
+                          <div class="likeShapeForPastProductDiv" onclick="alert('hi')">
+                              <i id="likeShapeForPastProduct" class="fa fa-heart-o likeShapeForPastProduct"> 50 </i>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+              <% }); %>
+      </div>
+  </div>
 
   <script>
     var loadFile = function(event) {
     var output = document.getElementById('output');
       output.src = URL.createObjectURL(event.target.files[0]);
     };
+  
+    var max_fields = 10;
+    var wrapper = $(".container1");
+    var add_button = $(".add_form_field");
+    
+    var x = 0;
+    console.log("first container >>> " + $(".container1")[0]);
+    
+    $(add_button).click(function(e) {
+      
+      e.preventDefault();
+
+      if (x < max_fields) {
+        x++;
+        $(wrapper).append('<div> <input class="addNewTag" type="text" name="productTags" placeholder="  enter new tag..." onChange="inputChange(event)"/> \
+          <a href="#" class="delete"> Delete </a> </div>'); //add input box
+        
+        
+        $(this).next($(".addNewTag").focus());
+        
+        console.log("value of x after new tag is ----  " + x);
+
+      }
+      else{
+        alert("you have reached limits of 10!!!");
+      }
+    }) 
+    
+
+    $(wrapper).on("click", ".delete", function(e) {
+      e.preventDefault();
+      $(this).parent("div").remove();
+      x--;
+      console.log("value of x after deleting is ---  " + x);
+    })
+
+
+    function inputChange(e) {
+      console.log("val of tag when enter >> " + $(e.target).val());
+      console.log(e.target);
+      e.target.disabled = true;
+    }
+
   </script>
 
   <script>
     $('.appendBtn').click(function () {
-        var url = "<%=hostPath%>/new";
+        //var hostPath = "<%=hostPath%>/new";
+        var urlPath = "<%=urlPath%>/new";
         var record_num = $(this).closest("tr").data('id');
         var cartRecords = {
-            productId: $(this).closest("tr").find('.productId').text().trim(),
-            productName: $(this).closest("tr").find('.productName').text().trim(),
-            sellerName: $(this).closest("tr").find('.sellerName').text().trim(),
+            //productId: $(this).closest("tr").find('.productId').text().trim(),
+            product_id: $(this).closest("tr").data("id"),
+            productListingName: $(this).closest("tr").find('.productListingName').text().trim(),
+            //sellerName: $(this).closest("tr").find('.sellerName').text().trim(),
+            productListingType: $(this).closest("tr").find(".productListingType").text().trim(),
             pricing: $(this).closest("tr").find('.pricing').text().trim(),
         }
-        
-        console.log(url);
+        console.log("host path url >> " + "<%=hostPath%>");
+        console.log("url path url >> " + "<%=urlPath%>");
         console.log($(this).closest("tr").find('.productId').text().trim());
         $.ajax({
-            url: url,
+            //url: url,
+            url: urlPath,
             type: 'POST',
             data: JSON.stringify(cartRecords),
             contentType: "application/json",
             success: function(result){
                 alert("product added to cart successfully");
-                location.href = "<%=hostPath%>"
+                location.href = "<%=urlPath%>"
             },
             error: function(result){
                 alert("Error");
@@ -136,17 +420,20 @@
 function discardChanges() {
             location.href = "<%=hostPath%>"
         }
-    
+
 
     $('.deleteBtn').click(function () {
       var record_num = $(this).closest("tr").data('id');
-      var productId = $(this).closest("tr").find('.productId').text().trim();
-      console.log(productId)
+      //var productId = $(this).closest("tr").find('.productId').text().trim();
+      var productId = $(this).closest("tr").data("id");
+      console.log("product id >>>> " + productId);
+      console.log("host path url >> " + "<%=hostPath%>");
+        console.log("url path url >> " + "<%=urlPath%>");
       $.ajax({
-        url: '<%-hostPath%>/' + productId,
+        url: '<%-urlPath%>/' + productId,
         type: 'DELETE',
         success: function (result) {
-          console.log(result.message);
+          console.log("hi " + result.message);
           var itemToRemove = '.rowRecord[data-id=' + record_num + ']';
           $(itemToRemove).remove();
         },
@@ -155,7 +442,110 @@ function discardChanges() {
           console.log(result.message);
         }
       });
-    });
+    });   
+
+
+  $(".star-ratings-sprite-rating").each(function () {
+                console.log("GGGGGGGGGGGGGGGGGGGGGGG@@@@@@@@@@@@");
+                console.log(this);
+                var val = $(this).data("rating");
+
+                /*
+                var totalStars = $(this).data("total");
+                var countTotalNo = $(this).data("count");
+                var calculated = $(this).data("calculated");
+
+                var avgStars = (totalStars / countTotalNo).toFixed(2) * 20;
+                console.log("rating for tis " + val);
+                console.log("total stars " + totalStars);
+                console.log("total no of reviews " + countTotalNo);
+                console.log("avg stars -- " + avgStars);
+
+                console.log("no of stars in user point of view " + avgStars * 5 / 100);
+                console.log(this);
+                avgStarsInString = avgStars + "%";
+                console.log("string avg stars " + avgStarsInString);
+                console.log("calculated val " + calculated);
+                //this.style.width = "20%"; 
+                */
+                var convertToPercentageOver100 = val / 5 * 100;
+                avgStarsInString = convertToPercentageOver100 + "%";
+                this.style.width = avgStarsInString;
+                //this.style.width = avgStarsInString;
+            });
+
+
+/*
+    var $j = jQuery.noConflict();
+    $(".zoom_01").elevateZoom({tint:true, tintColour:'#F90', tintOpacity:0.5});
+    
+    var $image = $('#image');
+
+$image.viewer({
+  inline: true,
+  viewed: function() {
+    $image.viewer('zoomTo', 1);
+  }
+});
+
+// Get the Viewer.js instance after initialized
+var viewer = $image.data('viewer');
+
+// View a list of images
+$('#images').viewer();
+
+*/
+
+
+ 
+ function htmlDecode(input){
+      var e = document.createElement('div');
+      e.innerHTML = input;
+      return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+  }
+
+
+    var totalProducts = JSON.parse(htmlDecode("<%= JSON.stringify(totalProducts) %>"));
+//Pagination
+pageSize = 9;
+
+var pageCount =  totalProducts.length / pageSize;
+
+console.log(totalProducts.length)
+console.log(pageSize);
+console.log(pageCount);
+
+
+for(var i = 0 ; i<pageCount;i++){
+  $("#pagin").append('<li><a class="eachList" href="#">'+(i+1)+'</a></li> ');
+  console.log("i ==== " + i);
+}
+
+$("#pagin li a").click(function() {
+    console.log("clicked to go pagination .... ");
+    console.log($(this));
+    var pageToGo = $(this)[0].innerHTML;
+    console.log(pageToGo);
+    location.href = "/products/?page=" + pageToGo;
+});
+
+window.onload = function() {
+  var paginationNo = window.location.search;
+  console.log(paginationNo);
+  var splitToGetNo = paginationNo.split("=", 2);
+  console.log("first element of array " + splitToGetNo[0] + " value =  " + splitToGetNo[1]);
+  for (i = 0; i< $(".eachList").length; i++) {
+    if ($(".eachList")[i].innerHTML == splitToGetNo[1]) {
+      console.log("list found");
+      console.log($(".eachList")[i]);
+      $(".eachList")[i].style.color = "white";
+      var changeParentBackground = $(".eachList")[i].parentElement;
+      changeParentBackground.style.backgroundColor = "#1a9cb7";
+    }
+  }
+}
+
+
   </script>
 </body>
 

@@ -4,11 +4,10 @@
   <title>
     <%= title %>
   </title>
-  <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'>
+ 
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel='stylesheet' href='/stylesheets/payment.css'/>
-  <script src='/javascripts/jquery.min.js'></script>
-  <script src='/javascripts/bootstrap.min.js'></script>
+ 
 </head>
 
 <body>
@@ -17,21 +16,13 @@
 <div class="cardDetails">
     <form action="/insertCard" method="POST">
         <fieldset class="form-group">
-            <label for="inputCardNumber"> Card Number </label>
-            <input type="text" id="inputCardNumber" name="cardNumber" style="float: left;" class="form-control" placeholder="Card Number" onchange="cardNumValidation(this.value);" required="true">
+            <label for="inputCardNumber"> E-mail </label>
+            <input type="text" id="inputCardNumber" name="cardNumber" style="float: left;" class="form-control" placeholder="E-mail" onchange="cardNumValidation(this.value);" required="true">
             <p id="cardNumValidateText" style="float: right;"></p>
         </fieldset>
         <fieldset class="form-group">
-            <label for="inputCardholder"> Cardholder </label>
-            <input type="text" id="inputCardholder" name="cardholder" class="form-control" placeholder="Cardholder" required="true">
-        </fieldset>
-        <fieldset class="form-group">
-            <label for="inputCVV"> CVV </label>
-            <input type="text" id="inputCVV" name="cvv" class="form-control" placeholder="CVV" required="true">
-        </fieldset>
-        <fieldset class="form-group">
-            <label for="inputExpiryDate"> Expiry Date </label>
-            <input type="text" id="inputExpiryDate" name="expiryDate" class="form-control" placeholder="Expiry Date" required="true">
+            <label for="inputCardholder"> Phone Number </label>
+            <input type="text" id="inputCardholder" name="cardholder" class="form-control" placeholder="Phone Number" required="true">
         </fieldset>
         <div>
             <button type="submit" class="btn btn-primary"> Confirm Order </button>
@@ -45,11 +36,17 @@
     <table class="items">
         <% for(var i=0; i < cartItemList.length; i++){ %>
             <tr class="rowRecord" data-id="<%= cartItemList[i].id %>">
+                <td class="productImage">
+                    <div class="imgBorder">
+                        <img src = "images/<%= cartItemList[i].product_image %>" class="productImg" />
+                    </div>
+                </td>
                 <td class="productName">
-                    <%= cartItemList[i].productName %>
+                    <strong><%= cartItemList[i].product_name %></strong> <br>
+                    <%= cartItemList[i].product_type %>
                 </td>
                 <td class="pricing">
-                    $<%= cartItemList[i].pricing %>
+                    $<%= cartItemList[i].product_price %>
                 </td>
             </tr>
         
@@ -90,7 +87,7 @@ function cartClear() {
         type: 'DELETE',
         success: function (result) {
           console.log(result.message);
-
+          location.href = "http://localhost:3000/transactions";
         },
         error: function (result) {
           alert("Unable to delete Product record.");
@@ -99,11 +96,31 @@ function cartClear() {
       });
 }
 
+function updateCartCount() {
+    var toZero = {
+        newCartCount: 0
+    }
+    $.ajax({
+        url: 'http://localhost:3000/payment/cartCountUpdate',
+        type: "POST",
+        data: JSON.stringify(toZero),
+        contentType: "application/json",
+        success: function(result) {
+            alert("Calling cart delete...");
+            var itemCount = 0;
+            $("#cartItemCount").text(itemCount);
+            cartClear();
+        },
+        error: function(result) {
+            alert("Failed to update cart count");
+            console.log(result.message);
+        }
+    })
+}
 
-$("form").submit(function(e) {
-    e.preventDefault();
+function createTransaction() {
+    var transaction_id = $('.transactionId').text().trim();
     var url = "<%=hostPath%>" + '/' + 'transaction';
-   
     var Records = {
         cartPricing: totalPrice
     }
@@ -115,8 +132,31 @@ $("form").submit(function(e) {
         contentType: "application/json",
         success: function(result){
             alert("Added successfully");
-            location.href = "http://localhost:3000/transactions";
-            cartClear();
+            updateCartCount();
+        },
+        error: function(result){
+            alert("Unsuccessful");
+            location.href = "<%=hostPath%>"
+      }
+    });
+  };
+
+  $("form").submit(function(e) {
+    e.preventDefault();
+    var url = "<%=hostPath%>" + '/' + 'deductAmt';
+    console.log(url);   
+    var Records = {
+        cartPricing: totalPrice
+    }
+    console.log(Records.cartPricing);
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: JSON.stringify(Records),
+        contentType: "application/json",
+        success: function(result){
+            alert("Added successfully");
+            createTransaction();
         },
         error: function(result){
             alert("Unsuccessful");
@@ -125,25 +165,7 @@ $("form").submit(function(e) {
     });
   });
 
-function cardNumValidation(val) {
-      var card_num = val;
-      console.log(card_num);
-      var visaCheck = card_num.charAt(0);
-      console.log(visaCheck);
-      console.log(card_num.length);
-      if (visaCheck == 4) {
-          if (card_num.length == 13) {
-              document.getElementById('cardNumValidateText').innerHTML = "Correct!";
-          }
-          else {
-            document.getElementById('cardNumValidateText').innerHTML = "Invalid Visa Card!";
-          }
-      }
-      else {
-        document.getElementById('cardNumValidateText').innerHTML = "Invalid Card!";
 
-      }
-  }
 
 </script>
 </html>

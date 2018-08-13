@@ -1,7 +1,5 @@
 .Border {
     margin: 50px 50px 50px 50px; 
-    border-color: black;
-    border: 1px solid black;
     height: 70%;
 }
 
@@ -35,3 +33,27 @@
     height: 120px;
     margin: 0 auto;
 }
+
+.deletedRow {
+    margin-left: 50px;
+}
+
+.productImage img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.productImage{
+    width: 200px;
+    height: 150px;
+}
+
+.table td {
+    font-size: 20px;
+}
+
+td.productImage {
+    width: 200px;
+}
+

@@ -1,0 +1,72 @@
+
+.label {
+    display: inline-block;
+    background:#d9d9d9;
+    color:#fff;
+    border-radius: 5px;
+    margin-right: 15px;
+    padding-top: 3px;
+    cursor:pointer;
+    color: black;
+    border: 1px solid black;
+    width: 120px;
+    height: 35px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+}
+
+input[name=role] {
+    display: none;
+}
+.userDiv {
+    display: none;
+    margin-top: 30px;
+}
+
+.instructorDiv {
+    display: none;
+    margin-top: 30px;
+}
+
+.wrapper {
+    border: 2px solid black;
+    background-color: #f2f2f2;
+    margin-left: 15%;
+    margin-right: 15%;
+    height: 500px;
+}
+
+.selectRoles {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.rowRecord {
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+    border: 1px solid gray;
+    background-color: #b3d7ff;
+    height: 50px;
+    font-size: 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.rowDetails {
+    text-align: center;
+    margin-left: 45px;
+    margin-right: 45px;
+    background-color: lightgray;
+    margin-top: 5px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
+
+.headerText {
+    text-align: center;
+    margin-top: 10px;
+}
+

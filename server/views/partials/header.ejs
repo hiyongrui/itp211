@@ -24,29 +24,79 @@
     .navbar{
         margin-bottom: 18px !important;
     } */
+
     .profilePictureHeader{
         border-radius:50%;
-    /*display: inline; */
-    width: 32px;
-    height: 32px;
-    border:2px solid lightslategray;
-    margin-left:30px;
+        /*display: inline; */
+        width: 32px;
+        height: 32px;
+        border:2px solid lightslategray;
+        margin-left:30px;
     }
     
-   #loginBtn{
-       margin-left:30px;
-       border-left:1px solid grey;
-   }
+    #loginBtn{
+        margin-left:30px;
+        border-left:1px solid grey;
+    }
  
-   #userLike{
-       color:blue !important;
-       font-size:24px;
-   }
+    #userLike{
+        color:blue !important;
+        font-size:24px;
+    }
+
+    
+    #searchType{
+        flex:1;
+        margin-right: -1px;
+        border-radius: 4px 0 0 4px!important;
+        border-right: 0;
+        padding-right:1.6em;
+        width: auto !important;
+        border:1px solid #ccc;
+        font-size: 16px;
+        background-clip: padding-box;
+        height:39px;
+        padding: 6px 1em;
+    }
+    
+    #searchInput{
+        border-radius: 0 !important;
+        height:39px;
+        width:333px;
+        border: 1px solid #ccc;
+        padding: 6px 1em;
+    }
+    
+    #searchBtn{
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+        padding: 6px 1em;
+    }
+
+    .flexContainer{
+        display:flex;
+    }
+
+    #searchInput:focus{
+        border-color:#2f8bcc;
+        box-shadow:none;
+    }
+
+    #searchBtn:hover{
+        background-color:#ccc;
+        cursor: pointer;
+    }
+
+    body { padding-top: 88px; }
+
+    @media screen and (max-width: 768px) {
+        body { padding-top: 0px; }
+    }
 </style>
-<!-- new navbar !-->
 
 <!--Navbar -->
-<nav class="mb-1 navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="mb-1 navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 
         <a id="musique" class="navbar-brand" href="#"> Musique </a>
 
@@ -60,18 +110,37 @@
             
             <!--Navbar-->
             <nav class="mb-1 navbar-dark bg-dark">
-                    <form class="form-inline">
-                        <input class="form-control" type="search" placeholder="Search..." aria-label="Search" style="width:333px">
-                    
-                    </form>
-                </nav>
+                
+                <!-- <form onsubmit="dynamicFromServer()"> !-->
+
+                <div class="flexContainer">
+                        
+                    <select name="searchType" id="searchType">
+                        <option value="instruments">Instruments</option>
+                        <option value="lessons">Lessons</option>
+                        <option value="songs">Songs</option>
+                        <option value="all"> All </option>
+                    </select>
+                
+              
+                    <input id="searchInput" class="form-control" type="search" placeholder="Search..." aria-label="Search"> 
+
+                    <button id="searchBtn" onclick="kys()">
+                        <i class="fa fa-search"> </i> 
+                    </button>
+            
+                </div>
+
+                <!-- </form> !-->
+              
+            </nav>
 
     <!--/.Navbar-->
             
             <ul class="navbar-nav ml-auto"> <!-- ml auto for left side !-->
-
+                
                 <li class="nav-item">
-                    <a class="nav-link" href="/products">
+                    <a class="nav-link" href="/products/?page=1">
                         Instruments
                         <!-- <span class="sr-only">(current)</span> !-->
                     </a>
@@ -97,13 +166,18 @@
                     </a>
                 </li>
 
+                <li class="nav-item"> 
+                    <p id="cartItemCount" style="color: white"> <%= user.cartItemCount %> </p> 
+                </li>
+
                 <li class="nav-item-dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-bell"> </i> 
+                        <i id="notificationBell" class="fa fa-bell">  </i> 
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-5">
+                    <div id="notificationUser" class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-5">
                         <% songlike.forEach(function(songlike){ %>
                             <% if (songlike.lol == user.id) { %>
+                        <!--
                         <div id="notification">
                             <ul>
                                 <li>
@@ -114,6 +188,17 @@
                                     <h2 class="addOn"> </h2>
                                 </li>
                             </ul>
+                        </div>  <% if ( songlike.haha == 3) { %>  
+                                        <h4> <img class="profilePictureHeader" src="/images/<%=songlike.id%>"> <%=songlike.user_id%> </h4>
+                                        <p> liked your <%=songlike.createdAt%> playlist </p>
+                                    <% } else { %> 
+                                        <h4> <img class="profilePictureHeader" src="/images/<%=songlike.id%>"> <%=songlike.user_id%> </h4>
+                                        <p> geageage your <%=songlike.createdAt%> playlist </p>
+                                <% } %> !-->
+                        
+                        <div class="notification">
+                            <h4> <img class="profilePictureHeader" src="/images/<%=songlike.id%>"> <%=songlike.user_id%> </h4>
+                            <p> liked your <%=songlike.createdAt%> playlist </p>
                         </div>
                             <% } %>
                         <% }); %>
@@ -129,12 +214,16 @@
                          <%=user.name %> 
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
-                        <a class="dropdown-item" href="/profile"> My profile </a>
+                        <a class="dropdown-item" href="/profile"> My Profile </a>
+                        <% if (user.role =="instructor") { %>
                         <a class="dropdown-item" href="/profileSetting"> Profile Setting </a>
-                        <a class="dropdown-item" href="/comments"> Comments </a>
+                        <% } %>
+                        <a class="dropdown-item" href="/wallet"> My Wallet </a>
+                        <a class="dropdown-item" href="/transactions"> My Product Transactions </a>
+                        <a class="dropdown-item" href="/bookinghistory"> My Booking History </a>
+                        <a class="dropdown-item" href="/reviews"> My Reviews </a>
                         <a class="dropdown-item" href="/playlists"> My Playlists </a>
                         <a class="dropdown-item" href="/users"> Search users </a>
-                        <a class="dropdown-item" href="/images-gallery"> Images gallery </a>
                         <a class="dropdown-item" href="/logout"> Log out </a>
                     </div>
                 </li>
@@ -166,83 +255,6 @@
     <!--/.Navbar -->
 
 
-   
-
-
-<!-- Fixed navbar !-->
-
-<!--
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    
-
-        
-                <a class="navbar-brand" href="/">ITP211 Multimedia App</a>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Sign in</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Sign up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile">Profile</a>
-                    </li>
-                     
-                    <li class="nav-item">
-                        <a class="nav-link" href="/comments">Comments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/videos">Videos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/images-gallery">Photos</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/messages"> Chat </a>
-                    </li>
-
-                    <% if (user) { %>
-
-                        <% if (user.experience > 4800) {%> <!-- or user.role == "user"-->
-                        <!--
-                        <li class="nav-item">
-                            <a class="nav-link" href="/signup"> Sign up! </a>
-                        </li>
-                     
-                        <% } 
-
-                        else {%> 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout"> Logout </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/songs"> Songs </a>
-                        </li>
-                        <li class="nav-item"> 
-                            <a class="nav-link" href="/users"> Users </a>
-                        </li>
-                        <li class="nav-item">  <!-- or 
-                                <!-- <img id="profilePictureHeader" src="/images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
-                                <p class="userIdNavBar"> <%=user.id %> </p> <!-- <%= user.name %>  !-->
-                            <!-- </li>
-                        <% } %>
-
-                    <% }  
-                    
-                    else { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/songs"> Song </a>
-                        </li>
-                    <% } %>
-                </ul>
-         
-    </nav>
-</div>
-
-<!-- Fixed navbar !--> 
-
-
 
 <script>
      function htmlDecode(input){
@@ -252,22 +264,33 @@
                 }
         
                 var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));
+                //var myVar = "<%-JSON.stringify(user)%>";
 
-        function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
             return c.substring(name.length, c.length);
+            }
         }
+        return "";
     }
-    return "";
-}
+    
+
+    function setCookie(cname,cvalue,exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+
 
     var currentProfileOnlineUserId = getCookie("userid")
     //var currentProfileOnlineUserId =  myVar.id;
@@ -281,29 +304,55 @@
     }) */
 
     var currentUser = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));
+    //var currentUser = "<%-JSON.stringify(user)%>";
 
     socket.emit("newUser", currentProfileOnlineUserId); 
+
 
     socket.on("sendToUser", function(sendToUser) {
         sendToUserArray = [];
         for (i=0; i< sendToUser.length ; i++) {
             sendToUserArray.push(sendToUser[i])
         }
-        console.log("send to user array >> " + JSON.stringify(sendToUserArray[0][0].user_id));
+        console.log("send to user array >> " + JSON.stringify(sendToUserArray[0].user_id));
         console.log("send user >>>> " + JSON.stringify(sendToUser));
-        var sendToUserSpecificId = sendToUser[0][0].user_id;
+        var sendToUserSpecificId = sendToUser[0].user_id;
         console.log("sepcific > " + sendToUserSpecificId);
         console.log("hi" + JSON.stringify(currentUser));
-        if (sendToUserSpecificId == currentUser.id) {
-            document.getElementById("musique").innerHTML = "hi";
+        
+        console.log("send user tough game " + JSON.stringify(sendToUser));
+        console.log(" socket user id sent from server -- " + JSON.stringify(sendToUser[0].user_id));
+        var sendNotificationToUserId = sendToUser[0].toUser;
+        var sendNotificationFromUserId = sendToUser[0].fromUser;
+        var sendNotificationFromUserName = sendToUser[0].name;
+        var sendNotificationFromUserImage = sendToUser[0].userImage;
+        var sendNotificationFromUserSongName = sendToUser[0].title;
+        console.log("current user id -- " + currentUser.id);
+        console.log("send notification from name " + sendNotificationFromUserName);
+
+        //if (sendToUserSpecificId == currentUser.id) {
+        if (sendNotificationToUserId == currentUser.id) {
+            //document.getElementById("musique").innerHTML += "hi";
             //alert("hi >>> " + currentUser.id);
             //$(".notification").append(`<h4> ${msg.name} </h4> <p> ${msg.message} -->  User id is :   </p>  `)
-            var changeNotification = document.querySelectorAll(".addOn");
-            var lastNotify = changeNotification[changeNotification.length - 1];
-            lastNotify.innerHTML = `<img class="profilePictureHeader" src="/images/mean.jpg">` + sendToUserSpecificId + " has liked your playlist ";
+            //var changeNotification = document.querySelectorAll(".addOn");
+            //var lastNotify = changeNotification[changeNotification.length - 1];
+            //lastNotify.innerHTML = `<img class="profilePictureHeader" src="/images/mean.jpg">` + sendNotificationFromUserName + " has liked your playlist ";
+            //$(".addOn").append(`<img class="profilePictureHeader" src="/images/mean.jpg">` + sendNotificationFromUserName + " has liked your playlist ");
+            addNewNotification();
         }
+        
+    function addNewNotification() {
+        //var last = $(".addOn:last");
+        //last.append(`<img class="profilePictureHeader" src="/images/mean.jpg">` + sendNotificationFromUserName + " has liked your playlist ");
+        var last = $(".notification:last");
+        //console.log("last notification --- " + JSON.stringify(last));
+        last.append(`<h4> <img class="profilePictureHeader" src="/images/${sendNotificationFromUserImage}">   ${sendNotificationFromUserName} </h4> <p> has liked your 
+            ${sendNotificationFromUserSongName} playlist </p>`);
+    }
+    
     });
-
+ 
     console.log("user role>>>gg " + myVar.role);
     if (myVar.role == "instructor") {
         var allInstructor = document.querySelectorAll(".profilePictureHeader");
@@ -312,4 +361,111 @@
         //document.getElementsByClassName("profilePictureHeader").style.borderColor = "green";
     }
 
+    if (currentUser != "") {
+    document.getElementById("notificationBell").innerHTML = "2";
+    }
+
+    console.log(window.location.origin);
+    console.log(window.location);
+    console.log("hey  <%=urlName%>");
+    
+
+    function dynamicFromServer() {
+        console.log("hello sent dynamic post to server");
+        
+        var clientKeyword = $("#searchInput").val();
+        var urlClient = window.location.origin + "/search/" + clientKeyword;
+        console.log("client keyword val() ---->  " + clientKeyword);
+        console.log("url to post request to >>>> " + urlClient);
+        
+        var searchJSON = {
+            searchKey: clientKeyword
+        }
+        
+        alert("<%=urlName%>");
+        alert(clientKeyword);
+        alert(urlClient);
+        alert(JSON.stringify(searchJSON));
+        setCookie("searchInputCookie", clientKeyword);
+        setCookie("searchType", $("#searchType").val());
+        
+        $.ajax({
+            type: "GET", //if post , fail search will return ?searchType=Instruments , so use GET
+            url:urlClient,
+            //data: JSON.stringify(searchJSON),
+            contentType: "application/json",
+            success: function(result) {
+                alert("successfully searched stuffs");
+                location.href = urlClient;
+            },
+            error: function(result) {
+                alert("error searching!!");
+                location.href = urlClient;
+            }
+        })
+
+    } //end of function dynamicToServer()
+
+    var searchType = $("#searchType").val();
+    console.log(searchType);
+
+
+    $("#searchInput").keydown(function(event) {
+        if (event.keyCode == 13) {
+           kys();
+        }
+    });
+    
+    $(document).ready(function() {
+        console.log("val >>>>>>>> " + $("#searchInput").val());
+        console.log("search type header ---  " + $("#searchType").val());
+    });
+
+    function kys() {
+        var searchVal = $("#searchInput").val();
+        var searchType = $("#searchType").val();
+        //var locationToGo = window.location.origin + "/search/" + searchVal;
+        var locationToGo = window.location.origin + "/search" + "/searchResult?comeon=" + searchVal;
+        alert(searchVal);
+        alert(searchType);
+        alert(" kys " + locationToGo);
+        
+        //setCookie("priceSortType", ""); //to clear filter when search for another stuff, set to "" cos onload searchresult if is "" , cookie val change to "None".
+        setCookie("searchInputCookie", searchVal);
+        setCookie("searchType", searchType);
+        setCookie("productFilterType", "None"); //set category to none when search for another stuff
+        location.href = locationToGo;
+    }
+    /* 
+    window.onload = function() {
+        var getInput = getCookie("searchInputCookie");
+        $("#searchInput").val(getInput);
+        var getType = getCookie("searchType");
+        if (getType == 0) {
+            $("#searchType").val("Instruments");
+        }
+        else{
+        $("#searchType").val(getType);
+        }
+    }
+    */
+    
+    var userNotificationNo = $("#notificationBell").text();
+    console.log(userNotificationNo);
+    if (currentUser != "") {
+        if (userNotificationNo == 0) {
+            console.log("WP");
+            //$(".notification").innerHTML += `<h4> <img class="profilePictureHeader" src="/images/3.jpg">  Hi  </h4> <p> has liked your playlist </p>'
+            //$(".dropdown-menu dropdown-menu-right dropdown-info.show").innerHTML += 2;
+            //var emptyNotification = document.getElementsByClassName("dropdown-menu.dropdown-menu-right.dropdown-info.show");
+            var emptyNotification = document.getElementById("notificationUser");
+            console.log(emptyNotification.innerHTML);
+        
+            console.log($("#notificationUser").val());
+            emptyNotification.innerHTML = "<h4> HI </h4>";
+            console.log(emptyNotification.innerHTML);
+            console.log($("#notificationUser").text());        
+        }
+    }
+    
 </script>

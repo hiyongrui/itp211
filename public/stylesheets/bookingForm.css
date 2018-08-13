@@ -1,0 +1,156 @@
+
+body {
+    background-image: url("/images/guitar6.jpg");
+    background-size: 100%;
+    background-position: top 60px;
+    background-repeat: no-repeat;
+}
+
+.wrapper {
+    display: inline-block;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 20px;
+}
+
+#bookingForm {
+    padding-top: 10px;
+    padding-left: 25px;
+    border: 2px solid gray;
+    height: 100%;
+    width: 600px;
+    float: left;
+    background-color: white;
+    margin-bottom: 20px;
+}
+
+.formTitle {
+    margin-top: 10px;
+}
+
+.payment {
+    margin-left: 20px;
+    border: 2px solid gray;
+    width: 350px;
+    height: 320px;
+    float: right;
+    background-color: white;
+}
+
+input[class=days] {
+    display: none;
+}
+
+input[name=timings] {
+    display: none;
+}
+
+.lessonDetails {
+    font-weight: bold;
+}
+
+.displayDays {
+    margin-right: 20px;
+    display: inline-block;
+}
+
+.textDays {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.textTimings {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.formLine {
+    margin-right: 30px;
+}
+
+label.label {
+    display: inline-block;
+    background:#d9d9d9;
+    color:#fff;
+    border-radius: 50%;
+    margin-right: 15px;
+    padding: 1em;
+    cursor:pointer;
+    color: black;
+    border: 1px solid black;
+    width: 65px;
+    height: 65px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+
+}
+
+label.timeLabel {
+    display: inline-block;
+    background:#4775d1;
+    color: white;
+    text-align: center;
+    padding-top: 1px;
+    margin-right: 25px;
+    margin-top: 5px;
+    height: 30px;
+    width: 100px;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid black;
+}
+
+.selectedTimingsText {
+    margin-left: 20px;
+    margin-top: 20px;
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.selectedTimings {
+    margin-left: 20px;
+    height: 150px;
+    overflow-y: scroll;
+}
+
+.confirmTimingBtn {
+    margin-top: 20px;
+    background-color: #cc6600;
+    color: white;
+    width: 140px;
+    height: 40px;
+    border: 1px solid black;
+    margin-bottom: 40px;
+}
+
+.totalAmtDue {
+    margin-left: 20px;
+}
+
+.removeTimingRow {
+    float: right;
+    margin-right: 120px;
+    margin-bottom: 16px;
+    color: #aaaaaa;
+    font-weight: bold;
+}
+
+.finalSelectedTimings {
+    float: left;
+
+}
+
+.removeTimingRow:hover,
+.removeTimingRow:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.paymentDetails {
+    margin-bottom: 20px;
+}
+
+.inputText {
+    margin-bottom: 20px;
+}

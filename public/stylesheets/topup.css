@@ -1,0 +1,310 @@
+html,body {
+    height: 100%;
+    background-color: #F8F9F9 !important;
+}
+
+
+label {
+    display: inline-block;
+    background:#F2F3F4;
+    color:#fff;
+    padding:1em;
+    margin:1em;
+    cursor:pointer;
+    color: black;
+    border: 1px solid blue;
+    width: 150px;
+    height: 100px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+
+}
+
+.topUpValue {
+    display: block;
+    width: 50px;
+}
+
+.display {
+    height: 230px;
+    width: 100%;
+}
+
+.displayBalance {
+    margin-top: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    height: 60px;
+    width: 500px;
+}
+
+.displayTextWallet {
+    margin-top: 30px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+
+.displayBoxBtns {
+    margin-top: 20px;
+}
+
+.walletImg {
+    height: 210px;
+    width: 240px;
+    display: block;
+    margin-left: 37px;
+}
+
+.displayBoxBtn {
+    font-size: 15px;
+    height: 40px;
+    width: 150px;
+    background-color: #3498DB;
+    color: white;
+    border-radius: 10px;
+}
+
+.displayBox{
+    border: 2px solid black;
+    margin-top: 180px;
+    margin-left: 20%;
+    margin-right: 20%;
+    height: 180px; /* original */
+    display: block;
+    background-color: #e3e6e8;
+    color: black;
+    font-size: 40px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.testCoinImg {
+    width: 50px;
+    height: 40px;
+    display: block;
+    float: left;
+}
+
+.selectAmt {
+    width: 30%;
+    float: left;
+    margin-left: 19%;
+    border-right: 1px solid gray;
+    
+}
+
+.reviewAmt {
+    margin-right: 20%;
+    margin-top: 30px;
+    float: right;
+    margin-left: 10px;
+}
+
+.selectedValue {
+    height: 30px;
+}
+
+.selectedValueText {
+    float: left;
+}
+
+.selectedValueAmt {
+    float: right;
+    text-align: right;
+}
+
+.priceText {
+    float: left;
+}
+
+.priceAmt {
+    float: right;
+    text-align: right;
+}
+
+.textReview {
+    font-weight: bold;
+}
+
+.textReviewLine {
+    margin-left: 0;
+}
+
+.topup {
+    /* margin-top: 50px; */
+    margin-top: 50px;
+}
+
+.topUpTextLine {
+    border-bottom: 1px solid gray;
+    line-height: 0.1em;
+    margin-right: 20%;
+    margin-left: 20%;
+    margin-bottom: 20px;
+    padding-left: 10%;
+    font-size: 30px;
+    margin-top: 80px;
+}
+
+h3 span {
+    padding: 0 10px;
+    background: #F8F9F9;
+}
+
+.acceptedCardsTextLine {
+    border-bottom: 1px solid gray;
+    line-height: 0.1em;
+    margin-right: 20%;
+    margin-left: 20%;
+    margin-bottom: 20px;
+    padding-left: 10%;
+    font-size: 30px;
+    padding-top: 30px;
+}
+
+.price {
+    top: 0;
+    margin-bottom: 10px;
+    height: 30px;
+}
+
+.displayBalance {
+    padding-left: 21%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+
+    height: 100px;
+}
+
+.coinimg {
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    top: 210px;
+    left: 684px;
+}
+
+.balanceAmt {
+   position: absolute;
+   top: 210px;
+   left: 630px;
+   font-size: 30px;
+   font-family: 'Times New Roman', Times, serif;
+}
+
+.topUpBtn {
+    background-color: red;
+    border: none;
+    height: 35px;
+    font-size: 14px;
+    color: white;
+    width: 355px;
+    margin-top: 60px;
+    border-radius: 2px;
+}
+
+.acceptedCards {
+    margin: 0 20% 30px 20%;
+}
+
+.paymentcards {
+    width: 600px;
+    height: 90px;
+    margin-top: 20px;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    overflow: auto;
+}
+
+.historyContent {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 520px;
+    height: 520px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    overflow-y: scroll;
+
+}
+
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.historyHeader {
+    height: 60px;
+    width: 100%;
+    background-color: #e6e6e6;
+    color: #3366ff;
+    text-align: center;
+    font-weight: bold;
+}
+
+.historyHeader h2 {
+    padding-top: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.historyBody {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 10px;
+}
+
+thead {
+    border-top: 1px solid gray;
+    height: 10px;
+}
+
+td {
+    height: 80px;
+    background-color: #f2f2f2;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.table {
+    border-spacing: 0 2em;
+    border-collapse: separate;
+}
+
+.paidAmt {
+    padding-right: 10px;
+    width: 20px;
+}
+
+
+

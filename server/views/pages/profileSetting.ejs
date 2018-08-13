@@ -107,6 +107,13 @@
     
 }
 
+textarea {
+  width: 99%;
+  height: 95%;
+  margin: auto;
+  resize: none;
+}
+
 	</style>
 </head>
 <body>
@@ -120,7 +127,7 @@
             </div>
 				</div>
 		</div>
-	<form id="regForm" action="/action_page.php">
+	<form id="regForm" action="/profileSetting/new" method="POST">
 		<!-- One "tab" for each step in the form: -->
 		<div class="tab">What Lesson do you teach?
 			<br>
@@ -165,34 +172,30 @@
 			<br>
 			<p>Select your Location:</p>
 			<div class ="box">
-			<p><input style="width:3%" type="checkbox" name="MyLocation" value="MyLocation">My Location</p>
-			<p><input style="width:3%" type="checkbox" name="StudentHome" value="StudentHome">Student's Home</p>
+			<p><input style="width:3%" type="checkbox" id="myCheck" onclick="myFunction()" name="MyLocation" value="Instructor's Location">My Location</p>
+			<p><input id="text" style="display:none" placeholder="Enter your Location here" name="location"></p>
+			<p><input style="width:3%" type="checkbox" name="StudentHome" value="Student's Home">Student's Home</p>
 		</div>
 	</div>
 		<div class="tab">Experience:
 			<div class = "box">
-				<p><input placeholder="Enter your Experience here" oninput="this.className = ''" name="experience"></p>
-				<p>From:<input placeholder="month/yyyy" oninput="this.className = ''" name="FromDate"></p>
-				<p>To:<input placeholder="month/yyyy" oninput="this.className = ''" name="ToDate"></p>
+				<p><input placeholder="Enter your Experience here" name="experience"></p>
+				<p>From:<input placeholder="month/yyyy"  name="FromDate"></p>
+				<p>To:<input placeholder="month/yyyy" name="ToDate"></p>
 			</div>	
 			<br>
 			<p>Education:</p>
 			<div class ="box">
-			<p><input placeholder="Please state your Education Level." oninput="this.className = ''" name="education"></p>
-			<p>From:<input placeholder="month/yyyy" oninput="this.className = ''" name="FromDate2"></p>
-			<p>To:<input placeholder="month/yyyy" oninput="this.className = ''" name="ToDate2"></p>
+			<p><input placeholder="Please state your Education Level." name="education"></p>
+			<p>From:<input placeholder="month/yyyy" name="FromDate2"></p>
+			<p>To:<input placeholder="month/yyyy"  name="ToDate2"></p>
 			</div>
 			<br>
 			<p>Awards:</p>
 			<div class ="box">
-			<p><input placeholder="Please state any awards or state NIL." oninput="this.className = ''" name="award"></p>
-			<p>Date:<input placeholder="month/yyyy" oninput="this.className = ''" name="Date"></p>
+			<p><input placeholder="Please state any awards or state NIL."  name="award"></p>
+			<p>Date:<input placeholder="month/yyyy" name="Date"></p>
 			</div>
-		</div>
-		<div class="tab">Upload Videos:
-				<div class ="box">
-					<p><a href = "/videos"><button class="btn btn-secondary" type="button" >Click here to Upload video</button></a></p>
-				</div>
 		</div>
 		<div style="overflow:auto;">
 		  <div style="float:right;">
@@ -281,7 +284,16 @@
 		}
 		//... and adds the "active" class on the current step:
 		x[n].className += " active";
-	  }
+		}
+		function myFunction() {
+    var checkBox = document.getElementById("myCheck");
+    var text = document.getElementById("text");
+    if (checkBox.checked == true){
+        text.style.display = "block";
+    } else {
+       text.style.display = "none";
+    }
+}
 	  </script>
         <% include ../partials/footer %>
        

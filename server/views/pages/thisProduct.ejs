@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Specific Product
+    </title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/imageviewer/1.0.0/viewer.css" rel="stylesheet"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/imageviewer/1.0.0/viewer.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.2.0/viewer.js"> </script>
+</head>
+
+<style>
+    body {
+        padding-top: 54px;
+    }
+
+    @media (min-width: 992px) {
+        body {
+            padding-top: 56px;
+        }
+    }
+
+    #output {
+        border-radius: 50%;
+        /*display: inline; */
+        width: 100px;
+        height: 90px;
+        float:left;
+    }
+
+    #sellerInfoDiv {
+        background-color: grey;
+    }
+
+    #sellerProductImage {
+        height: 400px;
+        width: 100%;
+    }
+
+    .marked {
+        background-color: lightgreen;
+        font-size: 20px;
+    }
+
+    .unmarked {
+        background-color: lightblue;
+        color: blue;
+        font-size: 20px;
+    }
+
+    .pastProductViewedImages {
+        height: 250px;
+        width: 100%;
+    }
+
+    .card-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #MayLikeLine {
+        display: table;
+        border-spacing: 1rem 0;
+        line-height: .25;
+        margin: 1em 0 .5em;
+        table-layout: auto;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 33px;
+        font-family: 'Droid Serif', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-style: italic;
+        text-transform: uppercase;
+        padding: 33px;
+    }
+
+    #MayLikeLine::before {
+        border-top: 3px double #123;
+        content: "";
+        display: table-cell;
+        width: 50%;
+        border-top-color: slategrey;
+    }
+
+    #MayLikeLine::after {
+        border-top: 3px double #123;
+        content: "";
+        display: table-cell;
+        width: 50%;
+        border-top-color: slategray;
+    }
+
+    .likeShapeForPastProduct {
+        color: #007bff;
+
+    }
+
+    .likeShapeForPastProductDiv {
+        text-align: center;
+    }
+
+    .likeShapeForPastProductDiv:hover {
+        background-color: rgba(0, 0, 0, .05);
+        border-color: #ff5722;
+    }
+
+    .card-footer {
+        cursor: pointer;
+    }
+
+    .card.h-100 {
+        padding: 10px;
+    }
+
+    .card.h-100:hover {
+        /* box-shadow: 0 0 10px rgba(0,0,0,.2); */
+        border: 1px solid;
+        box-shadow: 5px 10px 8px #888888;
+    }
+
+
+    .star-ratings-sprite {
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        font-size: 0;
+        height: 21px;
+        line-height: 0;
+        overflow: hidden;
+        text-indent: -999em;
+        width: 110px;
+        /* margin: 0 auto; */  
+    }
+
+    .star-ratings-sprite-rating {
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        background-position: 0 100%;
+        float: left;
+        height: 21px;
+        display: block;
+    }
+    .ratingCount{
+       margin-left:9px;
+        color: #ff5722;
+        
+    }
+    .ratingCountThisProduct{
+        color: #ff5722;
+        margin-right:90px !important;
+    }
+    .ratingOfUserColor{
+        margin-top:16px;
+        font-size: 1.6rem;
+        color: #ff5722;
+        text-align: center;
+    }
+    .ratingText{
+        color:#ff5722;
+        text-align: center;
+    }
+    .ratingOfUserDiv{
+        margin-top:48px;
+        margin-left:36px;
+    }
+    .textForUser{
+        text-align: center;
+        color: rgba(0,0,0,.54);
+        text-transform: uppercase;
+        font-size: 1.2rem;
+    }
+    .rightHr{
+        border-right-style: solid;
+        border-right-color: rgba(0,0,0,.09);
+    }
+    .username{
+        margin-top:29px;
+        text-align: right;
+    }
+    .userRow{
+        background-color:whitesmoke;
+        border-radius: 3px;
+
+    }
+    .instrument{
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        font-size: 0;
+        height: 21px;
+        line-height: 0;
+        overflow: hidden;
+        text-indent: -999em;
+        width: 110px;
+        margin-left: 154px;
+       
+    }
+    
+.fa-heart-o {
+    pointer-events: none;
+}
+button:disabled{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    padding: 1rem 2.4rem;
+    font-size: .94rem;
+    margin: .375rem;
+    text-transform: uppercase;
+}
+.zoomImg{
+    height:60px;
+    width:60px;
+}
+.thumbnail{
+    overflow: hidden;
+    display: inline-block;
+    width:100%;
+}
+</style>
+
+
+<body>
+    <% include ../partials/header %>
+
+        <!-- Page Content -->
+        <div class="container">
+
+            <!-- Heading Row -->
+            <div class="row my-4">
+                <div class="col-lg-7">
+                    <!-- <img class="img-fluid rounded" src="http://placehold.it/900x400" alt=""> !-->
+                    <div>
+                        <img id="sellerProductImage" src="/images/<%=thisProduct[0].imageName%>">
+                    </div>
+                    <div>
+                        <ul id="imagesZoom">
+                            <div class="thumbnail">
+                            <li><img class="zoomImg" src="/images/aov2.png" alt="Picture 1"></li>
+                            </div>
+                            <div class="thumbnail">
+                            <li><img class="zoomImg" src="/images/2.jpg" alt="Picture 2"></li>
+                            </div>
+                            <div class="thumbnail">
+                            <li><img class="zoomImg" src="/images/1.jpg" alt="Picture 3"></li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-5">
+                    <h1>
+                        <%=thisProduct[0].productListingName%>
+                    </h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam,
+                            maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                        <div class="row"> 
+                        <div class="col-3">
+                    <div class="star-ratings-sprite">
+                        <span style="width:52%" class="star-ratings-sprite-rating .instrument" data-rating="<%=thisProduct[0].rating%>">
+                        </span>
+                    </div>
+                        </div>
+                    <div class="col-6">
+                            <% if (!thisProduct[0].ratingCount) { %>
+                                <p class="ratingCountThisProduct"> (0) </p>
+                            <% } 
+                                else { %>
+                                <p class="ratingCountThisProduct"> (<%=thisProduct[0].ratingCount%>)</p>
+                            <% } %>
+                    </div>
+                        </div>
+                    <% if (thisProduct[0].user_id == user.id) {%> 
+                        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="this product belongs to you, so you are not allowed to add it to cart :(">
+                            <button class="btn btn-primary" style="pointer-events: none;" type="button" disabled> Add To Cart!</button>
+                        </span>
+                    <% } 
+                        else { %>
+                        <a class="btn btn-primary btn-lg addToCartBtn"> Add to Cart! </a>
+                    <% } %>
+
+                    <button type="button" class="unmarked" data-id="<%=thisProduct[0].id%>" data-value="<%=thisProduct[0].productLikeNo%>">
+                        <i class="fa fa-heart-o"> </i> 50
+                    </button>
+
+                </div>
+                <!-- /.col-md-4 -->
+            </div>
+            <!-- /.row -->
+
+          <hr>
+
+            <div class="row userRow"> 
+                <div class="col rightHr"> 
+                    <img id="output" src="/images/<%=thisProduct[0].userImage%>">
+                    <h2 class="username"> <%=thisProduct[0].name%> </h2> 
+                    <a href ="/users/profile/<%=thisProduct[0].name%>"> <button class="btn btn-outline-info waves-effect usernameBtn"> View Profile </button> </a>
+                </div>
+                <div class="col rightHr"> 
+                    <div class="star-ratings-sprite ratingOfUserDiv">
+                        <span style="width:52%" class="star-ratings-sprite-rating" data-rating="<%=thisProduct[0].userRating%>">
+                        </span>
+                    </div>
+                    
+                    <h2 class="ratingOfUserColor"> <%=thisProduct[0].userRating%> out of 5 </h2>
+                    <div class="ratingText">
+                        Ratings
+                    </div>
+                    
+                </div>
+                <div class="col rightHr">
+                    <div>
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThopPlcM74RAjssoOuQwTcMAIB16ejF_t7Mjij3DY4HPQoTlQE" height="100" width="222"/>
+                    </div>
+                    <div class="ratingOfUserColor"> 
+                        <%=countProductOfUser[0].count%> 
+                    </div>
+                    <p class="textForUser"> Instruments </p>
+                </div>
+
+                <div class="col rightHr">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZxHM8LDT9Ht9vzZ5zU8QYmoH6W1XFMwbjZERp724cL8Kv7JGP" height="100" width="222"/>
+                    <div class="ratingOfUserColor">
+                        9 
+                    </div>
+                    <p class="textForUser"> Lessons </p>
+                </div>
+
+                <div class="col">
+                    <img src="https://image.freepik.com/free-icon/love-songs-folder_318-43755.jpg"/ height="100" width="166">
+                    <div class="ratingOfUserColor">
+                       5
+                    </div>
+                    <p class="textForUser"> Songs </p>
+                </div>
+                
+            </div>
+
+        
+
+            <div class="row">
+                
+                    <h1 id="MayLikeLine" class="text-center"> You may also like </h1>
+                        <% sameProducts.forEach(function(sameProducts){ %>
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <a href="/products/<%=sameProducts.id%>">
+                                        <div class="card-body">
+                                            <img class="pastProductViewedImages" src="/images/<%=sameProducts.imageName%>">
+                                            <h2 class="card-title">
+                                                <%=sameProducts.productListingName%>
+                                            </h2>
+                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam,
+                                                maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                                            
+                                            <div class="row justify-content-center">
+                                                <div class="col-4"> 
+                                                    <div class="star-ratings-sprite">
+                                                        <span style="width:52%" class="star-ratings-sprite-rating" data-rating="<%=sameProducts.rating%>">
+                                                            
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <% if (!sameProducts.ratingCount) { %>
+                                                        <p class="ratingCount"> (0) </p>
+                                                    <% } 
+                                                        else { %>
+                                                        <p class="ratingCount"> (<%=sameProducts.ratingCount%>)</p>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+        
+                                        </div>
+                                    </a>
+                                    <div class="card-footer">
+                                        <div class="likeShapeForPastProductDiv" onclick="alert('hi')">
+                                            <i id="likeShapeForPastProduct" class="fa fa-heart-o likeShapeForPastProduct"> 50 </i>
+                                        </div>
+                                    </div>
+        
+                                </div>
+                            </div>
+                            <% }); %>
+                    </div>
+                    <!-- end of 2nd row for past history !-->
+
+
+            <div class="row">
+                
+            <h1 id="MayLikeLine" class="text-center"> Your Past Product Histories </h1>
+                <% pastProductViewed.forEach(function(pastProductViewed){ %>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <a href="/products/<%=pastProductViewed.id%>">
+                                <div class="card-body">
+                                    <img class="pastProductViewedImages" src="/images/<%=pastProductViewed.imageName%>">
+                                    <h2 class="card-title">
+                                        <%=pastProductViewed.productListingName%>
+                                    </h2>
+                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam,
+                                        maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                                    
+                                    <div class="row justify-content-center">
+                                        <div class="col-4"> 
+                                            <div class="star-ratings-sprite">
+                                                <span style="width:52%" class="star-ratings-sprite-rating" data-rating="<%=pastProductViewed.rating%>">
+                                                    
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <% if (!pastProductViewed.ratingCount) { %>
+                                                <p class="ratingCount"> (0) </p>
+                                            <% } 
+                                                else { %>
+                                                <p class="ratingCount"> (<%=pastProductViewed.ratingCount%>)</p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </a>
+                            <div class="card-footer">
+                                <div class="likeShapeForPastProductDiv" onclick="alert('hi')">
+                                    <i id="likeShapeForPastProduct" class="fa fa-heart-o likeShapeForPastProduct"> 50 </i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+            <!-- end of 2nd row for past history !-->
+
+        </div>
+        <!-- /.container -->
+
+        <script>
+
+            console.log("location " + window.location);
+
+            $('.addToCartBtn').click(function() {
+                var url = window.location.href + "/newCartItem";
+                console.log("URL IS " + url);
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    success: function(result) {
+                        alert("Product added to cart successfully");
+                        var itemCount = document.getElementById("cartItemCount").innerHTML;
+                        itemCount = parseInt(itemCount) + 1;
+                        $("#cartItemCount").text(itemCount);
+                    },
+                    error: function(result) {
+                        alert("Error");
+                    }
+                })
+            })
+
+            $(".star-ratings-sprite-rating").each(function () {
+                console.log("GGGGGGGGGGGGGGGGGGGGGGG@@@@@@@@@@@@");
+                console.log(this);
+                var val = $(this).data("rating");
+
+                /*
+                var totalStars = $(this).data("total");
+                var countTotalNo = $(this).data("count");
+                var calculated = $(this).data("calculated");
+
+                var avgStars = (totalStars / countTotalNo).toFixed(2) * 20;
+                console.log("rating for tis " + val);
+                console.log("total stars " + totalStars);
+                console.log("total no of reviews " + countTotalNo);
+                console.log("avg stars -- " + avgStars);
+
+                console.log("no of stars in user point of view " + avgStars * 5 / 100);
+                console.log(this);
+                avgStarsInString = avgStars + "%";
+                console.log("string avg stars " + avgStarsInString);
+                console.log("calculated val " + calculated);
+                //this.style.width = "20%"; 
+                */
+                var convertToPercentageOver100 = val / 5 * 100;
+                avgStarsInString = convertToPercentageOver100 + "%";
+                this.style.width = avgStarsInString;
+                //this.style.width = avgStarsInString;
+            });
+            
+            $('button.unmarked').on('click', function(e) {
+        var $targetButton = $(e.target);
+        if ($targetButton.hasClass('marked')) { // if mark , unmark it
+            onMarkedButtonClick($targetButton);
+            console.log("marking to unmark>> ");
+            var url = "http://localhost:3000/unlikesong";
+            var newValues = {
+                likesong_id:$(this).data("id")
+            }
+            console.log(url);
+            console.log(JSON.stringify(newValues));
+            var thisCount = $(this).data("value");
+            var thisButton = $(this);
+            console.log("thiscount affter" + thisCount);
+            console.log(thisButton[0].innerHTML);
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                //dataType: "json", //remove this to successfully add playlist??? lol
+                contentType: "application/json",
+                success: function(result){
+                    //alert("Song unliked successfully");
+                    thisCount = thisCount - 1;
+                    thisButton.data("value",thisCount);
+                    console.log("after unliking >> " + thisCount);
+                    //document.getElementsByClassName("likeCount").innerHTML = thisCount;
+                    thisButton[0].innerHTML = "<i class='fa fa-heart-o'> </i> " + thisCount;
+                    
+                },
+                error: function(result){
+                    alert("Error unliking song");
+                    //discardChanges();
+                }
+            })
+        } 
+        else if ($targetButton.hasClass('unmarked')) { //if unmark , mark it
+            onUnmarkedButtonClick($targetButton);
+            console.log("unmarking to mark >> ");
+            var url = "http://localhost:3000/likesong";
+            var newValues = {
+                likesong_id:$(this).data("id")
+            }
+            console.log(url);
+            console.log(JSON.stringify(newValues));
+            var thisCount = $(this).data("value");
+            var thisButton = $(this);
+            console.log("this count >> " + thisCount);
+            console.log(thisButton[0].innerHTML);
+            //console.log("nearest button " + (this).closest("h2").text(data));
+            //var this_like_song_id = $(this).data("id");
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                //dataType: "json", //remove this to successfully add playlist??? lol
+                contentType: "application/json",
+                success: function(result){
+                    //alert("Song Liked successfully"); 
+                    thisCount = 50 + 1;
+                    thisButton.data("value",thisCount);
+                    console.log("after liking >> " + thisCount);
+                    //document.getElementsByClassName("likeCount").innerHTML = "<i class='fa fa-heart-o'> </i>" + thisCount;
+                    thisButton[0].innerHTML = "<i class='fa fa-heart-o'> </i> " + thisCount;
+
+                    
+                    //socket.emit("songLikeByUserId", currentUser.id); 
+                    //socket.emit("songLikeId", this_like_song_id);
+                },
+                error: function(result){
+                    alert("Error liking song");
+                    //discardChanges();
+                }
+            })
+        }
+
+    });
+
+        function onMarkedButtonClick($button) {
+            $button.removeClass('marked');
+            $button.addClass('unmarked');
+        }
+
+        function onUnmarkedButtonClick($button) {
+            $button.removeClass('unmarked');
+            $button.addClass('marked');
+        }
+    
+    
+        
+    // Tooltips Initialization
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+    var viewer = new Viewer(document.getElementById('sellerProductImage'), {
+        inline: true,
+        viewed: function() {
+        viewer.zoomTo(1);
+        }
+    });
+
+    // View a list of images
+    var viewer = new Viewer(document.getElementById('imagesZoom'));
+    
+    </script>
+</body>
+
+</html>

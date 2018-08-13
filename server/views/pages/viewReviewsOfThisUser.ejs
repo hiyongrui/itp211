@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+          View review of this guy
+    </title>
+
+</head>
+
+<style>
+
+
+</style>
+
+<body>
+    <% include ../partials/header %>
+
+    <h1 class="text-muted" style="text-align: center">All Reviews</h1>
+       <br>
+    <div class="lead">
+        <div class="list-group">
+            <% reviews.forEach(function(reviews){ %>
+                <a href="#" class="list-group-item" data-id="<%= reviews.id%>">
+                    <img src="/images/<%=reviews.imageName%>" alt="" style="float: left; margin-right: 150px; height: 30%; width: 30%">
+                    <div class="reviews"  style="display: none">
+                        <form action="/reviews" method="delete">
+                            <h4 class="list-group-item-heading">
+                                <br>
+                                Review Title: <%= reviews.title %>
+                            </h4>
+                            <p class="list-group-item-text">
+                                Descriptions: <br> <%= reviews.content %>
+                            </p>
+                            <small class="text-muted">By:
+                                <%= reviews.name %>
+                                <br>
+                                <%= reviews.createdAt %>
+                            </small>
+                            <!-- <p class="list-group-item-text">
+                                <%= reviews.imageName %>
+                            </p> -->
+                            <!--
+                            <i class="fa fa-star"> </i>
+                            <i class="fa fa-star"> </i>
+                            <i class="fa fa-star"> </i>
+                            <i class="fa fa-star"> </i>
+                            <i class="fa fa-star"> </i>
+                            !-->
+
+                            <h1> Rating : <%=reviews.rating%> / 5.00</h1>
+                           
+                        </form>
+                    </div>
+                </a>
+                <% }); %>
+        </div>
+    </div>
+</div>
+
+
+
+        <script>
+         $(function(){
+            $("div.reviews").slice(0, 10).show(); // select the first ten
+            $("#load").click(function(e){ // click event for load more
+                e.preventDefault();
+                $("div:hidden").slice(0, 10).show(); // select next 10 hidden divs and show them
+                if($("div:hidden").length == 0){ // check if any hidden divs still exist
+                    alert("No more divs"); // alert if there are none left
+                }
+            });
+        });
+        </script>
+</body>
+
+</html>

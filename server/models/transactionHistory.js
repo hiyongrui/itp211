@@ -8,25 +8,37 @@ const transactionHistory = sequelizeInstance.define('transactionHistory', {
         autoIncrement: true,
         primaryKey: true
     },
-    productId: {
+    product_id: {
         type: Sequelize.STRING
         
     },
-    productName: {
+    product_name: {
         type: Sequelize.STRING,
         trim: true
     },
-    sellerName: {
+    product_type: {
         type: Sequelize.STRING
     },
-    pricing: {
+    product_condition: {
+        type: Sequelize.STRING
+    },
+    product_price: {
         type: Sequelize.INTEGER,
         trim: true
+    },
+    product_image: {
+        type: Sequelize.STRING
+    },
+    seller_name: {
+        type: Sequelize.INTEGER
     },
     transactionId: {
         type: Sequelize.INTEGER
     },
-    user_id: {
+    product_status: {
+        type: Sequelize.BOOLEAN
+    },
+    user_id:{
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

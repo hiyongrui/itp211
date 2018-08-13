@@ -5,7 +5,7 @@ var sequelize = myDatabase.sequelize;
 
 exports.payment = function (req, res) {
     Cart.findAll({
-        attributes: ['id', 'productName', 'pricing'],
+        attributes: ['product_id', 'product_name', 'product_type', 'product_condition', 'product_price', 'product_image', 'seller_name'],
         where: {
             user_id: req.user.id
         } 

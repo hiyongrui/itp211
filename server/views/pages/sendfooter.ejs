@@ -8,6 +8,10 @@
     #nameOfSong{
         margin-left:30px;
     }
+    .imageOfSong{
+        width:140px;
+        height:140px;
+    }
 </style>
 <footer class="footer">
     <div class="container">
@@ -18,9 +22,9 @@
                   
        
             <% songs.forEach(function(songs){ %>
-                
+                        <img class="imageOfSong" src="/images/<%=songs.songImage%>"/>
                         <audio controls class="audioPlayer">
-                      <source class="sourcePlayer" src="songs/<%= songs.songName %>" type="audio/mpeg" />
+                      <source class="sourcePlayer" src="/songs/<%= songs.songName %>" type="audio/mpeg" data-image="<%=songs.songImage%>"/>
                       </audio>
             <% }); %>
                       
@@ -67,6 +71,6 @@
 var getCurrentName = getCookie("songName");
 console.log("current cookie song name is " + getCurrentName);
           $(".audioPlayer:not(:first)").hide();
-         
+          $(".imageOfSong:not(:first)").hide();
 </script>
 

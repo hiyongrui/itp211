@@ -8,6 +8,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"> </script>
 
+    <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> !-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.10/sweetalert2.all.js"> </script>
 </head>
 
 <style>
@@ -105,7 +107,7 @@ label:hover{
     width: 50%;
 }
 
-.row{
+#levelDiv{
     margin-left:300px !important;
     padding:30px;
     margin-right:0px !important;
@@ -199,6 +201,27 @@ margin-left:150px;
      padding:60px;
      border-top: 1px solid blue !important;
  }
+
+ .currentUserProductImage{
+     height: 250px;
+     width:100%;
+
+ }
+
+ .col-md-4.col-sm-4.col-xs-4 {
+     background-color:grey;
+     margin-top:40px;
+ }
+
+ .card-title{
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis; /* make it ... if text too long */
+ }
+
+ #cssDeleteBtn{
+     padding:9px;
+}
 </style>
 
 <body>
@@ -220,7 +243,7 @@ margin-left:150px;
                         <label for="image"> <i id="pencil" class="fas fa-pencil-alt"> </i> </label>
                     </div>
                     
-                    <img id="output" src="images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
+                    <img id="output" src="/images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'"/> 
 
                    
                 </div>
@@ -234,7 +257,7 @@ margin-left:150px;
                 <span class="text-xs-center"> <%= user.name %> </span> 
                 <span class="text-xs-center"> experience : <%= user.experience %> </span>
                         !-->
-                <div class="row">
+                <div id="levelDiv" class="row">
                 
 
                 <div class="col-xs-1">
@@ -259,22 +282,7 @@ margin-left:150px;
         
     </div>
                 
-                <!--
-                <div id="avatar-card" class="avatar-card">
-                    <div class="avatar">
-                            <div class="gravatar-wrapper-164">
-                                <img id="output" src="images/<%= user.userImage %>" alt= "Card image cap" onerror="javascript:this.src='images/contact.png'"/>  
-                            </div>
-                        </a>
-                    </div>
-                    <div class="reputation" title="reputation">
-                        271,449 <span class="label-uppercase">reputation</span>
-                    </div>
-                </div>
-                !-->
-
-                <!-- <img class="card-img-top" src="<%= avatar %>" alt="Card image cap"> !-->
-              
+               
                 
         <div id="second" class="container-fluid no-padding">
 
@@ -319,7 +327,7 @@ margin-left:150px;
                                         <!--Grid column-->
                                         <div class="col-md-4">
                                             <!-- <i class="fa fa-area-chart fa-3x red-text"></i> !-->
-                                            <h1 id="noOfInstruments" class="font-weight-bold mt-3"> 15+ </h1>
+                                            <h1 id="noOfInstruments" class="font-weight-bold mt-3">  </h1>
                                             <h5 class="font-weight-bold mt-1"> Instruments </h5>
                                             <p class="grey-text"> This is the total number of instruments you have listed!
                                             </p>
@@ -329,7 +337,7 @@ margin-left:150px;
                                         <!--Grid column-->
                                         <div class="col-md-4">
                                             <!--<i class="fa fa-book fa-3x cyan-text"></i> !-->
-                                            <h1 id="noOfLessons" class="font-weight-bold mt-3"> 7+ </h1>
+                                            <h1 id="noOfLessons" class="font-weight-bold mt-3"> 1+ </h1>
                                             <h5 class="font-weight-bold mt-1"> Lessons </h5>
                                             <p class="grey-text"> This is the total number of lessons you have taken!
                                             </p>
@@ -385,14 +393,44 @@ margin-left:150px;
                         </div>
                         <!--/.Panel 1-->
                     
-                        <!--Panel 2-->
+                        <!--Panel 2 Instruments div-->
                         <div class="tab-pane fade" id="panel12" role="tabpanel">
                             <br>
-                    
-                            <p> Second Panel </p>
+                            
+                            <div class="container-fluid"> 
+                                <div class="row">
+                                    <% products.forEach(function(products){ %>
+                                    <div class="col-md-4 col-sm-4 col-xs-4 list-group-item addProductId" data-id="<%=products.id%>">
+                                        <div class="card h-100">
+
+                                            <div class="card-body">
+                                                <a href="/products/<%=products.id%>"> 
+                                                <img class="currentUserProductImage" src="/images/<%=products.imageName%>">
+                                                
+                                                <h2 class="card-title"> <%=products.productListingName%> </h2>
+                                                </a>
+                                                <p class="card-text"> 
+                                                    orem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus
+                                                    quam molestias corporis quod, ea minima accusamus.
+                                                </p>
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <a href="/products/<%=products.id%>" class="btn btn-primary"> View </a>
+                                                <button type="button" id="cssDeleteBtn" class="btn-danger deleteBtn" data-value="<%=products.id%>" onclick="deleteProduct(this)">
+                                                     <i class="far fa-trash-alt"> Delete </i>  
+                                                </button>
+                                            </div>
+
+                                        </div> <!-- end of card h-100 !-->
+                                    </div> <!-- end of col-md-4 col-sm-4 col-xs-4 for different devices !-->
+                                    <% }); %>
+                                </div> <!-- end of row !-->
+                            </div> <!--end of conatiner fluid-->
+                          
                     
                         </div>
-                        <!--/.Panel 2-->
+                        <!--Panel 2 end of instrument div !-->
                     
                         <!--Panel 3-->
                         <div class="tab-pane fade" id="panel13" role="tabpanel">
@@ -430,30 +468,7 @@ margin-left:150px;
                 }
 
             var myUser = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));   
-        /*
-        var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(comments) %>"));
-        console.log(myVar);
-        console.log(myVar[2].user_id);
-        
-        
-        console.log( " Current user id is : " + myUser.id);
-        var userCommentsCounter = 0;
-        for (i= 0; i<myVar.length; i++) {
-            if (myVar[i].user_id == myUser.id) {
-                userCommentsCounter += 1;
-            }
-        }
-        console.log( " Total no of comments : " + userCommentsCounter + " from " + myUser.email , "user id: " + myUser.id);
-        document.getElementById('experience').innerHTML = 'Experience: ' +  userCommentsCounter*500 +"  < client calculation database > "; // 4*500 = 2000
-        console.log("Total exp is : " + userCommentsCounter + " * " + "500 = " + userCommentsCounter*500 ); 
-        
-        console.log(myUser.experience);
-
-        var myExp = myUser.experience;
-        console.log("myHEAD" + myExp);  // from ejs variable exp = 4800
-        document.getElementById('experience').innerHTML += myExp - 1000;  // 4800-1000 = 3800
-        
-        */
+     
         
         var loadFile = function(event) {
         var output = document.getElementById('output');
@@ -553,10 +568,12 @@ margin-left:150px;
     })
     
     var totalSongs = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));  
-    console.log("total songs ==> " + totalSongs.length)
+    var totalProducts = JSON.parse(htmlDecode("<%= JSON.stringify(products) %>"));
+    console.log("total songs ==> " + totalSongs.length);
 
     document.getElementById("noOfSong").innerHTML =  totalSongs.length + "+";
-
+    document.getElementById("noOfInstruments").innerHTML = totalProducts.length + "+";
+   
 
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
@@ -565,7 +582,7 @@ margin-left:150px;
         labels: ["Instruments", "Lessons", "Songs"],
         datasets: [{
             label: 'Data you have created',
-            data: [15,7, totalSongs.length],
+            data: [totalProducts.length , 1 , totalSongs.length],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -598,7 +615,7 @@ margin-left:150px;
       datasets: [{
         label: "Population (millions)",
         backgroundColor: ["#c45850","#3cba9f","#3e95cd"],
-        data: [15,7,totalSongs.length]
+        data: [totalProducts.length , 1 , totalSongs.length]
       }]
     },
     options: {
@@ -609,6 +626,69 @@ margin-left:150px;
     }
 });
 
+
+    function deleteProduct(delete_id) {
+        console.log("deleting product .............. ");
+        var deletingProductId = $(delete_id).data("value");
+        console.log(deletingProductId);
+        var deleteProductLocation = window.location.origin + "/products/" + deletingProductId;
+        console.log(deleteProductLocation);
+        
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this product listing!",
+            icon: "warning",
+            buttons:true,
+            dangerMode: true
+        }).then(willDelete => {
+            if (willDelete) {
+                swal({
+                    title: "Deleted!", 
+                    text: "Your imaginary file has been deleted", 
+                    icon: "success",
+                    button: "Aww yiss"
+                });
+
+                $.ajax({
+                    url: deleteProductLocation,
+                    type: "DELETE",
+                    success: function(result) {
+                        console.log(result.message);
+                        //var itemToRemove = '.list-group-item[data-id='+songs_id+']';
+                        var productToRemove = '.list-group-item[data-id=' + deletingProductId + ']';
+                        $(productToRemove).remove();
+                    },
+                    error: function(result) {
+                        swal("unable to delete prod!!");
+                        console.log(result.message);
+                    }
+                })
+            }
+        });
+        
+    
+
+    } //end of delete product function
+
+    var verifySongImage = getCookie("songImage");
+    if (!verifySongImage) {
+        console.log("hello song image does not exist???");
+        console.log(document.querySelector(".imageOfSong"));
+        console.log("no " + verifySongImage);
+        document.querySelector(".imageOfSong").src = "/images/noMusic.png";
+        console.log(document.querySelector(".imageOfSong"));
+    }
+    else{
+        console.log("hi verify song image xist ");
+        console.log(verifySongImage);
+    }
+
+    if (myUser.role == "instructor") {
+        var allInstructor = document.querySelectorAll("#output");
+        var instructorAvatar = allInstructor[allInstructor.length - 1];
+        instructorAvatar.style.borderColor = "green";
+        //document.getElementsByClassName("profilePictureHeader").style.borderColor = "green";
+    }
 </script>
 
 

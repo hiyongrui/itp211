@@ -4,8 +4,12 @@ var sequelize = myDatabase.sequelize;
 var Sequelize = myDatabase.Sequelize;
 
 var bcrypt = require('bcrypt');
-var pwd = "1234";
+
+var pwd = "1234"; // first user password
 var hashpwd = bcrypt.hashSync(pwd,bcrypt.genSaltSync(8),null);
+
+var pwdforuserk = "k"; //second user password
+var hashpwdforuserk = bcrypt.hashSync(pwdforuserk, bcrypt.genSaltSync(8),null);
 
 const Users = sequelize.define('Users', {
     id: {
@@ -18,6 +22,9 @@ const Users = sequelize.define('Users', {
     },
     email: {
         type: Sequelize.STRING
+    },
+    userRating: {
+        type: Sequelize.DECIMAL(10,2)
     },
     password: {
         type: Sequelize.STRING
@@ -57,19 +64,31 @@ const Users = sequelize.define('Users', {
     rank: {
         type:Sequelize.STRING,
         defaultValue: 'bronze'
+    },
+    cartItemCount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
     }
 });
 
 // force: true will drop the table if it already exists
 Users.sync({force: false, logging:console.log}).then(()=>{
     console.log("users table synced");
-    return Users.upsert({
+    Users.upsert({
         id: 1,
         name: 'Ben',
         email: 'a@b.com',
         password: hashpwd,
         userImage: 'mean.jpg'
         //experience: 10
+    })
+    Users.upsert({
+        id:2,
+        name: 'k',
+        email: 'k@gmail.com',
+        password: hashpwdforuserk,
+        role: 'instructor',
+        userImage: 'cole sprouse.jpg'
     })
 });
 

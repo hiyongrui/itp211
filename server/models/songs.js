@@ -15,6 +15,9 @@ const Songs = sequelize.define('Songs', {
         defaultValue: '',
         trim: true
     },
+    songListingType: {
+        type: Sequelize.STRING
+    },
     songName: {
         type: Sequelize.STRING
     },
@@ -32,6 +35,10 @@ const Songs = sequelize.define('Songs', {
             model: 'Users',
             key: 'id'
         }
+    },
+    songTags: {
+        type: Sequelize.STRING,
+        trim:true
     }
 });
 
@@ -39,14 +46,33 @@ const Songs = sequelize.define('Songs', {
 Songs.sync({ force: false, logging: console.log }).then(() => {
     // Table created
     console.log("songs table synced")
-    /*
-    return Songs.upsert({
+    Songs.upsert({
         id: 1,
-        title: 'First song synced',
+        title: 'First song broken realit',
+        songListingType: "Classical",
         songName: 'Broken Reality.mp3',
-        user_id: 1
-        //experience: 10
-    }) */
+        songImage: "1.jpg",
+        user_id: 2,
+        songTags: "calm,study music"
+    });
+    Songs.upsert({
+        id: 2,
+        title: "second song exit premise",
+        songListingType: "Jazz",
+        songName: "Exit the Premises.mp3",
+        songImage: "2.jpg",
+        user_id: 2,
+        songTags: "classical music,jazz"
+    });
+    Songs.upsert({
+        id: 3,
+        title: "third song imagine dragonss",
+        songListingType: "Kpop",
+        songName: "Imagine Dragons - Demons (Official).mp3",
+        songImage: "3.jpg",
+        user_id: 2,
+        songTags: "music for reading, rap music"
+    });
 });
 
 module.exports = sequelize.model('Songs', Songs);

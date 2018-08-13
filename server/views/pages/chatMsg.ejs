@@ -38,19 +38,22 @@
                 var userchatlength = document.getElementsByClassName("userid");
                 //lastuserchat = userchatlength[userchatlength.length-1].innerHTML;
                 //console.log(lastuserchat);
+                console.log("chat data ----- " + JSON.stringify(myVar));
+                console.log(myVar[myVar.length-1]);
 
         var socket = io()
         $(() => {
-            $("#send").click(()=>{
+            $("#send").click(()=>{ //when onclick , send message of textbox using ajax post
                 var message = { name: $("#name").val(), message: $("#message").val() , /*user_id: myVar[myVar.length-1].user_id ,  addon: lastuserchat */}
                 postMessage(message)
             })
         })
 
-        socket.on('message', addMessage)
+        socket.on('message', addMessage) //after ajax post , socket emit and listen to message, append new message
 
         function addMessage(msg) {                                                   //   ${myVar[myVar.length-1].user_id}
-            $("#messages").append(`<h4> ${msg.name} </h4> <p> ${msg.message} -->  User id is :   </p>  `)
+            console.log("msg ---- " + JSON.stringify(msg));
+            $("#messages").append(`<h4> ${msg.name} </h4> <p> ${msg.message} -->  User id is : ${msg.user_id}  </p>  `)
         }
 
         function postMessage(message) {

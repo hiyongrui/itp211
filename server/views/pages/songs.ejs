@@ -119,6 +119,56 @@ width:71% !important;
   font-size:20px;
 }
 
+.fa-heart-o {
+    pointer-events: none;
+}
+
+.container1 input[type=text] {
+padding:5px 0px;
+margin:5px 5px 5px 0px;
+padding:6px;
+}
+
+.add_form_field
+{
+    background-color: #1c97f3;
+    border: none;
+    color: white;
+    padding: 8px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+ border:1px solid #186dad;
+}
+
+.addNewTag{
+    border: 1px solid #1c97f3;
+    width: 260px;
+    height: 40px;
+  margin-bottom:14px;
+}
+
+.delete{
+    background-color: #fd1200;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.imageOfSong{
+    width:140px;
+    height:140px;
+}
+
 </style>
 
 <body>
@@ -138,7 +188,7 @@ width:71% !important;
         <div class="modal fade" id="createSong" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="/songs" method="post" enctype="multipart/form-data">
+                    <form action="/songs" method="post" enctype="multipart/form-data" onsubmit="$('.addNewTag').removeAttr('disabled');">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -151,6 +201,23 @@ width:71% !important;
                                 <label  for="inputitle">Title</label>
                                 <input type="text" id="inputitle" name="title" class="form-control" placeholder="Song Title" required="">
                             </fieldset>
+
+                            <fieldset class="form-group">
+                                <label for="songListingType"> Song Type </label>
+                                <select name="songListingType" id="songListingType">
+                                    <option value="Classical">Classical</option>
+                                    <option value="Jazz">Jazz</option>
+                                    <option value="Kpop">Kpop</option>
+                                </select>
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                    <label for="inputProductTags"> Song Tags </label>
+                                    <div class="container1">
+                                      <button class="add_form_field"> Add New Tags &nbsp; <span style="font-size:16px; font-weight:bold;"> + </span > </button> 
+                                    </div>
+                            </fieldset>
+
                             <label class="file" style="width: 100%" onclick="$('input[id=lefile]').click();">
                                 <input type="file" id="song" name="song" required="" onchange="checkextension()">
                                 <span class="file-custom"></span>
@@ -178,17 +245,19 @@ width:71% !important;
         <div class="row">
             <% songs.forEach(function(songs){ %>
 
-            <a href="#" class="list-group-item" data-id="<%= songs.id%>">
+            <a href="#" class="list-group-item-nihao" data-id="<%= songs.id%>">
 
                 <div class="col-lg-12">    
                             <form action="/songs" method="delete">
+                            <img class="imageOfSong" src="/images/<%=songs.songImage%>"/>
                     <h4 id="songName" class="list-group-item-heading songTitle"><%= songs.title %></h4>
                         <audio controls class="audioPlayer">
-                      <source class="sourcePlayer" src="<%= songs.songName %>" type="audio/mpeg" />
+                      <source class="sourcePlayer" src="<%= songs.songName %>" type="audio/mpeg" data-image="<%=songs.songImage%>" />
                       </audio>
-
+                      <!--
                     <small class="byWho">Upload by: <%= songs.user_id %></small>
                     <button type="button" class="btn-primary deleteBtn" value="<%=songs.id%>"> Delete  </button>
+                    !-->
                    
                             </form> 
                 </div> 
@@ -204,7 +273,7 @@ width:71% !important;
                 <img id="songImageSize" src="/images/<%= songs.songImage %>"/> 
                 <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
                 <h2 class="likeCount" data-value="<%=songs.songLikeNo%>"> <%=songs.songLikeNo%> </h2>
-                <a href="/users/profile/<%=songs.user_id%>"> <small class="byWho"> Upload by: <%=songs.createdAt%></small> </a>
+                <a href="/users/profile/<%=songs.createdAt%>"> <small class="byWho"> Upload by: <%=songs.createdAt%></small> </a>
                 <% if (songs.user_id != user.id) { %>
                 <button type="button" class="unmarked" data-id="<%=songs.id%>" data-value="<%=songs.songLikeNo%>"> 
                     <i class="fa fa-heart-o"> </i> <%=songs.songLikeNo%>  </button>
@@ -215,7 +284,7 @@ width:71% !important;
             <div class="col-lg-2 btn-group dropright">
                
                 <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->                                  <!--previously changeSong(this.id) !-->
-                <button type="button" class="list-group-item btn btn-primary" data-id="<%=songs.id%>" id="<%=songs.songName%>" data-value="<%=songs.title%>" onclick=changeSong(this);changeImage()> Play </button>
+                <button type="button" class="list-group-item btn btn-primary" data-id="<%=songs.id%>" id="<%=songs.songName%>" data-value="<%=songs.title%>" data-image="<%=songs.songImage%>" onclick=changeSong(this);changeImage()> Play </button>
                 <button type="button" class="list-group-item btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-cool ="<%=songs.songName%>" data-id="<%=songs.id%>" id="<%=songs.id%>" onclick=getSongId(this)>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
@@ -224,22 +293,23 @@ width:71% !important;
                     
                     <% playlists.forEach(function(playlists){ %>
                         <div class="addPlaylist" data-id="<%=playlists.id%>">
-                        <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" data-song="<%=playlists.title%>" onclick=saveChanges()> Add to <%=playlists.title%> </a>
-                        <%=playlists.id%>
+                           
+                        <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" data-song="<%=playlists.title%>" onclick=saveChanges()> 
+                            <span class="playlistNo">  <%=playlists.id%> -  <i class="fa fa-list"></i></span> Add to <%=playlists.title%> </a>
+                       
                         </div>
                     <% }); %>
                         </form>
-                    <a class="dropdown-item" href="#">Action</a>
-                
+                   
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a>
+                    <a class="dropdown-item" href="/playlists">View all your playlists</a>
                 </div>
             </div>
             
             
         <% }); %>
             
-            
+            <!--
             <div class="col-lg-12 list-group-item" data-id="<%=songs.id %>">
 
                 <ul style="list-style: none">
@@ -259,7 +329,7 @@ width:71% !important;
                 </audio>
 
             </div>
-
+            !-->
 
         </div> <!-- end of row !-->
 
@@ -306,7 +376,10 @@ function setCookie(cname,cvalue,exdays)
                 audioPlayer();
                 
                 var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
-                
+                console.log("HELLO   ------------------ " + JSON.stringify(myVar));
+
+                var minusOneFromTotalSongs = myVar.length - 1;
+                console.log("song length after minus  " + minusOneFromTotalSongs);
           function audioPlayer() {
             
             
@@ -327,20 +400,32 @@ function setCookie(cname,cvalue,exdays)
             var songs = [sliced,slicedSecond];
             console.log(songs);
 
-            var i = 0;
-
+            //var i = 0;
+           
             audioPlayer.addEventListener('ended',function() {
+                var i = getCookie("i");
+                if (i==minusOneFromTotalSongs) {
+                    i = -1;
+                }
                 i++;
+                console.log(" new i wtf >> " + i);
                 nextSong = document.querySelectorAll(".sourcePlayer")[i].src.slice(28);
                 audioPlayer.src = nextSong;
                 console.log("next song src --  " + nextSong);
                 audioPlayer.load();
                 audioPlayer.play();
-                setCookie('songName' , nextSong)   
+                setCookie('songName' , nextSong);
+                setCookie('i', i);
                 document.getElementById("songName").innerHTML = "now playing : " + myVar[i].songName.slice(0,-4);
-                if (i==2) {
-                    i = -1;
-                }
+               
+                var nextSongImage = document.querySelectorAll(".sourcePlayer")[i];
+                var nextSongImageAttr = nextSongImage.getAttribute("data-image");
+                console.log("setting song image next ");
+                console.log(nextSongImage);
+                console.log(nextSongImageAttr);
+                document.querySelector(".imageOfSong").src = "/images/" + nextSongImageAttr;
+                setCookie("songImage", nextSongImageAttr);
+                
             },false); 
             /*
           
@@ -398,30 +483,37 @@ function setCookie(cname,cvalue,exdays)
     var songFirst = document.querySelector(".sourcePlayer").src.slice(28);
     var song = document.getElementsByTagName('audio')[0];
 
+    var songToDisplayAtStart = myVar[0].title;
+    
     window.onload = function() {
 
         var getThis = getCookie('songCookie');
         var getSong = getCookie('songName');
+        var getSongImage = getCookie("songImage");
 
         if (getSong == 0) {
-        document.getElementById("songName").innerHTML = "song: " +  getSong;
+        document.getElementById("songName").innerHTML = "song: " +  songToDisplayAtStart;
         song.src =  songFirst;
         song.currentTime = getThis;
         song.play();
-
+        setCookie("songImage", "1.jpg")
         }
         else{
         document.getElementById("songName").innerHTML =  "song playing: " + getSong.slice(0,-4);
+        document.querySelector(".imageOfSong").src = "/images/" + getSongImage;
+        console.log("song iamge after load "  + getSongImage);
         song.src = getSong;
         song.currentTime = getThis;
         song.play();
- 
+           
         }
+        
     }
 
     window.onbeforeunload = function() {
-
         var songNameBeforeExit = document.querySelector(".audioPlayer").src.slice(28);
+        //var songImageBeforeExit = document.querySelector(".imageOfSong").src.slice(29);
+
         setCookie('songCookie',song.currentTime);
         setCookie('songName', songNameBeforeExit);
 
@@ -429,8 +521,9 @@ function setCookie(cname,cvalue,exdays)
 
 
        $(".audioPlayer:not(:first)").hide(); 
-    //   $(".byWho:not(:first)").hide();
-      //  $(".songTitle:not(:first)").hide(); 
+       //$(".byWho:not(:first)").hide();
+        //$(".songTitle:not(:first)").hide(); 
+        $(".list-group-item-nihao:not(:first)").hide();
 //console.log(docment.getElementsByClassName("deleteBtn"))
         
 //setInterval(function() { console.log(document.querySelector(":focus")); }, 1000);
@@ -470,17 +563,26 @@ function setCookie(cname,cvalue,exdays)
                 //new_song_id = change_id;
                 new_song_id = event.srcElement.id;
                 console.log("new song id >>> " + new_song_id);
+                setNewValueI = $(change_id).data("id") - 1;
+                console.log("new id >> " + setNewValueI);
+                setCookie("i", setNewValueI);
                 var audioPlayer = document.querySelector(".audioPlayer");
+                //audioPlayer.src = "songs/" + new_song_id;
                 audioPlayer.src = new_song_id;
                 audioPlayer.load();
                 audioPlayer.play();
                 changed_song_name = $(change_id).data("value");
                 document.getElementById("songName").innerHTML = changed_song_name;
+                changed_song_image = $(change_id).data("image");
+                console.log("change song name " + changed_song_image);
+                document.querySelector(".imageOfSong").src = "/images/" + changed_song_image;
+                setCookie("songImage", changed_song_image);
+                
             }
 
-            function changeImage() {
-                console.log("looooo " + $(this).data().value);
-    
+            function changeImage(change_image) {
+                console.log("looooo " + $(this).data("value"));
+                
             }
             
         function saveChanges() {
@@ -607,7 +709,7 @@ function setCookie(cname,cvalue,exdays)
                 //dataType: "json", //remove this to successfully add playlist??? lol
                 contentType: "application/json",
                 success: function(result){
-                    alert("Song unliked successfully");
+                    //alert("Song unliked successfully");
                     thisCount = thisCount - 50;
                     thisButton.data("value",thisCount);
                     console.log("after unliking >> " + thisCount);
@@ -635,7 +737,7 @@ function setCookie(cname,cvalue,exdays)
             console.log("this count >> " + thisCount);
             console.log(thisButton[0].innerHTML);
             //console.log("nearest button " + (this).closest("h2").text(data));
-            var this_like_song_id = $(this).data("id");
+            //var this_like_song_id = $(this).data("id");
             $.ajax({
                 url: url,
                 type: "POST",
@@ -643,7 +745,7 @@ function setCookie(cname,cvalue,exdays)
                 //dataType: "json", //remove this to successfully add playlist??? lol
                 contentType: "application/json",
                 success: function(result){
-                    alert("Song Liked successfully"); 
+                    //alert("Song Liked successfully"); 
                     thisCount = thisCount + 50;
                     thisButton.data("value",thisCount);
                     console.log("after liking >> " + thisCount);
@@ -652,7 +754,7 @@ function setCookie(cname,cvalue,exdays)
 
                     
                     socket.emit("songLikeByUserId", currentUser.id); 
-                    socket.emit("songLikeId", this_like_song_id);
+                    //socket.emit("songLikeId", this_like_song_id);
                 },
                 error: function(result){
                     alert("Error liking song");
@@ -722,7 +824,46 @@ function setCookie(cname,cvalue,exdays)
        }
        */
 
+        var max_fields = 10;
+    var wrapper = $(".container1");
+    var add_button = $(".add_form_field");
+    
+    var x = 0;
+    
+    $(add_button).click(function(e) {
+      
+      e.preventDefault();
 
+      if (x < max_fields) {
+        x++;
+        $(wrapper).append('<div> <input class="addNewTag" type="text" name="songTags" placeholder="  enter new tag..." onChange="inputChange(event)"/> \
+          <a href="#" class="delete"> Delete </a> </div>'); //add input box
+        
+        
+        $(this).next($(".addNewTag").focus());
+        
+        console.log("value of x after new tag is ----  " + x);
+
+      }
+      else{
+        alert("you have reached limits of 10!!!");
+      }
+    }) 
+    
+
+    $(wrapper).on("click", ".delete", function(e) {
+      e.preventDefault();
+      $(this).parent("div").remove();
+      x--;
+      console.log("value of x after deleting is ---  " + x);
+    })
+
+
+    function inputChange(e) {
+      console.log("val of tag when enter >> " + $(e.target).val());
+      console.log(e.target);
+      e.target.disabled = true;
+    }
        </script>
        
     </body>

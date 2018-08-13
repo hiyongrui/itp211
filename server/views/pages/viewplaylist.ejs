@@ -1,35 +1,145 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title> One Playlist </title>
-   
+
 </head>
 
 <style>
+    .imageOfSong{
+    width:180px;
+    height:140px;
+}
+#songImageSize{
+    width: 250px;
+    height: 150px;
 
+}
 </style>
 
 <body>
     <% include ../partials/header %>
 
-        <div>
-            <h1> Hello one playlist </h1>
-           <h2> Playlist name :  <%= onePlayList.title %> </h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4 class="text-muted"> Playlist name : <%=onePlayList.title%> </h4>
+                </div>
+                <div class="col-lg-6">
+                    <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#createSong">
+                        Songs Upload to playlist
+                    </button>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="createSong" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form id="setNewFormAction" action="setnewformactionchangedthis" method="post" enctype="multipart/form-data">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Upload a song to ur playlist </h4>
+                            </div>
 
-           <h1>
-           <% allSongs.forEach(function(allSongs){ %>
-                 WhyIsThisTwo 
-                <p> <%=allSongs.songName%> </p>
-            <% }); %>
-           </h1>
-        </div> 
+                            <div class="modal-body">
+                                <fieldset class="form-group">
+                                    <label for="inputitle">Title</label>
+                                    <input type="text" id="inputitle" name="title" class="form-control" placeholder="Song Title" required="">
+                                </fieldset>
+                                <label class="file" style="width: 100%" onclick="$('input[id=lefile]').click();">
+                                    <input type="file" id="song" name="song" required="" onchange="checkextension()">
+                                    <span class="file-custom"></span>
 
-        <% include ../partials/footer %>
-      
+                                    <hr>
 
-     
-    
-    
- 
-    </body>
-    </html>
+                                    <input type="file" id="image" name="image" required="" onchange="loadFile(event);checkextensionImage()">
+                                    <span class="file-customImage"></span>
+
+                                    <img id="output" />
+                                    <p id="textForImage"> </p>
+
+                                </label>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end of modal !-->
+        </div> <!-- end  of container !-->
+
+
+        <% allSongs.forEach(function(allSongs){ %>
+
+            <a href="#" class="list-group-item-nihao" data-id="<%= allSongs.id%>">
+
+                <div class="col-lg-12">    
+                            <form action="/songs" method="delete">
+                            <img class="imageOfSong" src="/images/<%=allSongs.songImage%>"/>
+                    <h4 id="songName" class="list-group-item-heading songTitle"><%= allSongs.title %></h4>
+                        <audio controls class="audioPlayer">
+                      <source class="sourcePlayer" src="<%= allSongs.songName %>" type="audio/mpeg" data-image="<%=allSongs.songImage%>" />
+                      </audio>
+                      <!--
+                    <small class="byWho">Upload by: <%= songs.user_id %></small>
+                    <button type="button" class="btn-primary deleteBtn" value="<%=songs.id%>"> Delete  </button>
+                    !-->
+                   
+                            </form> 
+                </div> 
+            </a>
+           
+       <% }); %> 
+            <div class="row"> 
+                    <% allSongs.forEach(function(songs){ %>
+                        <div class="col-lg-10 list-group-item addSongId" data-id="<%=songs.id %>"> 
+                            
+                        <form action="/addsongs" method="post" enctype="multipart/form-data"> <!-- form is unnecessary , can still work without formaction !-->
+                            <!-- <h4 id="songId" data-id="<%=songs.id%>"> <%=songs.songName%> </h4> !-->
+                            <img id="songImageSize" src="/images/<%= songs.songImage %>"/> 
+                            <h4 class="songId" data-id="<%=songs.id%>"> <a href="#" class="aSong" data-id="<%=songs.id%>"> <%=songs.songName%> </a> </h4>
+                            <h2 class="likeCount" data-value="<%=songs.songLikeNo%>"> <%=songs.songLikeNo%> </h2>
+                            <a href="/users/profile/<%=songs.createdAt%>"> <small class="byWho"> Upload by: Ben</small> </a>
+                            <% if (songs.user_id != user.id) { %>
+                            <button type="button" class="unmarked" data-id="<%=songs.id%>" data-value="<%=songs.songLikeNo%>"> 
+                                <i class="fa fa-heart-o"> </i> <%=songs.songLikeNo%>  </button>
+                            <% } %>
+                            <button type="button" id="cssDeleteBtn" class="btn-danger deleteBtn" value="<%=songs.id%>"> <i class="far fa-trash-alt"> Delete </i>  </button>
+                        </div>
+            
+                        <div class="col-lg-2 btn-group dropright">
+                           
+                            <!-- <button type="button" class="btn btn-primary">Dropright</button> !-->                                  <!--previously changeSong(this.id) !-->
+                            <button type="button" class="list-group-item btn btn-primary" data-id="<%=songs.id%>" id="<%=songs.songName%>" data-value="<%=songs.title%>" data-image="<%=songs.songImage%>" onclick=changeSong(this);changeImage()> Play </button>
+                           
+                        
+                </div>
+                        
+                    <% }); %>
+
+            </div>
+
+
+                    <% include ../partials/footer %>
+
+
+
+
+<script>
+    var url = window.location.href.split("/")[4];
+    console.log("url > " + url);
+    $("#setNewFormAction").attr("action","/addInPlaylist/" + url);
+
+       $(".audioPlayer:not(:first)").hide(); 
+       //$(".byWho:not(:first)").hide();
+        //$(".songTitle:not(:first)").hide(); 
+        $(".list-group-item-nihao:not(:first)").hide();
+</script>
+
+</body>
+</html>

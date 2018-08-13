@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<head>
+<style>
+
+
+/***
+Bootstrap Line Tabs by @keenthemes
+A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+Licensed under MIT
+***/
+
+/* Tabs panel */
+.tabbable-panel {
+  border:1px solid #eee;
+  padding: 10px;
+}
+
+/* Default mode */
+.tabbable-line > .nav-tabs {
+  border: none;
+  margin: 0px;
+}
+.tabbable-line > .nav-tabs > li {
+  margin-right: 2px;
+}
+.tabbable-line > .nav-tabs > li > a {
+  border: 0;
+  margin-right: 0;
+  color: #737373;
+}
+.tabbable-line > .nav-tabs > li > a > i {
+  color: #a6a6a6;
+}
+.tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
+  border-bottom: 4px solid #fbcdcf;
+}
+.tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
+  border: 0;
+  background: none !important;
+  color: #333333;
+}
+.tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
+  color: #a6a6a6;
+}
+.tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
+  margin-top: 0px;
+}
+.tabbable-line > .nav-tabs > li.active {
+  border-bottom: 4px solid #f3565d;
+  position: relative;
+}
+.tabbable-line > .nav-tabs > li.active > a {
+  border: 0 !important;
+  color: #333333;
+}
+.tabbable-line > .nav-tabs > li.active > a > i {
+  color: #404040;
+}
+.tabbable-line > .tab-content {
+  margin-top: -3px;
+  background-color: #fff;
+  border: 0;
+  border-top: 1px solid #eee;
+  padding: 15px 0;
+}
+.portlet .tabbable-line > .tab-content {
+  padding-bottom: 0;
+}
+
+/* Below tabs mode */
+
+.tabbable-line.tabs-below > .nav-tabs > li {
+  border-top: 4px solid transparent;
+}
+.tabbable-line.tabs-below > .nav-tabs > li > a {
+  margin-top: 0;
+}
+.tabbable-line.tabs-below > .nav-tabs > li:hover {
+  border-bottom: 0;
+  border-top: 4px solid #fbcdcf;
+}
+.tabbable-line.tabs-below > .nav-tabs > li.active {
+  margin-bottom: -2px;
+  border-bottom: 0;
+  border-top: 4px solid #f3565d;
+}
+.tabbable-line.tabs-below > .tab-content {
+  margin-top: -10px;
+  border-top: 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.menu_title {
+    padding: 15px 10px;
+    border-bottom: 1px solid #eee;
+    margin: 0 5px;
+}
+
+.glyphicon {  margin-bottom: 10px;margin-right: 10px;}
+
+small {
+display: block;
+line-height: 1.428571429;
+color: #999;
+}
+
+</style>
+</head>
+<body>
+<% include ../partials/header %>
+<section class="container mt-4 mb-4">
+<div class="container">
+	<div class="row mb-12">
+		<div class="col-md-12">
+			<div class="d-flex flex-row border rounded">
+	  			<div class="p-0 w-25">
+	  			    <img src="/images/<%=itemList[0].userImage%>" class="img-thumbnail border-0" />
+	  				
+	  			</div>
+	  			<div class="pl-3 pt-2 pr-2 pb-2 w-75 border-left">
+	  				<h4 style="font-size:20px" class="text-dark"><strong><%=itemList[0].name%></strong></h4>
+	  				<h5 style="font-size:16px" class="text-primary"><i class="fa fa-envelope"></i>&nbsp<%=itemList[0].email%></h5>
+              <h3 style="font-size:20px" class="text-muted"><i class="fa fa-map-marker"></i>&nbsp<%=itemList[0].location%></h3>
+              <h3 style="font-size:18px"><strong>Lesson Taught:</strong> <%=itemList[0].lessons%></h3>
+              <br>   
+                                                                                                     
+              <button onclick="window.location.href='/timingForm'" type="button" class="btn btn-info btn-lg">&nbsp&nbsp&nbsp&nbsp&nbspView Lessons&nbsp&nbsp&nbsp&nbsp&nbsp</button>
+          </div>
+              <br>
+			</div>
+		</div>
+	</div>
+</div>
+</section>
+
+
+<div class="container">
+        <div class="col-sm-12">
+              
+        <div data-spy="scroll" class="tabbable-panel">
+        <div class="tabbable-line">
+        <ul class="nav nav-tabs ">
+                <li class="active">
+                <a style="font-size:18px" href="#tab_default_1" data-toggle="tab">
+                                &nbsp;&nbsp;&nbsp;&nbsp;About  &nbsp;&nbsp;&nbsp;&nbsp; </a>
+                </li>
+                <li>
+                <a style="font-size:18px" href="#tab_default_2" data-toggle="tab">
+                                &nbsp;&nbsp; &nbsp;&nbsp;Experience &nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </li>
+                <li>
+                <a style="font-size:18px" href="#tab_default_3" data-toggle="tab">
+                                &nbsp;&nbsp; &nbsp;&nbsp;Education &nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </li>
+                <li>
+                <a style="font-size:18px" href="#tab_default_4" data-toggle="tab">
+                                &nbsp;&nbsp; &nbsp;&nbsp;Awards &nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </li>
+        </ul>
+        <div class="tab-content">
+                <div class="tab-pane active" id="tab_default_1">
+                <br>
+                <h2 style="font-size:18px"><strong>About The Lesson: </strong></h2>
+                <p style="font-size:16px">
+                <%=itemList[0].message%>
+                </p>
+                <h4 style="font-size:18px"><strong>Level Taught: &nbsp; </strong><%=itemList[0].Beginner%>&nbsp; <%=itemList[0].Intermediate%>&nbsp; <%=itemList[0].Advanced%></h4>
+                <br>
+                <h4 style="font-size:18px"><strong>Preferred Location: &nbsp; </strong><%=itemList[0].MyLocation%>&nbsp; <%=itemList[0].StudentHome%></h4>
+  
+                </div>
+                <div class="tab-pane" id="tab_default_2">
+                <br>
+                <div class="row">
+                <div class="col-sm-6">
+                        <div class="form-group">
+                                <h2 style="font-size:18px"><strong>Experience: </strong></h2>
+                                <h2 style="font-size:18px"><strong><%=itemList[0].experience%></strong></h2>
+                        </div>
+                        <br>        
+                        <div class="form-group">
+                                <h2 style="font-size:18px"><strong>Period:&nbsp;</strong> <%=itemList[0].FromDate%> &nbsp; - &nbsp; <%=itemList[0].ToDate%> </strong></h2>
+                        </div>
+                </div>
+        </div>   
+</div>
+                <div class="tab-pane" id="tab_default_3">
+                <br>
+                <div class="row">
+                <div class="col-sm-6">
+                                <div class="form-group">
+                                                <h2 style="font-size:18px"><strong>Education: </strong></h2>
+                                                <h2 style="font-size:18px"><strong><%=itemList[0].education%></strong></h2>
+                                        </div>
+                                        <br>        
+                                        <div class="form-group">
+                                                <h2 style="font-size:18px"><strong>Period:&nbsp;</strong> <%=itemList[0].FromDate2%> &nbsp; - &nbsp; <%=itemList[0].ToDate2%></h2>
+                                        </div>
+                </div>
+                </div>
+                </div>
+                <div class="tab-pane" id="tab_default_4">
+                <br>
+                <div class="row">
+                <div class="col-sm-6">
+                        <div class="form-group">
+                                <h2 style="font-size:18px"><strong>Awards/Certificate: </strong></h2>
+                                <h2 style="font-size:18px"><strong><%=itemList[0].award%></strong></h2>
+                        </div>
+                        <br>        
+                        <div class="form-group">
+                                <h2 style="font-size:18px"><strong>Date Awarded:&nbsp;</strong> <%=itemList[0].Date%></h2>
+                        </div>
+                </div>
+                </div>
+        </div>
+        </div>
+        </div>
+        </div>
+                
+        </div> 
+</div>                
+
+
+
+
+
+<% include ../partials/footer %>
+</body>
+</html>	

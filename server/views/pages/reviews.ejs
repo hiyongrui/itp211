@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+
+</head>
+
+<style>
+
+</style>
+
+<body>
+    <% include ../partials/header %>
+        <div class="container">
+   
+                <div class="col-lg-6">
+                    <h4 class="text-muted">My Reviews Management</h4>
+                </div>
+               
+            <hr>
+            
+        
+            <div class="lead">
+                <div class="list-group">
+                    <% reviews.forEach(function(reviews){ %>
+                        <a href="#" class="list-group-item" data-id="<%= reviews.id%>">
+                            <img src="/images/<%=reviews.imageName%>" alt="" style="float: left; margin-right: 10px">
+                            <div class="reviews">
+                                <form action="/reviews" method="delete">
+                                    <h4 class="list-group-item-heading">
+                                        <%= reviews.title %>
+                                            <button class="btn btn-secondary pull-right deleteBtn" type="button" data-id="<%= reviews.id%>">Delete</button>
+                                    </h4>
+                                    <p class="list-group-item-text">
+                                        <%= reviews.content %>
+                                    </p>
+                                    <small class="text-muted">By:
+                                        <%= reviews.name %>
+                                        <br>
+                                        <%= reviews.createdAt %>
+                                    </small>
+                                    <p class="list-group-item-text">
+                                        <%= reviews.imageName %>
+                                    </p>
+                                    <!--
+                                    <i class="fa fa-star"> </i>
+                                    <i class="fa fa-star"> </i>
+                                    <i class="fa fa-star"> </i>
+                                    <i class="fa fa-star"> </i>
+                                    <i class="fa fa-star"> </i>
+                                    !-->
+
+                                    <h1> NO of Stars : <%=reviews.rating%> </h1>
+                                   
+                                </form>
+                            </div>
+                        </a>
+                        <% }); %>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            $('.deleteBtn').click(function() {
+                var reviews_id = $(this).data('id');      
+                console.log("review id " + reviews_id);
+                $.ajax({
+                        url: window.location.origin + '/reviews/' +reviews_id,
+                        type: 'DELETE', 
+                        success: function(result) {
+                            console.log(result.message);
+                            var itemToRemove = '.list-group-item[data-id='+reviews_id+']';
+                            $(itemToRemove).remove();
+                        },
+                        error: function(result){
+                            alert("Unable to delete review.");
+                            console.log(result.message);
+                        } 
+                    });  
+            });
+      
+        </script>
+</body>
+
+</html>

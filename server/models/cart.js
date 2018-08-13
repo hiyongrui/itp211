@@ -8,23 +8,36 @@ const Cart = sequelizeInstance.define('Cart', {
         autoIncrement: true,
         primaryKey: true
     },
-    productId: {
+    product_id: {
         type: Sequelize.STRING
         
     },
-    productName: {
+    product_name: {
         type: Sequelize.STRING,
         trim: true
     },
-    sellerName: {
+    product_type: {
         type: Sequelize.STRING
     },
-    pricing: {
+    product_condition: {
+        type: Sequelize.STRING
+    },
+    product_price: {
         type: Sequelize.INTEGER,
         trim: true
     },
+    product_image: {
+        type: Sequelize.STRING
+    },
+    seller_name: {
+        type: Sequelize.INTEGER
+    },
     transactionId: {
         type: Sequelize.INTEGER
+    },
+    product_status: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     },
     user_id:{
         type: Sequelize.INTEGER,

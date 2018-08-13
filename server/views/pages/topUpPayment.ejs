@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/topUpPayment.css' />
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="paymentForm">
+        <form method="POST" id="payment_form">
+            <div class="displayDetails">
+                <p class="displayItem"> </p>
+                <p class="displayAmtDue"> </p>
+            </div>
+            <hr class="displayDetailsLine">
+            <h2 class="paymentDetailsText"> Payment Details </h2>
+            <input type="text" class="displayTextBox" id="displayCards" disabled="disabled">
+            <label for="cardNumber"></label>
+            <input type="text" id="cardNumber" class="inputText" required/>
+            <span class="floating-label"> Card Number </span>
+            <label for="cardholderName"></label>
+            <input type="text" id="cardholderName" class="inputText" required/>
+            <span class="floating-label-name"> Cardholder Name </span>
+            <div class="group-row">
+                <label for="expiryDate"></label>
+                <input type="text" id="expiryDate" class="inline-textbox-left" required/>
+                <span class="floating-label-expiry"> Expiry Date </span>
+                <label for="CVV"></label>
+                <input type="text" id="CVV" class="inline-textbox-right" required/>
+                <span class="floating-label-cvv"> CVV </span>
+            </div>
+            <br><br><br>
+            <h2 class="contactDetailsText"> Contact Details </h2>
+            <label for="contactNumber"></label>
+            <input type="text" id="contactNumber" class="contactInput" required/>
+            <span class="floating-label-phoneNum"> Contact Number </span>
+            <label for="email"></label>
+            <input type="text" id="email" class="inputText" required/>
+            <span class="floating-email"> E-mail </span>
+            <div class="buttons">
+                <input type="submit" value="Submit" id="submitBtn">
+                <button type="button" value="Cancel" id="cancelBtn" onclick="cancel()"> Cancel </button>
+            </div>
+            
+
+
+        </form>
+    </div>
+
+    <script>
+        var item = localStorage.getItem("test");
+        console.log(item);
+        document.getElementsByClassName('displayItem')[0].innerHTML = +item+ " Coins";
+        document.getElementsByClassName('displayAmtDue')[0].innerHTML = "$" +item+ " SGD";
+        console.log("location.href " + location.href);
+        $('#payment_form').on('submit', function (e) {
+            e.preventDefault();
+            var url = '<%=urlPath%>' + '/' + 'coinPayment'
+            console.log(url);
+            var itemValue = item;
+            console.log(itemValue);
+            itemValue = parseInt(itemValue);
+            var topUpData = {
+                value: itemValue,
+            }
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: JSON.stringify(topUpData),
+                contentType: "application/json",
+                success: function(result) {
+                    alert("Payment is successful");
+                    location.href = "/wallet";
+                },
+                error: function(result) {
+                    alert("Payment failed");
+                }
+            })
+        });
+        
+        function cardNumValidation(val) {
+            var card_num = val;
+            console.log(card_num);
+            var visaCheck = card_num.charAt(0);
+            console.log(visaCheck);
+            console.log(card_num.length);
+            if (visaCheck == 4) {
+                if (card_num.length == 13) {
+                    document.getElementById('cardNumValidateText').innerHTML = "Correct!";
+                }
+                else {
+                    document.getElementById('cardNumValidateText').innerHTML = "Invalid Visa Card!";
+                }
+            }
+            else {
+                document.getElementById('cardNumValidateText').innerHTML = "Invalid Card!";
+            }
+        }
+
+        function cancel() {
+            location.href ="/wallet";
+        }
+    </script>
+</body>

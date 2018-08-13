@@ -1,0 +1,263 @@
+
+
+body {
+    background-image: url("/images/creditcard.jpg");
+    background-repeat: no-repeat;
+}
+
+.displayItem {
+    float: left;
+}
+
+.displayAmtDue {
+    float: right;
+}
+
+.displayDetailsLine {
+    margin-top: 50px;
+    width: 400px;
+}
+
+.floating-label-cvv {
+    position: absolute;
+    pointer-events: none;
+    left: 718px;
+    top: 446px;
+    transition: 0.3s ease all;
+    color: gray;
+  }
+
+input#CVV:focus ~ .floating-label-cvv,
+input#CVV:not(:focus):valid ~ .floating-label-cvv{
+    top: 437px;
+    bottom: 10px;
+    color: #6699ff;
+    left: 718px;
+    font-size: 12px;
+    opacity: 1;
+}
+
+.floating-label-expiry {
+    position: absolute;
+    pointer-events: none;
+    left: 568px;
+    top: 446px;
+    transition: 0.3s ease all;
+    color: gray;
+  }
+
+input#expiryDate:focus ~ .floating-label-expiry,
+input#expiryDate:not(:focus):valid ~ .floating-label-expiry{
+    top: 437px;
+    bottom: 10px;
+    color: #6699ff;
+    left: 568px;
+    font-size: 12px;
+    opacity: 1;
+}
+
+.floating-label {
+    position: absolute;
+    pointer-events: none;
+    left: 568px;
+    top: 306px;
+    transition: 0.3s ease all;
+    color: gray;
+  }
+
+input:focus ~ .floating-label,
+input:not(:focus):valid ~ .floating-label{
+    top: 296px;
+    bottom: 10px;
+    color: #6699ff;
+    left: 568px;
+    font-size: 12px;
+    opacity: 1;
+}
+
+.floating-label-name {
+    position: absolute;
+    pointer-events: none;
+    left: 568px;
+    top: 376px;
+    transition: 0.3s ease all;
+    color: gray;
+  }
+
+input#cardholderName:focus ~ .floating-label-name,
+input#cardholderName:not(:focus):valid ~ .floating-label-name{
+    top: 366px;
+    bottom: 10px;
+    color: #6699ff;
+    left: 568px;
+    font-size: 12px;
+    opacity: 1;
+}
+
+.displayTextBox {
+    width: 340px;
+    height: 45px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    border: 1px solid #e6e6e6;
+    background-image:url('/images/paymentCardsImg.png');
+    background-position: 10px 10px;
+    padding-left: 60px;
+    background-size: 40%;
+    background-repeat: no-repeat;
+}
+
+.inputText {
+    font-size: 17px;
+    width: 380px;
+    height: 35px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    padding-left: 20px;
+    padding-top: 10px;
+    margin-top: 20px;
+    outline: 0;
+}
+
+.inline-textbox-left {
+    float: left;
+    margin: 0;
+    height: 35px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    width: 167px;
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    outline: 0;
+}
+
+.group-row {
+    display: block;
+    width: 402px;
+    margin-bottom: 20px;
+}
+
+.group-row2 {
+    margin-top: 30px;
+    width: 350px;
+    display: block;
+}
+
+.inline-textbox-right {
+    float: right;
+    margin: 0;
+    height: 35px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    width: 167px;
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    outline: 0;
+}
+
+
+.paymentForm {
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 570px;
+    border: 2px solid gray;
+    height: 730px;
+    background-color: white;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    
+}
+
+form {
+    margin-left: 15%;
+    margin-right: 14%;
+    padding-top: 20px;
+}
+
+.contactDetailsText {
+    margin-left: 2px;
+}
+
+.contactInput {
+    font-size: 17px;
+    width: 380px;
+    height: 35px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    padding-left: 20px;
+    padding-top: 10px;
+    outline: 0;
+}
+
+.buttons {
+    display: inline-block;
+}
+
+#submitBtn {
+    margin-top: 50px;
+    height: 45px;
+    width: 240px;
+    background-color: #0066ff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+}
+
+#cancelBtn {
+    width: 160px;
+    height: 45px;
+    margin-top: 50px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+input[type=text] {
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+input[type=text]:focus {
+    border: 2px solid #3399ff;
+}
+
+.floating-email {
+    position: absolute;
+    pointer-events: none;
+    left: 568px;
+    top: 638px;
+    transition: 0.3s ease all;
+    color: gray;
+}
+
+input#email:focus ~ .floating-email,
+input#email:not(:focus):valid ~ .floating-email{
+    top: 628px;
+    bottom: 10px;
+    color: #6699ff;
+    left: 568px;
+    font-size: 12px;
+    opacity: 1;
+}
+
+.floating-label-phoneNum {
+    position: absolute;
+    pointer-events: none;
+    left: 568px;
+    top: 568px;
+    transition: 0.3s ease all;
+    color: gray;
+}
+
+input#contactNumber:focus ~ .floating-label-phoneNum,
+input#contactNumber:not(:focus):valid ~ .floating-label-phoneNum{
+    top: 558px;
+    bottom: 10px;
+    color: #6699ff;
+    left: 568px;
+    font-size: 12px;
+    opacity: 1;
+}
+

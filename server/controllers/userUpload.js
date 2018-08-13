@@ -37,7 +37,7 @@ exports.uploadImage = function (req, res) {
     var targetPath;
     var targetName;
     var tempPath = req.file.path;
-    console.log("SMLJ IS REQ FILE " + req.file);
+    console.log("SMLJ IS REQ FILE " + JSON.stringify(req.file));
 
     //get mime type of file
     var type = mime.lookup(req.file.mimetype);
@@ -52,7 +52,7 @@ exports.uploadImage = function (req, res) {
 
     // set new path to images
     targetPath = './public/images/' + req.file.originalname;
-
+    console.log("req file oroginalname " + req.file.originalname);
     // using read stream API to read file;
     src = fs.createReadStream(tempPath);
 
@@ -78,6 +78,7 @@ exports.uploadImage = function (req, res) {
         
         var user_id = req.user.id
         //save to database
+        console.log("user image >>>>>>>> " + userImage);
         Users.findById(user_id).then(user => {
             user.userImage = userImage;
             user.save();

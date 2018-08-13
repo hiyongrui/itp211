@@ -24,11 +24,14 @@ var IMAGE_TYPES = ['image/jpeg' , 'image/jpg' , 'image/png'];
 
 var Songlike = require('../models/songlike');
 
+var SongTag = require("../models/songTags");
+
 // List songs
 exports.show = function (req,res) {
     var user_num = req.user.id;                           //previously u.email ,    u.name AS user_id
-    sequelize.query('select s.id , s.title , s.songName , s.songImage, s.songLikeNo, s.user_id , u.name as createdAt from Songs s join Users u on s.user_id = u.id' , 
+    sequelize.query('select s.id , s.title , s.songName , s.songImage, s.songLikeNo, s.user_id , u.name AS createdAt from Songs s join Users u on s.user_id = u.id' , 
         { model : Songs}).then((songs) => {
+            console.log("songs >>>>>>>>>> " + JSON.stringify(songs));
     Playlists.findAll({ where: {user_id: user_num} }).then((playlists) => {
         Songlike.findAll( { where: {user_id: user_num} }).then(songlikeuser => {
         res.render('songs' , {
@@ -200,13 +203,33 @@ exports.uploadSong = function (req,res) {
         var songData = {
             title: req.body.title,
             //songName: req.files["song"].originalname,
+            songListingType: req.body.songListingType,
             songName: originalNameArray[0],
             songImage: originalNameArray[1],
-            user_id: req.user.id
+            user_id: req.user.id,
+            songTags: req.body.songTags
         }
-
+        console.log("song data object --- " + JSON.stringify(songData));
         // Save to database
         Songs.create(songData).then((newSong,created) => {
+            console.log("in process of creating song --- " + JSON.stringify(newSong));
+
+            if (songData.songTags != undefined) {
+                console.log("highest song id now >>>   " + newSong.id);
+                for (i=0; i<songData.songTags.length; i++) {
+                    var songTagData = {
+                        song_id: newSong.id,
+                        songTags: songData.songTags[i],
+                        user_id: songData.user_id
+                    }
+                    console.log("hi tag --  " + i  + " " + songData.songTags[i]);
+                    console.log("product tag data >> " + JSON.stringify(songTagData));
+                    SongTag.create(songTagData).then(createdTags => {
+                        console.log(" created song tags ------   " + JSON.stringify(createdTags));
+                    })
+                }
+            }
+
             if (!newSong) {
                 return res.send(400, {
                     message: "error"
@@ -269,13 +292,14 @@ exports.delete = function (req,res) {
     var song_num = req.params.songs_id;
     console.log("deleting songs" + song_num);
     Songs.destroy({where: { id: song_num } }).then( (deletedSong ) => {
-        if(!deletedSong) {
+        SongTag.destroy({ where: {song_id: song_num} }).then((deletedSongTag) => {
+        if(!deletedSong && !deletedSongTag) {
             return res.send(400, {
                 message: "error"
             });
         }
-
         res.status(200).send({message: "Deleted songs : " + song_num});
+        })
     })
 }
 

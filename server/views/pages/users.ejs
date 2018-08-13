@@ -13,7 +13,7 @@
     /*display: inline; */
     width: 200px;
     height: 200px;
-    /* border: 2px solid grey; */
+    border: 2px solid lightslategray;
 }
 .user{
     color: blue;
@@ -34,7 +34,7 @@
           <% users.forEach(function(users) { %>
           <div class="col-xs-6 col-md-4">
            
-                <img id="output" class="card-img-top" src="images/<%= users.userImage %>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'">
+                <img id="output" class="card-img-top profilePictureUsers" src="images/<%= users.userImage %>" onerror="javascript:this.src='https://www.beatport.com/static/4cec64ff89a509926748f1d94aeb6d53dbae4eaf/images/artist-default-1x1.jpg'">
                                     <!-- users.id if is FindById , params is the user_id-->
                <a href="users/profile/<%=users.name%>"> <button type="button" class="btn btn-outline-success waves-effect"> visit </button>
                 
@@ -42,9 +42,10 @@
 
                 <p class="text-center user"> email: <%= users.email %> </p>
 
-                <p class="text-center user"> role: <%= users.role %> </p>
+                <p class="text-center user role"> role: <%= users.role %> </p>
            
-          </div> <% }); %> 
+          </div> 
+          <% }); %> 
 
         </div>
         
@@ -85,6 +86,31 @@
               location.href = "<%-urlPath %>/profile/"+user_num;
             });
             console.log(document.getElementById("output"));
+            
+
+            function htmlDecode(input){
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+            }
+        
+            var allTheUsers = JSON.parse(htmlDecode("<%= JSON.stringify(users) %>"));
+
+            console.log("user role");
+            console.log("all user length " + allTheUsers.length);
+            var allUsers = document.querySelectorAll(".role");
+            console.log(allUsers[1].innerHTML);
+            
+            for (i=0; i<allTheUsers.length; i++) {
+                if (allUsers[i].innerHTML.indexOf("instructor") !== -1) {
+                    console.log(allUsers[i]);
+                    console.log("closest ---------- ");
+                    var changeColorOfTheseInstructors = allUsers[i-1].parentNode.parentElement.nextSibling.nextSibling.firstChild.firstChild.nextSibling;
+                    console.log(changeColorOfTheseInstructors);
+                    changeColorOfTheseInstructors.style.borderColor = "green";
+                }
+            }
+                
         </script>
 
 </body>

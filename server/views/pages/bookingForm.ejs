@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+
+  <link rel='stylesheet' href='/stylesheets/bookingForm.css' />
+</head>
+<body>
+    <% include ../partials/header %>
+    <div class="wrapper">
+        <form id="bookingForm">
+            <div class="formTitle">
+                <h3> Book Your Appointment </h3>
+            </div>
+            <hr class="formLine">
+            <div class="lessonInfo">
+                <p class="lessonDetails">Lesson Details</p>
+                <p class="idTest">Lesson: <span class="lessonNameData"><%=lessonData[0].title%> </span></p>
+                <p class="instructor">Instructor Name: <span class="instructorNameData"><%=lessonData[0].user_id%></span></p>
+                <p class="lessonPrice">Price: $<span class="pricePerHourData"><%=lessonData[0].price%></span>/hour</p>
+            </div>
+            <hr class="formLine">
+            <p class="textDays">Select Day:</p>
+            <div class="displayDays">
+                <label id="Monday" class="label">
+                    <input type="radio" class="days" name="days" id="1" value="Monday">Mon
+                </label>
+                <label id="Tuesday" class="label">
+                    <input type="radio" class="days" name="days" id="2" value="Tuesday">Tue
+                </label>
+                <label id="Wednesday" class="label">
+                    <input type="radio" class="days" name="days" id="3" value="Wednesday">Wed
+                </label>
+                <label id="Thursday" class="label">
+                    <input type="radio" class="days" name="days" id="4" value="Thursday">Thu
+                </label>
+                <label id="Friday" class="label">
+                    <input type="radio" class="days" name="days" id="5" value="Friday">Fri
+                </label>
+                <label id="Saturday" class="label">
+                    <input type="radio" class="days" name="days" id="6" value="Saturday">Sat
+                </label>
+                <label id="Sunday" class="label">
+                    <input type="radio" class="days" name="days" id="7" value="Sunday">Sun
+                </label>
+            </div>
+            <p class="textTimings">Available Timings:</p>
+            <div class="displayTimings">
+
+            </div>
+            <button type="button" class="confirmTimingBtn" value="Confirm Timing">Confirm Timing</button>
+            
+            <button type="button" class="bookBtn" value="Confirm Booking">Confirm Booking</button>
+           
+        </form>
+        <div class="payment">
+            <p class="selectedTimingsText"> Selected Timings </p>
+            <hr class="paymentLine">
+            <div class="selectedTimings">
+
+            </div>
+            <hr class="paymentLine">
+            <div class="totalAmtDue">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $("input[name='days']").change(function() {
+        var labels = document.getElementsByClassName('label');
+        console.log(labels.length);
+        for (var i = 0; i < labels.length; i++) {
+          document.getElementsByClassName('label')[i].style.border = "1px solid black";
+          document.getElementsByClassName('label')[i].style = "background-color: #d9d9d9";
+        }
+        selectedVal = $('input[name=days]:checked').val();
+        console.log(selectedVal);
+        document.getElementById(selectedVal).style = "background-color: #99ccff";
+        var url = '<%=urlPath%>' + '/getTimings'
+        var day = {
+            day: selectedVal
+        }
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(day),
+            contentType: "application/json",
+            success: function(data) {
+                $('.displayTimings').empty();
+                console.log(data.length);
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var tempFromTime = data[i].fromTime;
+                        var tempToTime = data[i].toTime;
+                        console.log(tempFromTime);
+                        var nightOrDay;
+                        if (tempToTime < 12) {
+                            nightOrDay = "AM";
+                        }
+                        else if (tempToTime > 11) {
+                            nightOrDay = "PM";
+                        }
+                        tempFromTime = tempFromTime.toString();
+                        tempToTime = data[i].toTime;
+                        tempToTime = tempToTime.toString();
+                        console.log("TempToTime: "+tempToTime) 
+                        var timingSlot = '<label id="'+tempFromTime+'" class="timeLabel"> <input type="checkbox" name="timings" id="'+tempFromTime+'" class="timings '+data[i].isBooked+ '" value="' +tempFromTime+ '">'+tempFromTime + "- " + tempToTime+ " " + nightOrDay +'</label>';
+                        console.log(timingSlot);
+                        $('.displayTimings').append(timingSlot);
+                    }
+                }
+                else {
+                    $('.displayTimings').empty();
+                }
+                $('.timings').each(function(i) {
+                    var timingClass = document.getElementsByClassName('timings')[i];
+                    if (timingClass.classList.contains('1')) {
+                        $('.1').prop("disabled", true);
+                    }
+                });
+                
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        })
+    });
+
+    $(document).on("change", "input[name='timings']", function () {
+        var timeLabels = document.getElementsByClassName('timeLabel');
+        console.log(timeLabels.length);
+        for (var i = 0; i < timeLabels.length; i++) {
+            document.getElementsByClassName('timeLabel')[i].style = "background-color: #4775d1";
+        }
+        checkedValues = [];
+        $('input[name="timings"]:checked').each(function() {
+             console.log(this.value);
+             checkedValues.push(this.value);
+         });
+         console.log(checkedValues);
+         for (var i = 0; i < checkedValues.length; i++) {
+             console.log(checkedValues[i])
+             $("label[id="+checkedValues[i]+"]").css("background-color", "#99ccff");
+         }
+         
+    });
+
+    function calcTotalAmt() {
+        var numOfTimings = $('.selectedTimings .finalSelectedTimings').length
+        var pricePerHour = $('.pricePerHourData').text().trim();
+        pricePerHour = parseInt(pricePerHour);
+
+        console.log("price per hour: " +pricePerHour);
+        var totalPrice = pricePerHour * numOfTimings;
+        totalPrice = parseInt(totalPrice);
+        $('.totalAmtDue').text("Total Amount: $" +totalPrice);
+    }
+
+    $('.confirmTimingBtn').click(function() {
+        var timeLabels = document.getElementsByClassName('timeLabel');
+        console.log(timeLabels.length);
+        for (var i = 0; i < timeLabels.length; i++) {
+            document.getElementsByClassName('timeLabel')[i].style = "background-color: #4775d1";
+        }
+        var selectedDay = $('input[name="days"]:checked').val();
+        checkedValues = [];
+        $('input[name="timings"]:checked').each(function() {
+            console.log(this.value);
+            checkedValues.push(this.value);
+        });
+        for (var i = 0; i < checkedValues.length; i++) {
+            var tempTiming = checkedValues[i];
+            tempTiming = parseInt(tempTiming);
+            tempToTime = tempTiming + 1;
+            var fromTimeDayNight;
+            var toTimeDayNight;
+            if (tempTiming < 12) {
+                fromTimeDayNight = "AM";
+            }
+            else {
+                fromTimeDayNight = "PM";
+            }
+            if (tempToTime > 11) {
+                toTimeDayNight = "PM";
+            }
+            else {
+                toTimeDayNight = "AM";
+            }
+            var selectedDayId = $('input[name="days"]:checked').attr('id');
+            var tryIfExist = selectedDay + ", " + tempTiming + " " + fromTimeDayNight + " - " + tempToTime + " " + toTimeDayNight
+            $('.selectedTimings').append('<p class="finalSelectedTimings" id="'+selectedDay+tempTiming+'"> <span class="selectedDayFinal"> ' +selectedDay + '</span>' + ", " +'<span class="selectedTimeFinal"> ' + tempTiming + '</span>' + " " + fromTimeDayNight + " - " + tempToTime + " " + toTimeDayNight+ '<span style="display: none" class="selectedDayValue"> '+selectedDayId+'</span> </p> <span class="removeTimingRow '+i+'" onclick="deleteRow(this)" id="'+selectedDay+tempTiming+'"> &times </span>');
+            
+        }
+        $('input:checkbox').prop('checked', false);
+
+        calcTotalAmt();
+
+    });
+
+    function deleteRow(obj) {
+        var select = $(this);
+        console.log(select);
+        var rowId = obj.id;
+        console.log(rowId);
+        $("p[id="+rowId+"]").remove();
+        $("span[id="+rowId+"]").remove();
+        calcTotalAmt();
+    }
+    
+    function booking() {
+        var getAllDays = $('.selectedTimings').find('.selectedDayFinal');
+        var getAllTimings = $('.selectedTimings').find('.selectedTimeFinal');
+        var getAllDayValues = $('.selectedTimings').find('.selectedDayValue');
+        
+
+        selectedDaysArr = [];
+        selectedTimingsArr = [];
+        selectedDayValuesArr = [];
+
+        for (var i = 0; i < getAllDays.length; i++) {
+            var selectedDayFinalVal = document.getElementsByClassName('selectedDayFinal')[i].innerHTML;
+            var selectedTimeFinalVal = document.getElementsByClassName('selectedTimeFinal')[i].innerHTML;
+            var selectedDayValue = document.getElementsByClassName('selectedDayValue')[i].innerHTML;
+            console.log(selectedDayFinalVal);
+            console.log(selectedTimeFinalVal);
+            console.log("selected day values" +selectedDayValue);
+            selectedDaysArr.push(selectedDayFinalVal);
+            selectedTimingsArr.push(selectedTimeFinalVal);
+            selectedDayValuesArr.push(selectedDayValue);
+        }
+        console.log(selectedDaysArr);
+        console.log(selectedTimingsArr);
+        console.log(selectedDayValuesArr);
+        var url = '<%=urlPath%>' + '/bookingData'
+        var bookingData = {
+            days: selectedDaysArr,
+            dayValue: selectedDayValuesArr,
+            timings: selectedTimingsArr,
+        }
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(bookingData),
+            contentType: "application/json",
+            success: function(result) {
+            },
+            error: function(result) {
+                alert('error');
+            }
+        })
+    };
+
+    function createBooking() {
+        var numOfTimings = $('.selectedTimings .finalSelectedTimings').length
+        var pricePerHour = $('.pricePerHourData').text().trim();
+        pricePerHour = parseInt(pricePerHour);
+
+        console.log("price per hour: " +pricePerHour);
+        var totalPrice = pricePerHour * numOfTimings;
+        totalPrice = parseInt(totalPrice);
+        $('.totalAmtDue').text("Total Amount: $" +totalPrice);
+        var instructor_id = $('.instructorNameData').text().trim();
+        var lesson_name = $('.lessonNameData').text().trim();
+        console.log(instructor_id);
+        var url = '<%=urlPath%>' + '/booking'
+        var bookingTransactionData = {
+            totalPrice: totalPrice,
+            instructor_id: instructor_id,
+            lesson_name: lesson_name
+        }
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(bookingTransactionData),
+            contentType: "application/json",
+            success: function(result) {
+                booking();
+            },
+            error: function(result) {
+                alert('error');
+            }
+        })
+    };
+
+    function addBalance() {
+        var numOfTimings = $('.selectedTimings .finalSelectedTimings').length
+        var pricePerHour = $('.pricePerHourData').text().trim();
+        pricePerHour = parseInt(pricePerHour);
+
+        console.log("price per hour: " +pricePerHour);
+        var totalPrice = pricePerHour * numOfTimings;
+        totalPrice = parseInt(totalPrice);
+        var instructorId = $('.instructorNameData').text()
+        console.log("total price: " +totalPrice);
+        var url = '<%=urlPath%>' + '/bookingSendPayment';
+        var paymentData = {
+            totalPrice: totalPrice,
+            instructor_id: instructorId 
+        }
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(paymentData),
+            contentType: 'application/json',
+            success: function(result) {
+                createBooking();
+            },
+            error: function(result) {
+                alert("error");
+            }
+        })
+   };
+
+   $('.bookBtn').click(function() {
+        var numOfTimings = $('.selectedTimings .finalSelectedTimings').length
+        var pricePerHour = $('.pricePerHourData').text().trim();
+        pricePerHour = parseInt(pricePerHour);
+
+        console.log("price per hour: " +pricePerHour);
+        var totalPrice = pricePerHour * numOfTimings;
+        totalPrice = parseInt(totalPrice);
+        console.log("total price: " +totalPrice);
+        var url = '<%=urlPath%>' + '/bookingUserPayment';
+        console.log(url);
+        var paymentData = {
+            totalPrice: totalPrice,
+        }
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(paymentData),
+            contentType: "application/json",
+            success: function(result) {
+                addBalance();
+            },
+            error: function(result) {
+                alert("error");
+            }
+        })
+   });
+
+    $('.paymentMethod').change(function() {
+        $('.paymentDetails').show();
+    })
+
+    </script>
+
+</body>
+</html>

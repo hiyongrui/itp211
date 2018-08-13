@@ -8,12 +8,18 @@ const Transaction = sequelizeInstance.define('Transaction', {
         autoIncrement: true,
         primaryKey: true
     },
+    order_date: {
+        type: Sequelize.DATEONLY
+    },
     transactionId: {
         type: Sequelize.INTEGER
     },
     cartPricing: {
         type: Sequelize.INTEGER,
         trim: true
+    },
+    order_status: {
+        type: Sequelize.BOOLEAN
     },
     user_id:{
         type: Sequelize.INTEGER,

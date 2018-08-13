@@ -44,7 +44,7 @@ function getCommentsCount() {
 
 /*
 getCommentsCount().then(data=> {
-    console.log(" GAY IS " + data);
+    console.log(" a IS " + data);
     experiencelevel.push(data);
     totalexp = data * 500;
     Users.findById('2').then(userexp => {

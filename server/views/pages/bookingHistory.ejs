@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/bookingHistory.css'/>
+ 
+</head>
+
+<body>
+    <% include ../partials/header %>
+        <div class="wrapper">
+        <h3 class="headerText">Your Bookings</h3>
+        <div class="selectRoles">
+            <label id="User" class="label">
+            <input type="radio" class="role" name="role" id="user" value="User">User
+            </label>
+            <label id="Instructor" class="label">
+            <input type="radio" class="role" name="role" id="instructor" value="Instructor">Instructor
+            </label>
+        </div>
+        <div class="userDiv">
+            
+        </div>
+        <div class="instructorDiv">
+
+        </div>
+    </div>
+
+    <script>
+
+        function getBookingDetails(obj) {
+            var row_id = obj.getAttribute('data-id');
+            console.log(row_id);
+            var url = '<%=hostPath%>' + '/bookingDetails';
+            var row_id = {
+                row_id: row_id
+            }
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: JSON.stringify(row_id),
+                contentType: "application/json",
+                success: function(data) {
+                    $('.rowDetails').empty();
+                    alert('success');
+                    console.log(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        tempTiming = data[i].timing;
+                        tempTiming = parseInt(tempTiming);
+                        tempTiming += 1;
+                        var trRow = '<p class="rowDetails">' + data[i].day + ' | Timing: ' + data[i].timing + ' - ' + tempTiming + ' | Lesson Date: ' + data[i].bookingDate + '</p>'
+                        $('#' +data[i].booked_id).append(trRow);
+                        $('#' +data[i].booked_id).show();
+                    }
+                }
+            })
+        }
+
+        $("#user").click(function() {
+            var labels = document.getElementsByClassName('label');
+            console.log(labels.length);
+            for (var i = 0; i < labels.length; i++) {
+                document.getElementsByClassName('label')[i].style.border = "1px solid black";
+                document.getElementsByClassName('label')[i].style = "background-color: #d9d9d9";
+            }
+            selectedVal = $('input[name=role]:checked').val();
+            console.log(selectedVal);
+            document.getElementById(selectedVal).style = "background-color: #99ccff";
+            
+            url = '<%=hostPath%>' + '/userHist'
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(data) {
+                    alert('successful');
+                    $(".userDiv").empty();
+                    $('.userDiv').show();
+                    $('.instructorDiv').hide();
+                    console.log(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        var trRow = '<p class="rowRecord" onclick="getBookingDetails(this)" data-id="'+data[i].id+'"> Lesson Name: ' + data[i].lesson_name + ' | $' + data[i].totalPrice + ' | Purchase Date: ' + data[i].purchaseDate + ' | Instructor Email: ' +data[i].email + '</p> <div style="display: none" id="'+data[i].id+'"class="rowDetails"> </div>'
+                        $('.userDiv').append(trRow);                
+                    }
+                },
+                error: function() {
+                    alert("error");
+                }
+            })
+        });
+
+        $("#instructor").click(function() {
+            var labels = document.getElementsByClassName('label');
+            console.log(labels.length);
+            for (var i = 0; i < labels.length; i++) {
+                document.getElementsByClassName('label')[i].style.border = "1px solid black";
+                document.getElementsByClassName('label')[i].style = "background-color: #d9d9d9";
+            }
+            selectedVal = $('input[name=role]:checked').val();
+            console.log(selectedVal);
+            document.getElementById(selectedVal).style = "background-color: #99ccff";
+            url = '<%=hostPath%>' + '/instructorHist'
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(data) {
+                    $('.userDiv').hide();
+                    $('.instructorDiv').show();
+                    alert('successful');
+                    $(".instructorDiv").empty();
+                    $('.instructorDiv').show();
+                    $('.userDiv').hide();
+                    console.log(data.length);
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var trRow = '<p class="rowRecord" onclick="getBookingDetails(this)" data-id="'+data[i].id+'"> Lesson Name: ' + data[i].lesson_name + ' | $' + data[i].totalPrice + ' | Purchase Date: ' + data[i].purchaseDate + ' | Instructor Email: ' +data[i].email + '</p> <div style="display: none" id="'+data[i].id+'"class="rowDetails"> </div>'
+                            $('.instructorDiv').append(trRow);                
+                        }
+                    } else {
+                        var noLesson = '<h4> No one has bought your lesson yet! </h4>'
+                        $('.instructorDiv').append(noLesson);
+                    }
+                },
+                error: function() {
+                    alert("error");
+                }
+            })
+        });
+    
+    </script>
+</body>
+</html>

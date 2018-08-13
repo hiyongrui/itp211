@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/topup.css' />
+  <script src='/javascripts/jquery.min.js'></script>
+</head>
+<body>
+    <% include ../partials/header %>
+
+    <div class="displayBalance">
+      <img src="/images/walletBrown2.png" alt="wallet" class="walletImg">
+      <img src="/images/coinimg.png" alt="coinimg" class="coinimg">
+      <% for(var i = 0; i < data.length; i++) {%>
+        <p class="balanceAmt"> <%= data[i].coin %> </p>
+      <% } %>
+    </div>
+    <div class="display">
+      
+      <div class="displayBox">
+        <h3 class="displayTextWallet"> My Wallet </h3>
+        <div class="displayBoxBtns">
+          <button type="button" class="displayBoxBtn" value="withdraw">Withdraw</button>
+          <button type="button" class="displayBoxBtn" id="showHistoryBtn" value="transactions">My Transactions</button>
+          <button type="button" class="displayBoxBtn" value="oneClick">One-Click Validation</button>
+        </div>
+      </div>
+    </div>
+    <h3 class="acceptedCardsTextLine"><span>WE ACCEPT</span></h3>
+    <div class="acceptedCards">
+      <img src="/images/paymentCardsImg.png" alt="paymentcards" class="paymentcards">
+    </div>
+    <h3 class="topUpTextLine"><span>TOP UP COINS</span></h3>
+    <div class="topup">
+      <div class="selectAmt">
+        <label id="10" class="label">
+          <input type="radio" class="topUpValue" name="topUpValue" id="10" value="10">SGD$ 10
+          <div class="coinAmt"> Coin x 10 </div>
+        </label>
+        <label id="20" class="label">
+          <input type="radio" class="topUpValue" name="topUpValue" id="20" value="20">SGD$ 20
+          <div class="coinAmt"> Coin x 20 </div> 
+        </label>
+        <br>
+        <label id="30" class="label">
+          <input type="radio" class="topUpValue" name="topUpValue" id="30" value="30">SGD$ 30
+          <div class="coinAmt"> Coin x 30 </div>
+        </label>
+        <label id="50" class="label">
+          <input type="radio" class="topUpValue" name="topUpValue" id="50" value="50">SGD$ 50
+          <div class="coinAmt"> Coin x 50 </div>
+        </label>
+        <br>
+        <label id="100" class="label">
+          <input type="radio" class="topUpValue" name="topUpValue" id="100" value="100">SGD$ 100
+          <div class="coinAmt"> Coin x 100 </div>
+        </label>
+        <label id="150" class="label">
+          <input type="radio" class="topUpValue" name="topUpValue" id="150" value="150">SGD$ 150
+          <div class="coinAmt"> Coin x 150 </div>
+        </label>
+        <label id="5000" class="label">
+            <input type="radio" class="topUpValue" name="topUpValue" id="5000" value="5000">SGD$ 5000
+            <div class="coinAmt"> Coin x 5000 </div>
+        </label>
+      </div> <!-- End of selectAmt div-->
+
+      <div class="reviewAmt">
+        <div class="textReview"> Review Purchase </div>
+        <hr class="textReviewLine">
+        <div class="selectedValue">
+          <p class="selectedValueText"> Selected Value </p>
+          <p class="selectedValueAmt"> </p>
+        </div>
+        <br>
+        <div class="price">
+          <p class="priceText"> Price </p>
+          <p class="priceAmt"> </p>
+        </div>
+        <hr class="textReviewLine">
+        <button type="button" class="topUpBtn" value="Top Up">Proceed to payment</button>
+      </div>
+    </div>
+
+    <div id="historyModal" class="modal">
+      <div class="historyContent">
+        <div class="historyHeader">
+          <h2> Your History </h2>
+        </div>
+        <div class="historyBody">
+          <table class="table">
+            <thread>
+              <thead>
+                <th>Date</th>
+                <th>Item</th>
+                <th>Amount</th>
+              </thead>
+            </thread>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $("input[name='topUpValue']").change(function() {
+        var labels = document.getElementsByClassName('label');
+        console.log(labels.length);
+        for (var i = 0; i < labels.length; i++) {
+          document.getElementsByClassName('label')[i].style.border = "1px solid blue";
+        }
+        selectedVal = $('input[name=topUpValue]:checked').val();
+        console.log(selectedVal);
+        document.getElementById(selectedVal).style.border = "1px solid red";
+        $('.selectedValueAmt').text("Coin x " +selectedVal);
+        $('.priceAmt').text("SGD$ " +selectedVal);
+      })
+
+      $('.topUpBtn').click(function () {
+        var url = '<%=urlPath%>' + '/' + 'topup'
+        console.log(url);
+        var value = $('input[name=topUpValue]:checked').val();
+        value = parseInt(value);
+        console.log(value);
+        localStorage.setItem("test", value);
+        console.log("localStorage value: "  +localStorage.getItem("test"));
+        var topUpData = {
+          coinAmt: value,
+          price: value
+        }
+        location.href = 'http://localhost:3000/topuppayment';
+        /*
+        $.ajax({
+          url: url,
+          type: 'POST',
+          data: JSON.stringify(topUpData),
+          contentType: "application/json",
+          success: function(result){
+            alert("Success");
+          },
+          error: function(result){
+            alert("Error");
+            console.log(result.message);
+          }
+        })
+        */
+      })
+      $('#showHistoryBtn').click(function () {
+          var url = '<%=urlPath%>' + '/' + 'topupHistory'
+          var record = [];
+          var dates = [];
+          $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(data) {
+              $(".table tbody tr").remove();
+              alert("GET top up history");
+              console.log("data length: " +data.length);
+              for (var i = 0; i < data.length; i++) {
+                tempDate = data[i].topupDate
+                tempCoinAmt = data[i].coinAmt;
+                record.push(tempCoinAmt);
+                dates.push(tempDate);
+              }
+              console.log(record);
+              console.log(dates);
+              for (var i = 0; i < record.length; i++) {
+                var trRow = '<tr class="rowRecord"> <td class="trTopupDate">' + dates[i] + '</td> <td class="trCoinAmt"> Coin x ' + record[i] + '</td> <td class="paidAmt"> $' + record[i] + '</td> </tr>'
+                $('.table').append(trRow);                
+              }
+              $('#historyModal').modal("show");
+            },
+            error: function(result) {
+              alert("GET error");
+            }
+          })
+      })
+    
+      </script>
+
+</body>
+</html>

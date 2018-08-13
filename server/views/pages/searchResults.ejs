@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Search Results
+    </title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <script src="/javascripts/socket.io.js"></script>
+
+</head>
+
+<style>
+    .MayLikeLine {
+        display: table;
+        border-spacing: 1rem 0;
+        line-height: .25;
+        margin: 1em 0 .5em;
+        table-layout: auto;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 33px;
+        font-family: 'Droid Serif', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-style: italic;
+        text-transform: uppercase;
+        padding: 33px;
+    }
+
+    .MayLikeLine::before {
+        border-top: 3px double #123;
+        content: "";
+        display: table-cell;
+        width: 50%;
+        border-top-color: slategrey;
+    }
+
+    .MayLikeLine::after {
+        border-top: 3px double #123;
+        content: "";
+        display: table-cell;
+        width: 50%;
+        border-top-color: slategray;
+    }
+
+    .output{
+        /* border-radius:50%; */
+        /*display: inline; */
+        width: 360px;
+        height: 360px;
+    }
+
+    #productImageAndTag {
+        display:flex;
+    }
+
+    .scrollmenu{
+        background-color:white;
+        overflow: auto;
+        white-space: nowrap;
+        width:50%;
+        margin-top:8px;
+    }
+
+    .scrollmenu a{
+        display:inline-block;
+        border: 1px solid #edf0f7;
+        border-radius: 4px;
+        background-color:bisque;
+        color:#2f8bcc;
+        text-align: center;
+        padding: 8px 10px;
+        margin: 2px 5px;
+        font-size: 1.2em;
+        text-decoration: underline;
+    }
+
+    .scrollmenu a:hover{
+        background-color: #777;
+    }
+
+    #noSearchResult{
+        width: 28.4rem;
+        height:14.4rem;
+        text-align: center;
+    }
+    
+    #noSearchResultDiv{
+        margin:auto;
+        text-align: center;
+    }
+
+    .jumbotron.my-4{
+        padding:16px;
+    }
+
+    .boldSearch{
+        color:rgb(34, 34, 34);
+        font-weight: 500;
+    }
+
+    .btn.btn-outline-warning:hover{
+        color:#212529 !important;
+        background-color: #ffc107 !important;
+        border-color:2px solid #ffc107 !important;
+    }
+    
+    .searchProductImages{
+        height: 250px;
+        width: 100%;
+    }
+
+     .likeShapeForPastProduct {
+        color: #007bff;
+
+    }
+
+    .likeShapeForPastProductDiv {
+        text-align: center;
+    }
+
+    .likeShapeForPastProductDiv:hover {
+        background-color: rgba(0, 0, 0, .05);
+        border-color: #ff5722;
+    }
+
+    .card-footer {
+        cursor: pointer;
+    }
+
+    .card.h-100 {
+        padding: 10px;
+    }
+
+    .card.h-100:hover {
+        /* box-shadow: 0 0 10px rgba(0,0,0,.2); */
+        border: 1px solid;
+        box-shadow: 5px 10px 8px #888888;
+    }
+
+
+    .star-ratings-sprite {
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        font-size: 0;
+        height: 21px;
+        line-height: 0;
+        overflow: hidden;
+        text-indent: -999em;
+        width: 110px;
+        /* margin: 0 auto; */
+        margin-left: 54px;
+    }
+    .instrument{
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        font-size: 0;
+        height: 21px;
+        line-height: 0;
+        overflow: hidden;
+        text-indent: -999em;
+        width: 110px;
+        margin: 0 auto; 
+    }
+    .star-ratings-sprite-rating {
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+        background-position: 0 100%;
+        float: left;
+        height: 21px;
+        display: block;
+    }
+    .ratingCount{
+        margin-left:18px;
+        color:green;   
+    }
+    
+    .card-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+     .marked {
+        background-color: lightgreen;
+        font-size: 20px;
+    }
+
+    .unmarked {
+        background-color: lightblue;
+        color: blue;
+        font-size: 20px;
+    }
+    .filterCol{
+        background-color:green;    
+    }
+    .priceStyle{
+        font-size:244%;
+        max-width:130px;
+        color: #ff5722;
+        font-weight:400
+    }
+    .dollarSign{
+        font-size:144%;
+        color:#ff5722;
+        font-weight:400;
+    }
+
+    
+    .sortDiv, .conditionDiv, .priceDiv{
+        padding-top:34px;
+    }
+
+    .filterH4Style{
+        font-size:1.4rem;
+        text-transform: uppercase;
+        letter-spacing: .1rem;
+        color:#212121;
+    }
+    
+    #inputMin, #inputMax{
+        float:left;
+        display:block;
+        width:70px;
+        height:30px;
+        padding: 0 7px;
+        text-align:left;
+        color:blue;
+        border: 1px solid #a8a8a8;
+        border-radius:3px;
+        background-color: #fff;
+        box-shadow: 0 1px 1px 0 #ececec;
+    }
+    .middleInput{
+        float:left;
+        width:10px;
+        text-align: center;
+        line-height: 30px;
+        color:gray;
+    }
+    #applyBtn{
+        float:left;
+    }
+    .filterDiv{
+        height:44%;
+        cursor:auto;
+    }
+
+    .titleSongs{
+        text-align: center;
+    }
+    .display-3{
+        text-transform: uppercase;
+        font-size:2.9rem !important;
+    }
+    .col-4{
+        margin-top:12px;
+    }
+    .list-group-item{
+        display:unset !important;
+    }
+    .sorryText{
+        text-align: center;
+        font-size: 180%;
+        font-weight:600;
+        color:red;
+    }
+    .sorryImage{
+        margin-left:38%;
+    }
+    .playBtn{
+        margin-left:25% !important;
+    }
+    .shrinkPlayBtn{
+        padding:12px !important;
+        margin-left:22% !important;
+    }
+</style>   
+
+<body>
+    <% include ../partials/header %>
+
+        <!-- Page Content -->
+        <div class="container">
+
+            <% if (dynamicSearch.length == 0 && cookieSearchType != "all") { %> 
+                <header class="jumbotron my-4">
+                    <div id="noSearchResultDiv"> 
+                        <img id ="noSearchResult" src="http://tarabeiser.com/ux/imgux/searchEmptyState.png"/>
+                        <h2 class="display-3"> Sorry! </h2>
+                        <p class="lead"> There were no search results for <span class="boldSearch"> '<%=searchQuery%>' :( </span> </p>
+                        <button id="resetSearchBtn" class="btn btn-outline-warning" onclick="resetSearch()"> Reset Search Filter </button>
+                    </div>
+                </header>
+            <% } else { %>
+            <!-- Jumbotron Header -->
+            <header class="jumbotron my-4">
+                <h1 class="display-3"> <%=cookieSearchType%> Search results for <%=searchQuery%>! </h1>
+                <p class="lead"> Filter further by clicking on <%=cookieSearchType%> tags below! </p>
+                <div class="scrollmenu"> 
+              
+                <!-- <a href="/search/<%=searchQuery%>/haha?tag=<%=dynamicTags.productTags%>"> <%= dynamicTags.productTags %> </a>  !-->
+                    <% if (cookieSearchType == "instruments") { %>
+                        <% dynamicTags.forEach(function(dynamicTags) {%>
+                        <a href="/search/<%=searchQuery%>/searchTag?tag=<%=dynamicTags.productTags%>"> <%= dynamicTags.productTags %> </a>
+                        <% }); %>
+
+                    <% } else if (cookieSearchType =="songs") { %>
+                        <% dynamicTags.forEach(function(dynamicTags) {%>
+                        <a href="/search/<%=searchQuery%>/searchTag?tag=<%=dynamicTags.songTags%>"> <%= dynamicTags.songTags %> </a>
+                        <% }); %>
+
+                    <% } else { %> 
+                        <a href="#"> Hi </a>
+                    <% } %>
+                <!-- <a href="/search/<%=cookieSearchType%>/<%=searchQuery%>/searchTag?tag=<%=dynamicTags.productTags%>"> <%= dynamicTags.productTags %> </a> !-->
+                <!-- <a href="/search/<%=cookieSearchType%>/searchResult?comeon=<%=searchQuery%>&tagSelected=<%=dynamicTags.productTags%>"> </a> !-->
+          
+                </div>
+
+            </header>
+      
+            <!-- Page Features -->
+                <% if (cookieSearchType == "instruments") { %> 
+            <div class="container"> 
+                <div class="row">
+                    <div class="col-3"> 
+                        <div class="card-footer filterDiv">
+
+                            <button id="resetSearchBtn" class="btn btn-outline-warning" onclick="resetSearch()"> Reset Search Filter </button>
+                            <div class="categoryDiv">
+                                <h4 class="filterH4Style"> Category </h4>
+                                <select id="productOptions" name="productFilterType" class="productFilterType">
+                                    <option value="None"> None </option>
+                                    <option value="Java">Java</option>
+                                    <option value="Angular">Angular</option>
+                                    <option value="Automation">Automation</option>
+                                </select>
+                            </div>
+                            <hr>
+
+                            <div class="sortDiv">
+                                <h4 class="filterH4Style"> Sort </h4>
+                                <input class="sortInput" id="highToLow" type="radio" name="option" value="descending"> Price - High To Low 
+                                <br>
+                                <input class="sortInput" id="lowToHigh" type="radio" name="option" value="ascending"> Price - Low To High
+                                <br>
+                                <input class="sortInput" id="mostRecent" type="radio" name="option" value="mostRecent"> Most recent
+                                <br>
+                                <input class="sortInput" id="mostRating" type="radio" name="option" value="mostRating"> Most Rating 
+                            </div>
+                            <hr>
+
+                            <div class="conditionDiv">
+                                <h4 class="filterH4Style"> Item Condition </h4>
+                                <input id="newCondition" type="radio" name="optionCondition" value="new"> New Condition
+                                <br>
+                                <input id="oldCondition" type="radio" name="optionCondition" value="old"> Old Condition
+                            </div>
+                            <hr>
+
+                            <div class="priceDiv">
+                                <h4 class="filterH4Style"> Price </h4>
+                                <input id="inputMin" class="inputAmount" type="number" name="min" min="1" max="1000" placeholder="Min">
+                                <div class="middleInput"> - </div>
+                                <input id="inputMax" class="inputAmount" type="number" name="max" min="1" max ="1000" placeholder="Max">
+                                <button type="button" id="applyBtn" class="btn btn-outline-danger" onclick="sentAmountToServer()">  Apply </button>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+
+                    <div class="col-9"> 
+                        <div class="row">
+                            <% dynamicSearch.forEach(function(dynamicSearch){ %> <!-- col-lg-3 col-md-6 mb-4 !-->                    
+                            <div class="col-4">
+                                <div class="card h-100">
+                                    <a href="/products/<%=dynamicSearch.id%>">
+                                        <div class="card-body">
+                                            <img class="searchProductImages" src="/images/<%=dynamicSearch.imageName%>">
+                                            <h5 class="card-title">
+                                                <%=dynamicSearch.productListingName%>
+                                            </h5>
+                                            <p class="card-text"> 
+                                                <span class="dollarSign"> $ </span> <span class="priceStyle">  <%=dynamicSearch.pricing%> </span>
+                                            </p>
+
+                                        <div class="row">
+                                            <div class="col-6"> 
+                                                <div class="star-ratings-sprite instrument">
+                                                    <span style="width:52%" class="star-ratings-sprite-rating" data-rating="<%=dynamicSearch.rating%>">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <% if (!dynamicSearch.ratingCount) { %>
+                                                    <p class="ratingCount"> (0) </p>
+                                                <% } else { %>
+                                                    <p class="ratingCount"> (<%=dynamicSearch.ratingCount%>)</p>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+        
+                                        </div>
+                                    </a>
+
+                                        <div class="card-footer">
+                                            <div class="likeShapeForPastProductDiv" onclick="alert('hi')">
+                                                <i id="likeShapeForPastProduct" class="fa fa-heart-o likeShapeForPastProduct"> 50 </i>
+                                            </div>
+                                        </div>
+        
+                                </div> <!-- end of card h-100!-->
+                            </div> <!-- end of col-md-4 !-->
+                    <% }); %> <!-- end of dynamic search foreach!-->
+
+                        </div> <!-- end of 2nd row-->
+                    </div> <!--end of col-9 -->
+                </div> <!--end of row !-->
+            </div> <!-- end of container !-->
+
+
+                <% } else if (cookieSearchType == "songs") { %> <!-- else if is not instrument search..!-->
+                    <div class="container"> 
+                        <div class="row">
+                            <div class="col-3"> 
+                                <div class="card-footer filterDiv">
+                                    <div class="categoryDiv">
+                                        <h4 class="filterH4Style"> Category </h4>
+                                        <select id="productOptions" name="productFilterType" class="productFilterType">
+                                            <option value="None"> None </option>
+                                            <option value="Java">Java</option>
+                                            <option value="Angular">Angular</option>
+                                            <option value="Automation">Automation</option>
+                                            </select>
+                                    </div>
+                                        <hr>
+            
+                                    <div class="sortDiv">
+                                        <h4 class="filterH4Style"> Sort </h4>
+                                        <input class="sortInput" id="highToLow" type="radio" name="option" value="descending"> Price - High To Low 
+                                        <br>
+                                        <input class="sortInput" id="lowToHigh" type="radio" name="option" value="ascending"> Price - Low To High
+                                        <br>
+                                        <input class="sortInput" id="mostRecent" type="radio" name="option" value="mostRecent"> Most recent
+                                    </div>
+                                        <hr>
+            
+                                    <div class="conditionDiv">
+                                        <h4 class="filterH4Style"> Item Condition </h4>
+                                        <input id="newCondition" type="radio" name="optionCondition" value="new"> New Condition
+                                        <br>
+                                        <input id="oldCondition" type="radio" name="optionCondition" value="old"> Old Condition
+                                    </div>
+                                        <hr>
+            
+                                    <div class="priceDiv">
+                                        <h4 class="filterH4Style"> Price </h4>
+                                        <input id="inputMin" class="inputAmount" type="number" name="min" min="1" max="1000" placeholder="Min">
+                                        <div class="middleInput"> - </div>
+                                        <input id="inputMax" class="inputAmount" type="number" name="max" min="1" max ="1000" placeholder="Max">
+                                        <button type="button" id="applyBtn" class="btn btn-outline-danger" onclick="sentAmountToServer()">  Apply </button>
+                                    </div>
+                                        
+            
+                                </div>
+                            </div> <!-- end of col 3 for songs-->
+             
+                            <div class="col-9"> 
+                                <div class="row">
+                                    <% dynamicSearch.forEach(function(dynamicSearch){ %> <!-- col-lg-3 col-md-6 mb-4 !-->                    
+                                    <div class="col-4">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <img class="searchProductImages" src="/images/<%=dynamicSearch.songImage%>">
+                                                <h5 class="titleSongs">
+                                                    <%=dynamicSearch.title%>
+                                                </h5>
+
+                                                <button type="button" class="list-group-item btn btn-outline-primary waves-effect shrinkPlayBtn" data-id="<%=dynamicSearch.id%>" id="<%=dynamicSearch.songName%>" data-value="<%=dynamicSearch.title%>" data-image="<%=dynamicSearch.songImage%>" onclick=changeSong(this);changeImage()> Play </button>
+
+                                                <% if (user) { %>
+                                                    <button type="button" class="list-group-item btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-cool ="<%=dynamicSearch.songName%>" data-id="<%=dynamicSearch.id%>" id="<%=dynamicSearch.id%>" onclick=getSongId(this)>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                    <% playlists.forEach(function(playlists){ %>
+                                                        <div class="addPlaylist" data-id="<%=playlists.id%>">
+                                                            <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" data-song="<%=playlists.title%>" onclick=saveChanges()> Add to <%=playlists.title%> </a>
+                                                            <%=playlists.id%>
+                                                        </div>
+                                                    <% }); %>
+                                                    <a class="dropdown-item" href="#">Action</a>
+                                                
+                                                    <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" href="#">Separated link</a>
+                                                    </div>
+                                                <% } %>
+
+                                            </div> <!-- end of card body-->
+            
+                                            <div class="card-footer">
+                                                <div class="likeShapeForPastProductDiv" onclick="alert('hi')">
+                                                    <i id="likeShapeForPastProduct" class="fa fa-heart-o likeShapeForPastProduct"> 50 </i>
+                                                </div>
+                                            </div>
+                    
+                                        </div> <!-- end of card h-100!-->
+                                    </div> <!-- end of col-md-4 !-->
+                                <% }); %> <!-- end of dynamic search foreach song!-->
+            
+                                </div> <!-- end of 2nd row-->
+                            </div> <!--end of col-9 for songs -->
+                        </div> <!--end of row for songs !-->
+                    </div> <!-- end of container folr songs !-->
+                   
+                <% } else if (cookieSearchType =="all") { %> <!-- end of else if is songs !-->
+                        
+                        <% if (dynamicSearch.length == 0) { %>
+                            <h2 class="sorryText"> Sorry no results found for instruments! </h2>
+                            <img class="sorryImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSW8fX-cpjeXea3OetgMqSyhpkeSOVvNl5CDM4p2wzDNqBYACoeRg"> 
+                        
+                        <% } else  { %>
+                                <h1 class="text-center MayLikeLine"> Instruments </h1>
+                                <div class="col-12"> 
+                                    <div class="row">
+                                        <% dynamicSearch.forEach(function(dynamicSearch){ %> <!-- col-lg-3 col-md-6 mb-4 !-->                    
+                                        <div class="col-4">
+                                            <div class="card h-100">
+                                                <a href="/products/<%=dynamicSearch.id%>">
+                                                    <div class="card-body">
+                                                        <img class="searchProductImages" src="/images/<%=dynamicSearch.imageName%>">
+                                                        <h5 class="card-title">
+                                                            <%=dynamicSearch.productListingName%>
+                                                        </h5>
+                                                        <p class="card-text"> 
+                                                            <span class="dollarSign"> $ </span> <span class="priceStyle">  <%=dynamicSearch.pricing%> </span>
+                                                        </p>
+            
+                                                    <div class="row">
+                                                        <div class="col-6"> 
+                                                            <div class="star-ratings-sprite">
+                                                                <span style="width:52%" class="star-ratings-sprite-rating" data-rating="<%=dynamicSearch.rating%>">
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <% if (!dynamicSearch.ratingCount) { %>
+                                                                <p class="ratingCount"> (0) </p>
+                                                            <% } else { %>
+                                                                <p class="ratingCount"> ( <%=dynamicSearch.ratingCount%> )</p>
+                                                                <% } %>
+                                                        </div>
+                                                    </div>
+                    
+                                                    </div>
+                                                </a>
+            
+                                                    <div class="card-footer">
+                                                        <div class="likeShapeForPastProductDiv" onclick="alert('hi')">
+                                                            <i id="likeShapeForPastProduct" class="fa fa-heart-o likeShapeForPastProduct"> 50 </i>
+                                                        </div>
+                                                    </div>
+                    
+                                            </div> <!-- end of card h-100!-->
+                                        </div> <!-- end of col-md-4 !-->
+                                <% }); %> <!-- end of dynamic search foreach!-->
+            
+                                    </div> <!-- end of 2nd row-->
+                                </div> <!--end of col-9 -->
+                        <% } %>
+                       
+                        <hr>
+
+                        <% if (dynamicSongs.length == 0) { %>
+                            <h2 class="sorryText"> Sorry no results found for songs! </h2> 
+                                <img class="sorryImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSW8fX-cpjeXea3OetgMqSyhpkeSOVvNl5CDM4p2wzDNqBYACoeRg">
+                        <% } else { %>
+                            <h1 class="text-center MayLikeLine"> Songs </h1>
+
+        
+                                <div class="col-12"> 
+                                        <div class="row">
+                                            <% dynamicSongs.forEach(function(dynamicSongs){ %> <!-- col-lg-3 col-md-6 mb-4 !-->                    
+                                            <div class="col-4">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <img class="searchProductImages" src="/images/<%=dynamicSongs.songImage%>">
+                                                        <h5 class="titleSongs">
+                                                            <%=dynamicSongs.title%>
+                                                        </h5>
+        
+                                                        <button type="button" class="list-group-item btn btn-outline-primary waves-effect playBtn" data-id="<%=dynamicSongs.id%>" id="<%=dynamicSongs.songName%>" data-value="<%=dynamicSongs.title%>" data-image="<%=dynamicSongs.songImage%>" onclick=changeSong(this);changeImage()> Play </button>
+        
+                                                        <% if (user) { %>
+                                                            <button type="button" class="list-group-item btn btn-primary dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-cool ="<%=dynamicSongs.songName%>" data-id="<%=dynamicSongs.id%>" id="<%=dynamicSongs.id%>" onclick=getSongId(this)>
+                                                                <span class="sr-only">Toggle Dropdown</span>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                            <% playlists.forEach(function(playlists){ %>
+                                                                <div class="addPlaylist" data-id="<%=playlists.id%>">
+                                                                    <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" data-song="<%=playlists.title%>" onclick=saveChanges()> Add to <%=playlists.title%> </a>
+                                                                    <%=playlists.id%>
+                                                                </div>
+                                                            <% }); %>
+                                                            <a class="dropdown-item" href="#">Action</a>
+                                                        
+                                                            <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item" href="#">Separated link</a>
+                                                            </div>
+                                                        <% } %>
+        
+                                                    </div> <!-- end of card body-->
+                    
+                                                    <div class="card-footer">
+                                                        <div class="likeShapeForPastProductDiv" onclick="alert('hi')">
+                                                            <i id="likeShapeForPastProduct" class="fa fa-heart-o likeShapeForPastProduct"> 50 </i>
+                                                        </div>
+                                                    </div>
+                            
+                                                </div> <!-- end of card h-100!-->
+                                            </div> <!-- end of col-md-4 !-->
+                                        <% }); %> <!-- end of dynamic search foreach song!-->
+                    
+                                        </div> <!-- end of 2nd row-->
+                                    </div> <!--end of col-9 for songs -->
+                      
+
+                        <% } %>
+
+                <% } %> <!-- end of else if cookie is all !-->
+                    
+                
+             
+                
+
+            <% } %> <!-- end of else dynamic search is > 0 !-->
+
+        </div>
+        <!-- /.container -->
+
+     
+
+        <% include sendfooter %>
+
+    <script>
+        function htmlDecode(input){
+            var e = document.createElement('div');
+            e.innerHTML = input;
+            return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+            }
+        
+           
+        //error of json input comes from header navbar user.
+        var dynamicSearch = JSON.parse(htmlDecode("<%= JSON.stringify(dynamicSearch) %>"));
+        //var dynamicSearch = "<%=JSON.stringify(dynamicSearch)%>";
+        console.log(dynamicSearch);
+        console.log("window location pathname " + window.location.pathname);
+        
+        if ((dynamicSearch.length == 0) && (window.location.pathname == "/search/searchResult")) {
+            $("#resetSearchBtn").hide();
+        }
+
+        var currentUser = JSON.parse(htmlDecode("<%= JSON.stringify(user) %>"));
+        //console.log(currentUser);
+        
+        //var currentUser = "<%=JSON.stringify(user || null)%>";
+        console.log(currentUser);
+
+        
+        filterLocation = window.location.href + "/filter?price=descending";
+
+        console.log("current location search reslt page " + window.location);
+        console.log("window hrefsearch result pg " + window.location.href);
+        console.log("filter location >>> " + filterLocation);
+
+        
+        $("[name=option]").on("change", function() { //sort by price high low,most recent..
+            filterFromServer();
+            //this.form.submit();
+        });
+        
+        $("[name=optionCondition]").on("change", function() {
+            filterCondition();
+        })
+
+        function filterFromServer() {
+            console.log("\n \n getting filter from server soon... ");
+            var priceSortType = $("input:radio[name=option]:checked").val();
+            console.log("selected filter of sort by --- " + priceSortType);
+            
+            var searchInput = getCookie("searchInputCookie"); // prod from navbar
+            console.log("search input cookie " + searchInput);
+            
+            var productFilterTypeCookie = getCookie("productFilterType"); // category = java
+            var selectedCondition = getCookie("selectedCondition");
+            
+            /*
+            if (priceSortType == "descending") {
+                if (productFilterTypeCookie && selectedCondition) { 
+                    filterLocation = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType + "&category=" + productFilterTypeCookie + "&condition=" + selectedCondition;
+                //filterLocation = window.location.origin + "/search/<%=cookieSearchType%>/searchResult?comeon=<%=searchQuery%>" + "&price=descending";
+                // http://localhost:3000/search/prod/filter?sortedBy=descending&category=Java&condition=new
+                }
+                else{
+                    console.log("no type selected so gg ");
+                    filterLocation = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=descending";
+                }
+            }
+            else if (priceSortType == "ascending") {
+                if (productFilterTypeCookie) {
+                    filterLocation = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=acsending" + "&category=" + productFilterTypeCookie;
+                }
+                else{
+                    console.log("are u ok gg ");
+                    filterLocation = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=acsending";
+                }
+                //filterLocation = window.location.origin + "/search/<%=cookieSearchType%>/searchResult?comeon=<%=searchQuery%>" + "&price=acsending";
+            }
+
+            else {
+                if (productFilterTypeCookie) {
+                    filterLocation = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=mostRecent" + "&category=" + productFilterTypeCookie;
+                }
+                else {
+                    console.log("win lia lo most recent ");
+                    filterLocation = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=mostRecent";
+                }
+            }
+            */
+
+            setCookie("priceSortType", priceSortType);
+            //console.log("current location " + window.location);
+            //console.log("window href " + window.location.href);
+            
+            alert(filterLocation);
+            alert(priceSortType);
+            alert("<%=searchQuery%>");
+            alert("<%=cookieSearchType%>");
+            
+            /*
+            $.ajax({
+                type: "GET",
+                url: filterLocation,
+                contentType: "application/json",
+                success: function(result) {
+                    console.log(result);
+                    alert("successfully filter");
+                    location.href = filterLocation;
+                },
+                error: function(result) {
+                    alert("error filtering!!");
+                }
+            })*/
+
+            filterSuccessNow();
+            //location.href = filterLocation;
+
+        } //end of function filterFromServer()
+        
+
+        function filterCondition() {
+            console.log("filtering option ........ ");
+            var selectedCondition = $("input:radio[name=optionCondition]:checked").val();
+
+            alert("selected condition ---->  " + selectedCondition);
+            
+            /*
+            var searchInput = getCookie("searchInputCookie");
+            var productFilterTypeCookie = getCookie("productFilterType");
+            var priceSortType = getCookie("priceSortType");
+            
+            alert("search input val cookie --->  " + searchInput); //prod from search box navbar
+            alert("produc filter type cookie -->  " + productFilterTypeCookie); //category dropdown
+            alert("price sort type -->  " + priceSortType); // most recent radio btn
+            
+            console.log(searchInput);
+            console.log(productFilterTypeCookie);
+            
+            if (selectedCondition == "new") {
+                if (priceSortType && productFilterTypeCookie) { // got most recent, got java category , got new
+                    alert("----------- both price sort selected and category!! ------------ ");
+                    location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType + "&category=" + productFilterTypeCookie + "&condition=" + selectedCondition;
+                    // http:localhost:3000/search/prod/filter?sortedBy=mostRecent&category=Java&condition=new
+                }
+                else if (priceSortType) { //no category, 
+                    alert("only price sort type available ~~~~~~~ ");
+                    location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType + "&condition=" + selectedCondition;
+                    // http:localhost:3000/search/prod/filter?sortedBy=mostRecent&condition=new
+                }
+                else { //no price sort type most recent, no java category
+                    alert("@@@no price sort type, no java category selected too@@@@");
+                    alert("why did i land here");
+                    // http:localhost:3000/search/prod?filter?sortedBy=mostRecent
+                }
+            }
+            */
+            setCookie("selectedCondition", selectedCondition);
+            
+            filterSuccessNow();
+        } //end of function filterOption()
+
+        function filterSuccessNow() {
+            var searchInput = getCookie("searchInputCookie"); //prod input from navbar
+            var productFilterTypeCookie = getCookie("productFilterType"); //java category
+            var priceSortType = getCookie("priceSortType"); // most recent
+            var selectedCondition = getCookie("selectedCondition"); //new condition
+            
+            var inputMin = getCookie("inputMin");
+            var inputMax = getCookie("inputMax");
+            alert("filtering sucessfully bitchhh ");
+            alert(searchInput);
+            alert(productFilterTypeCookie);
+            alert(priceSortType);
+            alert(selectedCondition);
+            alert("input min " + inputMin);
+            
+            // doesnt work...//
+            if (productFilterTypeCookie && selectedCondition && (inputMin != 0)) {
+                alert("prod filter type cookie & selected condition cookie & input min ---- ");
+                location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType + "&category=" + productFilterTypeCookie + "&conditon=" + selectedCondition + "&min=" + inputMin + "&max=" + inputMax;
+            }
+            //doesnt work..//
+            
+            else if (productFilterTypeCookie && selectedCondition) {
+                // http:localhost:3000/search/prod/filter?sortedBy=mostRecent&category=Java&condition=new
+                alert("----- product filter type cookie & selected condition cookie ----- ");
+                location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType + "&category=" + productFilterTypeCookie + "&condition=" + selectedCondition;
+            }
+            else if (productFilterTypeCookie) {
+                alert("@@@@@@product filter type cookie only java ");
+                location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType + "&category=" + productFilterTypeCookie;
+            }
+            else if (selectedCondition) {
+                alert("~~~ selected condition new only ~~~ ");
+                location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType + "&condition=" + selectedCondition;
+            }
+            else{ // else not category, not condition , only most recent..
+                location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=" + priceSortType;
+            }
+            
+        }
+
+        window.onload = function() {
+           
+        }
+
+        $(".productFilterType").change(function() {
+            var productFilterType = $(".productFilterType option:selected").text();
+            alert(productFilterType);
+            setCookie("productFilterType", productFilterType);
+            
+            filterSuccessNow();
+        });
+        
+
+        function resetSearch() {
+            var searchInput = getCookie("searchInputCookie"); //prod input from navbar
+            var productFilterTypeCookie = getCookie("productFilterType"); //java category
+            var priceSortType = getCookie("priceSortType"); // most recent
+            var selectedCondition = getCookie("selectedCondition"); //new condition
+            //location.href = window.location.origin + "/search/" + searchInput + "/filter?sortedBy=mostRecent&category=None";
+            location.href = window.location.origin + "/search/searchResult?comeon=" + searchInput
+            setCookie("productFilterType", "None");
+            setCookie("selectedCondition", "")
+        }
+
+        function sentAmountToServer() {
+            var inputMin = $("#inputMin").val();
+            var inputMax = $("#inputMax").val();
+            console.log("input min " + inputMin);
+            console.log("input max " + inputMax);
+            setCookie("inputMin", inputMin);
+            setCookie("inputMax", inputMax);
+            filterSuccessNow();
+        }
+
+
+        $(".star-ratings-sprite-rating").each(function () {
+                console.log("GGGGGGGGGGGGGGGGGGGGGGG@@@@@@@@@@@@");
+                console.log(this);
+                var val = $(this).data("rating");
+                var convertToPercentageOver100 = val / 5 * 100;
+                avgStarsInString = convertToPercentageOver100 + "%";
+                this.style.width = avgStarsInString;
+                //this.style.width = avgStarsInString;
+        });
+
+
+        var final_song_id = "";
+        function getSongId(clicked_id) { //press to get song_id to add to playlist
+            //final_song_id = clicked_id;
+            final_song_id = event.srcElement.id;
+            console.log("clicked song_id >> " + final_song_id);
+            console.log("click id data id >> " + $(clicked_id).data("id"));
+            changed_song_name = $(clicked_id).data("cool");
+            console.log("click value songName >> " + $(clicked_id).data("cool"));
+        }
+
+        function saveChanges() {
+            var url = window.location.origin + "/addsongs";
+            var newValues = {
+                //song_id: $(".aSong").attr("data-id"),
+                song_id: final_song_id,
+                playlist_id: $("a:focus").attr("data-id")
+            }
+            //$(".aSong").focus();
+            //var song_id = $("a:focus").attr("data-id");
+            //var newValuesFinal = Object.assign({"song_id":song_id},newValues);
+            console.log("new values " + JSON.stringify(newValues));
+            console.log("playlist id >> " + $('.addPlaylist').data('id'));
+            console.log($(this).closest("div").attr('data-id'));
+            
+            var songTitleAlert = $("a:focus").attr("data-song");
+            
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(newValues),
+                //dataType: "json", //remove this to successfully add playlist??? lol
+                contentType: "application/json",
+                success: function(result){
+                    //alert("Song added to your " + songTitleAlert + " playlist successfully");
+                    toastr.options = {
+                    "debug": false,
+                    "positionClass": "toast-top-right",
+                    "fadeIn": 300,
+                    "fadeOut": 1000,
+                    "timeOut": 6000,
+                    }
+                    toastr.success("song added to your playlist successfully!");
+                },
+                error: function(result){
+                    alert("Error adding to playlist");
+                    //discardChanges();
+                }
+            })
+        } //end of save changes() function
+        
+        function changeSong(change_id) { //when you press play then change song
+                //new_song_id = change_id;
+            new_song_id = event.srcElement.id;
+            console.log("new song id >>> " + new_song_id);
+            setNewValueI = $(change_id).data("id") - 1;
+            console.log("new id >> " + setNewValueI);
+            setCookie("i", setNewValueI);
+            var audioPlayer = document.querySelector(".audioPlayer");
+            audioPlayer.src = "/songs/" + new_song_id;
+            audioPlayer.load();
+            audioPlayer.play();
+            changed_song_name = $(change_id).data("value");
+            document.getElementById("nameOfSong").innerHTML = changed_song_name;
+            setNewImage = $(change_id).data("image");
+            console.log("set new image >>>  " + setNewImage);
+            var changeImage = document.querySelector(".imageOfSong"); //first image..
+            changeImage.src = "/images/" + setNewImage;
+        }
+
+        function changeImage() {
+            console.log("looooo " + $(this).data().value);    
+        }
+            
+        //error of json input comes from header navbar user.
+        var totalSongs = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
+        console.log("sonsg " + songs);
+    </script>
+
+
+<script src="/javascripts/test.js"></script> 
+</body>
+</html>

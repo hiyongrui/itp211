@@ -46,23 +46,38 @@ var chatMessages = require('./server/controllers/chatMsg');
 
 var studentsController = require("./server/controllers/studentsController"); //from p5db
 
+
+
 // Import lessons controller kamali
 var lessons = require('./server/controllers/lessons');
 //var viewAllLessons = require('./server/controllers/viewAllLessons');
 var profileSetting = require('./server/controllers/profileSetting');
-// end of kamali controller
+var profileSetting = require('./server/controllers/profileSetting');
+
+var IndProfile = require('./server/controllers/IndProfile'); // Import IndProfile controller kamali
+
+var guitar = require('./server/controllers/guitar'); // Import InstructorListings controller kamali
+var violin = require('./server/controllers/violin'); 
+//end of kamali controller import
+
 
 // Import products controller jiarong
 var productsController = require("./server/controllers/sampleProduct");
 var cart = require("./server/controllers/cart");
 var transaction = require("./server/controllers/transaction");
 var payment = require("./server/controllers/payment");
-// end of jiarong controller
+// end of jiarong controller import
+
+// Import reviews controller charmaine @@@
+var reviews = require('./server/controllers/reviews');
+//end of charmaine controller import
 
 
 var Users = require('./server/models/users');
 var Songs = require('./server/models/songs');
 var Songlike = require('./server/models/songlike');
+var search = require("./server/controllers/search");
+
 
 // Modules to store session
 var myDatabase = require('./server/controllers/database');
@@ -137,7 +152,15 @@ app.use(flash());
 
 
 app.use(function(req, res, next) { // from stackoverflow, simple middleware , provided req.user is populated
+    if (req.isAuthenticated()) {
     res.locals.user = req.user; // user variable available to all templates but must declare right after passport.session middleware, before any routes
+    }
+    else{
+        res.locals.user = false;
+    }
+    app.locals.urlName = req.headers.host; //<%=urlName%> in client javascript is equal to   localhost:3000
+    console.log(req.headers.referer);
+    console.log("app locals url name >>>> " + req.headers.host);
     if (req.user) {
         req.session.useridhehe = req.user.id;
         res.cookie('userid', req.user.id);
@@ -216,7 +239,7 @@ app.use(function(req,res,next) {
     next();
 })
 
-/* app.locals to make the song sequelize object available for all pages , req.locals no work??
+// app.locals to make the song sequelize object available for all pages , req.locals no work??
 app.use(function(req,res,next) {
     Songs.findAll().then((songs=> {
         app.locals.songs = songs
@@ -224,9 +247,10 @@ app.use(function(req,res,next) {
 ))
 next();
 })
-*/
+
 app.use(function(req,res,next) {
     console.log("app use ---------------- ");
+    if (req.isAuthenticated()) {
     var changecool = req.session.useridhehe;
     sequelize.query("select s.title AS createdAt , u.name AS user_id  , u.userImage AS id , s.user_id lol , sl.user_id haha from Songlikes sl inner join Users u on sl.user_id = u.id inner join Songs s on sl.song_id = s.id where u.id <> :status",
     {replacements: {status:changecool}, type:sequelize.QueryTypes.SELECT} 
@@ -234,8 +258,13 @@ app.use(function(req,res,next) {
         app.locals.songlike = songlikes
         console.log("\n song like DATA =============== ");
         console.log(JSON.stringify(songlikes));
+        next(); //ended this next() here and else{next() because it seems to be async and error songlike is undefined at header.ejs if no next() here...?} and console log will happen after the error
+        //https://stackoverflow.com/questions/34184701/expressjs-async-and-middleware-does-not-work-properly
     })
-next();
+    }
+    else{
+        next();
+    }
 })
 
 app.get('/footer', footer.list);
@@ -308,7 +337,7 @@ app.get('/users',users.hasAuthorization , users.list );
 
 // Set up  routes for videos ////
 app.get('/videos' , videos.hasAuthorization , videos.show);
-app.post('/videos' , videos.hasAuthorization , upload.single('video') , videos.uploadVideo);
+//app.post('/videos' , videos.hasAuthorization , upload.single('video') , videos.uploadVideo);
 app.delete('/videos/:videos_id'  ,videos.hasAuthorization, videos.delete); //kamali
 
 
@@ -324,6 +353,23 @@ app.post('/unlikesong', songs.hasAuthorization , songs.unlikeSong);
 app.get('/playlists', playlists.hasAuthorization , playlists.list);
 app.post('/playlists', playlists.hasAuthorization , playlists.create);
 app.get('/playlists/:id', playlists.hasAuthorization , playlists.viewOnePlaylist);
+app.post('/addInPlaylist/:id', playlists.hasAuthorization , upload.fields([{name: "song", maxCount:1}, {name: "image", maxCount:1}]), playlists.uploadSong);
+
+app.get("/products/:id", productsController.viewOneProduct);
+//app.get("/search", search.search);
+//app.post("/search/:searchResult", search.searchResult);
+
+//app.get("/search/:searchResult", search.searchList);
+//app.get("/search/:searchResult/haha", search.searchForTag);
+app.get("/search/:searchResult/filter", search.searchFilter);
+
+app.get("/search/searchResult", search.searchList);
+app.get("/search/:searchResult/searchTag", search.searchForTag);
+// search/instruments/searchResult?comeon=searchVal)
+// eg..         /display/post?size=small
+//  use app.get("/display/post") , req.query.size will give u small. https://stackoverflow.com/questions/17007997/how-to-access-the-get-parameters-after-in-express
+//if dont use req.query , cant search for stuff like 4/10 condition the slash / does not work for req.params
+// https://hackernoon.com/restful-api-designing-guidelines-the-best-practices-60e1d954e7c9 , according to this , :searchResult params should be in query instead... ?
 
 
 // Set up routes for images 6666
@@ -350,7 +396,29 @@ app.post("/profileSetting/edit/:id" , profileSetting.update);
 
 app.get('/lessons', lessons.hasAuthorization, lessons.show);
 app.get('/viewAllLessons', profileSetting.show);
-// end of kamali router
+
+app.get('/IndProfile/:id', IndProfile.show); //routes for ind profile
+
+app.get('/guitar', guitar.show); //routes for instructor listings , suppose to have ukelele , cello , singing,piano,flute,saxophone,drums,clarinet,bassguitar,harmonica,tabla,opera,songwriting,percussion,trumpet,trombone
+app.get('/violin', violin.show);    // but im not gonna copy paste 18 model , 18 controller , 18 ejs = 54 that are duplicated wtf. so just 2.
+app.get('/ukulele', violin.show);
+app.get('/cello', violin.show);
+app.get('/singing', violin.show);
+app.get('/piano', violin.show);
+app.get('/flute', violin.show);
+app.get('/saxophone', violin.show);
+app.get('/drums', violin.show);
+app.get('/clarinet', violin.show);
+app.get('/bassGuitar', violin.show);
+app.get('/harmonica', violin.show);
+app.get('/tabla', violin.show);
+app.get('/opera', violin.show);
+app.get('/songWriting', violin.show);
+app.get('/percussion', violin.show);
+app.get('/trumpet', violin.show);
+app.get('/trombone', violin.show);
+//end of kamali router
+
 
 
 // jiarong product router
@@ -360,20 +428,57 @@ app.get("/products", productsController.list);
 //app.post("/new", productsController.insert);
 app.delete('/products/:id', productsController.delete);
 
+
 app.get("/cart", cart.list);
 app.post("/products/new", cart.insert);
 app.delete("/cart/:id", cart.cartDelete);
+app.post("/cart/cartCount", cart.updateCartCount);
+app.post("/products/:id/newCartItem", cart.newCartItem);
+
+
 
 var payment = require('./server/controllers/payment');
 app.get("/payment", payment.payment);
 
 app.get("/transactions", transaction.listOrders);
 app.post("/payment/transaction", transaction.transaction);
+app.post("/payment/deductAmt", transaction.deductAmt);
 app.delete("/payment/cartDelete", transaction.deleteCart);
+app.post("/payment/cartCountUpdate", transaction.updateCartCount);
 app.all("/transactions/:transactionId", transaction.listOrderDetails);
+app.post("/transactions/:id/sendPayment", transaction.sendPayment);
+
+
+var topup = require('./server/controllers/topup');
+app.get("/wallet", topup.list);
+app.get("/topupPayment", topup.coinPaymentList);
+app.post("/topuppayment/coinPayment", topup.payment);
+app.get("/wallet/topupHistory", topup.topupHistory);
+
+var booking = require('./server/controllers/booking');
+app.get("/timingForm", booking.timingTest);
+app.get("/bookingForm/:id", booking.bookingForm);
+app.post("/bookingForm/:id/getTimings", booking.getTimings);
+app.post("/timingForm/timings", booking.addTiming);
+app.post("/bookingForm/:id/booking", booking.createBooking);
+app.post("/videos", upload.single('video'), booking.uploadVideo, booking.appendId);
+app.post("/bookingForm/:id/bookingData", booking.booking);
+app.post("/bookingForm/:id/bookingUserPayment", booking.bookingPayment);
+app.post("/bookingForm/:id/bookingSendPayment", booking.sendPayment);
+
+app.get("/bookingHistory", booking.listBookingHistory);
+app.get("/bookingHistory/userHist", booking.listUserHistory);
+app.post("/bookingHistory/bookingDetails", booking.getDetails);
+app.get("/bookingHistory/instructorHist", booking.listInstructorHistory);
 // end of jiarong router
 
-
+// charmaine review router//
+app.post("/reviews", upload.single('image'),  reviews.insert );
+app.get('/reviews' , reviews.hasAuthorization , reviews.list);
+// app.post('/reviews' , reviews.hasAuthorization , reviews.create);
+app.delete('/reviews/:reviews_id' , reviews.hasAuthorization , reviews.delete);
+app.get('/users/profile/:name/rating/:user_id', reviews.hasAuthorization, reviews.viewReviewsOfThisUser); //review for this oner user
+//end of charmaine router
 
 //Set up route for chat messages 666666 can do this in another controller but they lazy
  app.get('/messages', function(req, res) {
@@ -398,7 +503,8 @@ app.post('/messages', function(req, res) {
         if (!newMessage) {
             res.sendStatus(500);
         }
-        io.emit('message', req.body)
+        //io.emit('message', req.body)
+        io.emit('message', chatData);
         res.sendStatus(200)
     })
 });
@@ -485,7 +591,8 @@ users = {} //key value instead of array
 
 io.on('connection', function(socket) {
      socket.user_id = socket.request.session.useridhehe;
-
+    
+     /* 
      socket.join(socket.user_id,function() { //by default socket join its own room identified by its own socket.id
          console.log("\n socket rooms new !! " + JSON.stringify(socket.rooms)); //rooms of current socket
          console.log("room length > > " + JSON.stringify(io.sockets.adapter.rooms[socket.user_id])) //.length
@@ -496,12 +603,13 @@ io.on('connection', function(socket) {
      console.log("handshake \n before"  + JSON.stringify(socket.handshake.headers.cookie))
      console.log("socket session > > " + socket.user_id);
      console.log("socket cookie lolol " + cookie.parse(socket.handshake.headers.cookie).userid);
+     */
      //socket.on('newUser',function() {
         // socket.user_id = userid;
      users[socket.id] = socket.user_id; // key value , previously socket.user_id = socket.user_id?
      console.log("socket id ## " + socket.id + " users object $$ " + Object.values(users));
 
-   
+//    if (socket.user_id != undefined) { // new if statement 8/1/2018 2.23 am when planning the google doc , to prevent error cannot set property 'status' of null
           Users.findById(socket.user_id).then(user=> {
             user.status ="online";
             user.last_login_date = Date.now();
@@ -510,7 +618,7 @@ io.on('connection', function(socket) {
             io.sockets.emit('onlineUser', socket.user_id);
             //io.sockets.emit('lastSeen', user.last_login_date);
         })
-   
+   // } // end of new if statement 8/1/2018
         console.log("\n");
         console.log(JSON.stringify(users) + " wat is user id from client - " + socket.user_id);
         console.log('\n %s sockets connected' , io.engine.clientsCount);
@@ -521,17 +629,16 @@ io.on('connection', function(socket) {
 
    
     socket.on('songLikeByUserId' , function(songlikebyuser_id) {
-        socket.on("songLikeId", function(songlikeid) {
             console.log("song love by user id===========");
             console.log(songlikebyuser_id);
-            sequelize.query("select distinct s.user_id from Songlikes sl inner join Songs s on sl.song_id = s.id where song_id = 2").then(send_to_user => {
+            //find max id from like table --> sequelize.query("select *")
+            sequelize.query("select s.user_id toUser , sl.user_id fromUser , u.name , u.userImage , s.title from Songlikes sl inner join Songs s on sl.song_id = s.id inner join Users u on sl.user_id = u.id where sl.id = (select max(id) from Songlikes)" 
+             , {type:sequelize.QueryTypes.SELECT} ).then(send_to_user => {
+            //sequelize.query("select distinct s.user_id from Songlikes sl inner join Songs s on sl.song_id = s.id where song_id = 2").then(send_to_user => {
                 console.log("send to user >>> " + JSON.stringify(send_to_user));
                 io.sockets.emit("sendToUser", send_to_user);
-            })
-            console.log("song love id========");
-            console.log(songlikeid);
-        })
-    })
+            });
+    });
     
     // or socket.on('leave') for room leave , then disconnected aka offline?
     socket.on('disconnect',function() {
@@ -544,8 +651,9 @@ io.on('connection', function(socket) {
             console.log(' %s sockets connected after --------- ' , io.engine.clientsCount);
             console.log(Object.keys(io.engine.clients));
         
-            if (io.sockets.adapter.rooms[socket.user_id] ===  {}) {
+            //if (io.sockets.adapter.rooms[socket.user_id] ===  {}) {
             //if ( Object.values(users).indexOf(socket.user_id) <=0) {
+              //  if (socket.user_id != undefined) {
                 Users.findById(socket.user_id).then(user=> {
                 user.status = "offline";
                 user.last_login_date = Date.now();
@@ -554,9 +662,9 @@ io.on('connection', function(socket) {
                 io.sockets.emit('onlineUser', socket.user_id);    
                 
                 })
-            }
+            //}
             
-              
+           // }
                
             
         //console.log(socket.handshake);

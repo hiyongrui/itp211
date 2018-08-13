@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+</head>
+<body>
+    <% include ../partials/header %>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                            <br>
+                            <br>
+                <center><h4 class="text-muted"> Create your Profile </h4></center>
+            </div>
+        </div>
+    </div>
+            
+        <!-- Modal -->
+        <div class="modal fade" id="createVideo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="/videos" method="post" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Upload a video file</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <fieldset class="form-group">
+                                <label  for="inputitle"><bold>Title</bold></label>
+                                <input type="text" id="inputitle" name="title" class="form-control" placeholder="Lesson Title" required="">
+                                <br>
+                                <label  for="inputitle">Price</label>
+                                <input type="text" id="price" name="price" class="form-control" value="1" placeholder="Price" required="">
+                                <br>
+                                <input type="text" id="counter" name="counter" class="form-control" value="1" placeholder="0" style="display: none;">
+                                <label  for="inputitle">Select your available days:</label>
+                                <br>
+                                <input list="days" id="day" class="form-control" placeholder="Select your available days:" name="days">
+					            <datalist id="days">
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+					            </datalist>
+                                <br>
+                                <div class="timeSlots">
+                                <label for="inputitle">Select your available Time:</label>
+                                <br>
+                                <input list="FromTime" class="form-control" placeholder="From:" name="FromTime" id="FromTime">
+                                <datalist id="FromTime">
+                                <option value="9AM">09AM</option>
+                                <option value="10AM">10AM</option>
+                                <option value="11AM">11AM</option>
+                                <option value="12PM">12PM</option>
+                                <option value="13PM">13PM</option>
+                                <option value="14PM">14PM</option>
+                                <option value="15PM">15PM</option>
+                                <option value="16PM">16PM</option>
+                                <option value="17PM">17PM</option>
+                                <option value="18PM">18PM</option>
+                                <option value="19PM">19PM</option>
+                                <option value="20PM">20PM</option>
+                                <option value="21PM">21PM</option>
+                                </datalist>
+                                <br>
+                                <input list="ToTime" class="form-control" placeholder="To:" name="ToTime" id="ToTime">
+                                <datalist id="ToTime">
+                                <option value="10AM">10AM</option>
+                                <option value="11AM">11AM</option>
+                                <option value="12PM">12PM</option>
+                                <option value="13PM">13PM</option>
+                                <option value="14PM">14PM</option>
+                                <option value="15PM">15PM</option>
+                                <option value="16PM">16PM</option>
+                                <option value="17PM">17PM</option>
+                                <option value="18PM">18PM</option>
+                                <option value="19PM">19PM</option>
+                                <option value="20PM">20PM</option>
+                                <option value="21PM">21PM</option>
+                                <option value="22PM">22PM</option>
+                                </datalist>
+                                </div>
+                                <br>
+                                <button onclick="AddSlot()" type="button">Add Slot</button>
+                                <button onclick="sendData()" type="button">Confirm Timing</button>
+                                <br>
+                                <p id="AddSlot"></p>
+                                <br>
+                                <br>
+                            <label class="file" style="width: 100%" onclick="$('input[id=lefile]').click();">
+                                <input type="file" id="video" name="video">
+                                <span class="file-custom"></span>
+                            </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr>
+            <center><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#createVideo">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Upload Video &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</button></center>
+        <br><br>
+        <div class="row">
+            <% videos.forEach(function(videos){ %>
+                <a class="list-group-item" data-id="<%= videos.id%>">
+                <div class="col-lg-4">
+                    <form action="/videos" method="delete"> 
+                    <h4 data-id="<%=videos.id%>"><%= videos.title %></h4>
+                    <video width="320" height="240" controls preload="auto" codecs="avc1.42E01E, mp4a.40.2">
+                        <source src="/videos/<%= videos.videoName %>" type="video/mp4" />
+                    </video>
+                    <p>Upload by: <%= videos.user_id %></p>
+                    <p>Price: $<%= videos.price %></p>
+                    <p>From: <%= videos.FromTime %></p>
+                    <p>To: <%= videos.ToTime %></p>
+                    <br/>
+                    <div id="buttons">
+                    <button type="button" class="btn btn-secondary pull-right tempBookBtn" data-id="<%= videos.id%>">Book this</button>
+                    <button class="btn btn-secondary pull-right deleteBtn" type="button" data-id="<%= videos.id%>">Delete</button>
+                    </div>
+                    </form>
+                </div>
+                </a>
+            <% }); %>
+        </div>
+        </div>
+        <a href="/profileSetting"><button type="button" class="btn btn-secondary pull-left" id="prevBtn" onclick="nextPrev(-1)">Previous</button></a>
+        <script>
+            $('.deleteBtn').click(function() {
+                var videos_id = $(this).data('id'); 
+                console.log(videos_id);
+                console.log('<%-urlPath%>' + videos_id )
+                $.ajax({
+                        url: '<%-urlPath%>'+ videos_id,
+                        type: 'DELETE',
+                        success: function(result) {
+                            console.log(result.message);
+                            var itemToRemove = '.list-group-item[data-id='+videos_id+']';
+                            $(itemToRemove).remove();
+                        },
+                        error: function(result){
+                            alert("Unable to delete video.");
+                            console.log(result.message);
+                        } 
+                    });  
+            });
+           
+            $('.tempBookBtn').click(function() {
+                
+                var lesson_id = $(this).data('id');
+                console.log(lesson_id);
+                var url = '<%=hostPath%>' + '/' + 'bookingForm' + '/' + lesson_id;
+                location.href = url;
+                
+                // $.ajax({
+                //     url: url,
+                //     type: 'POST',
+                //     data: JSON.stringify(bookingRecord),
+                //     contentType: "application/json",
+                //     success: function(result) {
+                //         alert("Success");
+                        
+                //     },
+                //     error: function(result) {
+                //         alert("Error")
+                //     }
+                // })
+            });
+
+            var counter = 0;
+            function AddSlot() {
+                counter += 1; // to give each input a unique id (for ease of retrieving)
+                var newFromField = '<input list="FromTime" class="form-control" id="FromTime' +counter+ '" placeholder="From:" name="FromTime'+counter+'"><datalist id="FromTime">'
+                var newToField = '<input list="ToTime" class="form-control" id="ToTime' +counter+ '" placeholder="To:" name="ToTime'+counter+'"><datalist id="ToTime">'
+                $('.timeSlots').append('<br>');
+                $('.timeSlots').append('<p>Add Another Time Slot</p>');
+                $('.timeSlots').append(newFromField);
+                $('.timeSlots').append('<br>');
+                $('.timeSlots').append(newToField);
+
+                console.log("current dateTime count:",counter)
+                $('#counter').val(counter)
+            }   
+            
+            function sendData() {
+                var url = "<%=urlPath%>" + '/timings'
+                console.log(counter);
+                var day = $('#day').val();
+                var fromTime = $('#FromTime').val();
+                fromTime = fromTime.substring(0, 2);
+                console.log("Day:" +day);
+                console.log(fromTime);
+                var fromTimings = [];
+                fromTimings.push(fromTime);
+                var toTime = $('#ToTime').val();
+                toTime = toTime.substring(0, 2);
+                console.log(toTime);
+                var toTimings = [];
+                toTimings.push(toTime);
+                if (counter > 0) {
+                    for (var i = 1; i < counter + 1; i++) {
+                        var tempFromTime = $("#FromTime"+i).val();
+                        tempFromTime = tempFromTime.substring(0, 2);
+                        console.log(tempFromTime);
+                        fromTimings.push(tempFromTime);
+                    }
+                    console.log(fromTimings);
+                    for (var i = 1; i < counter + 1; i++) {
+                        var tempToTime = $("#ToTime"+i).val();
+                        tempToTime = tempToTime.substring(0, 2);
+                        console.log(tempToTime);
+                        toTimings.push(tempToTime);
+                    }   
+                    console.log(toTimings);
+                }
+                // just a line
+                console.log('-----just a line------')
+                for (var i = 0; i < fromTimings.length; i++) {
+
+                }
+                var timingsData = {
+                    day: day,
+                    toTime: toTimings,
+                    fromTime: fromTimings
+                }
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: JSON.stringify(timingsData),
+                    contentType: "application/json",
+                    success: function(result){
+                        alert("product added to cart successfully");
+                    },
+                    error: function(result){
+                        alert("Error");
+                    }
+                })
+            }
+        </script>
+        <% include ../partials/footer %>
+    </body>
+    </html>

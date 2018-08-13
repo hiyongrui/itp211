@@ -16,29 +16,35 @@
   <% if(cartItemList.length > 0) { %>
   <div class="wrapper" id="wrapper">
     <h2 class="header"> Shopping Cart</h2>
+    <div>
+      <h3 class="deletedRow"> </h3>
+    </div>
     <div class="Border">
       <table class="table">
         <thread>
           <tr>
-            <th>Product ID</th>
+            <th>Product Image</th>
             <th>Product Name</th>
-            <th>Seller Name</th>
             <th>Pricing</th>
             <th>Action</th>
           </tr>
           <% for(var i=0; i < cartItemList.length; i++){ %>
             <tr class="rowRecord" data-id="<%= cartItemList[i].id %>">
-              <td class="productId">
-                <%= cartItemList[i].productId %>
+              <td class="productId" style="display: none">
+                <%= cartItemList[i].product_id %>
               </td>
-              <td>
-                <%= cartItemList[i].productName %>
+              <td class="productImage">
+                <img src ="/images/<%= cartItemList[i].product_image %>" class="productImg">
               </td>
-              <td>
-                <%= cartItemList[i].sellerName %>
+              <td class="productName">
+                <strong><%= cartItemList[i].product_name %></strong> <br>
+                <%= cartItemList[i].product_type %>
+              </td>
+              <td class="sellerName" style="display: none">
+                <%= cartItemList[i].seller_name %>
               </td>
               <td class = "pricing">
-                <%= cartItemList[i].pricing %>
+                <%= cartItemList[i].product_price %>
               </td>
               <td>
                   <input type="button" class="deleteBtn"  value="Delete">
@@ -107,9 +113,41 @@
 
   // })
 
+
+  function checkEmpty () {
+    var rowEmpty = $(".table td").length;
+    console.log("Row length: " +rowEmpty);
+    if (rowEmpty === 0) {
+      location.href = "http://localhost:3000/cart";
+    }
+  
+  }
+
+    function updateCartCount () {
+    $.ajax({
+        url: '<%=urlPath%>' + '/' + 'cartCount',
+        type: 'POST',
+        success: function (result) {
+          // Deduct the cart item count in navbar
+          var itemCount = document.getElementById("cartItemCount").innerHTML;
+          console.log(document.getElementById("cartItemCount").innerHTML);
+          itemCount = parseInt(itemCount) - 1;
+          console.log("Item Count: " +itemCount);
+          $("#cartItemCount").text(itemCount);
+          // Check if cart is empty
+          checkEmpty();
+        },
+        error: function (result) {
+          alert("Error");
+          console.log(result.message);
+        }
+      })
+  }
+
   $('.deleteBtn').click(function () {
     var record_num = $(this).closest("tr").data('id');
     var itemPricing = $(this).closest("tr").find('.pricing').text().trim();
+    var productName = $(this).closest("tr").find('.productName').text().trim();
     console.log(itemPricing);
     
     $.ajax({
@@ -121,6 +159,11 @@
         $(itemToRemove).remove();
         totalPrice = totalPrice - itemPricing;
         $('#totalPrice').text(totalPrice);
+        console.log(productName);
+        $('.deletedRow').text(productName + " has been removed from your cart!");
+        alert("delete is successful");
+        updateCartCount();
+        
       },
       error: function (result) {
         alert("Unable to delete student record.");

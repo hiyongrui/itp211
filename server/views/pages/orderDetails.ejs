@@ -13,21 +13,93 @@
     <table class="table">
             <thread>
               <tr>
-                <th> Product Id</th>
                 <th>Product Name</th>
                 <th>Pricing</th>
+                <th>Status</th>
     
               </tr>
               <% for(var i=0; i < transactionDetails.length; i++){ %>
-                <tr class="rowRecord" data-id="<%= transactionDetails[i].id %>">
-                  <td class="transactionId" data-id="<%= transactionDetails[i].productId %>">
-                    <%= transactionDetails[i].productId %>
-                  </td>
+                <tr class="rowRecord" data-id="<%= transactionDetails[i].id %>" data-userid = "<%=transactionDetails[i].seller_name%>">
+                  
                   <td class="productName">
-                      <%= transactionDetails[i].productName %>
+                    <%= transactionDetails[i].product_name %>
+                  </td>
+                  <td class="transactionId" style="display: none">
+                    <%= transactionDetails[i].transactionId %>
+                  </td>
+                  <td class="sellerId" style="display: none">
+                      <%= transactionDetails[i].seller_name %>
                   </td>
                   <td class="pricing">
-                    $<%= transactionDetails[i].pricing %>
+                    $<%= transactionDetails[i].product_price %>
+                  </td>
+                  <td>
+                      <% if (transactionDetails[i].product_status == true) { %>
+                        Completed
+                        <% } else {%>
+                          Pending
+                          <% } %>
+                  </td>
+                  <td>
+                    <% if (transactionDetails[i].product_status == false) { %>
+                    <button type="button" class="confirmBtn">Confirm</button>
+                    <% } else {%>
+                      <div class="col-lg-6">
+                        <button  type="button" class="btn btn-secondary pull-right createReview" data-toggle="modal" data-target="#createPost" data-id = "<%=transactionDetails[i].product_id%>">
+                            Create Review
+                        </button>
+                      </div>
+                      <div class="modal fade" id="createPost" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="/reviews" method="post" enctype="multipart/form-data">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Create Review</h4>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <fieldset class="form-group">
+                                    <label for="inputitle">Title</label>
+                                    <input type="text" id="inputitle" name="title" class="form-control" placeholder="Review Title" required="">
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <label for="inputContent">Content</label>
+                                    <textarea id="inputContent" name="content" rows="8" cols="40" class="form-control" placeholder="Review Description" required=""></textarea>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label for="inputProductId"> Product Id  </label>
+                                    <input type="text" id="inputProductId" name="product_id" class="form-control" placeholder="product id ">
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label for="inputRating"> Rating </label>
+                                    <input type="number" name="rating" min="1" max="5">
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label class="file" style="width: 50%">
+                                      <input type="file" id="image" name="image" onchange="loadFile(event)">
+                                       <span class="file-custom"></span> 
+                                     
+                                      <img id="output"/>
+                                  </label>
+                                </fieldset>
+        
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+              </div
+                      <% } %>
                   </td>
                 </tr>
                 <% } %>
@@ -36,7 +108,45 @@
           <a href="http://localhost:3000/transactions"> Back to Order History</a>
 
 <script>
- 
+$('.confirmBtn').click(function() {
+  var seller_id = $('.sellerId').text().trim();
+  console.log("seller oid " + seller_id);
+  var product_price = $('.pricing').text().trim();
+  product_price = product_price.substr(1);
+  product_price = parseInt(product_price);
+  var url = '<%=urlPath%>' + '/sendPayment';
+  var row_id = $(this).closest('tr').data("id");
+  var userID = $(this).closest('tr').data("userid");
+  console.log("USER ID " + userID);
+  console.log("Row id: " +row_id)
+  console.log(url);    
+  var paymentData = {
+    seller_id: userID,
+    product_price: product_price,
+    row_id: row_id
+  }
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: JSON.stringify(paymentData),
+    contentType: "application/json",
+    success: function(result) {
+      alert('success');
+    },
+    error: function(result) {
+      alert('error');
+    }
+  })
+})
+
+$(".createReview").on("click", function() {
+  console.log("this prod id =-- ");
+  console.log($(this));
+  console.log($(this).data("id"));
+  document.getElementById("inputProductId").value = $(this).data("id");
+  document.getElementById("inputProductId").readOnly = true;
+})
+  
 </script>
 
     
