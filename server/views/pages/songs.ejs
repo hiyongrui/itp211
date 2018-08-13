@@ -277,8 +277,9 @@ padding:6px;
                 <% if (songs.user_id != user.id) { %>
                 <button type="button" class="unmarked" data-id="<%=songs.id%>" data-value="<%=songs.songLikeNo%>"> 
                     <i class="fa fa-heart-o"> </i> <%=songs.songLikeNo%>  </button>
-                <% } %>
+                <% } else { %>
                 <button type="button" id="cssDeleteBtn" class="btn-danger deleteBtn" value="<%=songs.id%>"> <i class="far fa-trash-alt"> Delete </i>  </button>
+                <% } %>
             </div>
 
             <div class="col-lg-2 btn-group dropright">
@@ -295,7 +296,7 @@ padding:6px;
                         <div class="addPlaylist" data-id="<%=playlists.id%>">
                            
                         <a data-id="<%=playlists.id%>" class="dropdown-item" href="#" data-song="<%=playlists.title%>" onclick=saveChanges()> 
-                            <span class="playlistNo">  <%=playlists.id%> -  <i class="fa fa-list"></i></span> Add to <%=playlists.title%> </a>
+                            <span class="playlistNo">   <i class="fa fa-list"></i></span> Add to <%=playlists.title%> </a>
                        
                         </div>
                     <% }); %>

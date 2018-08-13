@@ -311,7 +311,9 @@
                         <% }); %>
 
                     <% } else { %> 
-                        <a href="#"> Hi </a>
+                        <% dynamicTags.forEach(function(dynamicTags) {%>
+                            <a href="/search/<%=searchQuery%>/searchTag?tag=<%=dynamicTags.productTags%>"> <%= dynamicTags.productTags %> </a>
+                        <% }); %>
                     <% } %>
                 <!-- <a href="/search/<%=cookieSearchType%>/<%=searchQuery%>/searchTag?tag=<%=dynamicTags.productTags%>"> <%= dynamicTags.productTags %> </a> !-->
                 <!-- <a href="/search/<%=cookieSearchType%>/searchResult?comeon=<%=searchQuery%>&tagSelected=<%=dynamicTags.productTags%>"> </a> !-->
@@ -332,9 +334,9 @@
                                 <h4 class="filterH4Style"> Category </h4>
                                 <select id="productOptions" name="productFilterType" class="productFilterType">
                                     <option value="None"> None </option>
-                                    <option value="Java">Java</option>
-                                    <option value="Angular">Angular</option>
-                                    <option value="Automation">Automation</option>
+                                    <option value="Guitar">Guitar</option>
+                                    <option value="Violin">Violin</option>
+                                    <option value="Drum">Drum</option>
                                 </select>
                             </div>
                             <hr>
@@ -963,7 +965,7 @@
             
         //error of json input comes from header navbar user.
         var totalSongs = JSON.parse(htmlDecode("<%= JSON.stringify(songs) %>"));
-        console.log("sonsg " + songs);
+        console.log("sonsg " + totalSongs);
     </script>
 
 
