@@ -480,6 +480,60 @@ app.delete('/reviews/:reviews_id' , reviews.hasAuthorization , reviews.delete);
 app.get('/users/profile/:name/rating/:user_id', reviews.hasAuthorization, reviews.viewReviewsOfThisUser); //review for this oner user
 //end of charmaine router
 
+var db;
+
+app.get("/mongodb", (req,res) => {
+    res.render("mongofile");
+})
+app.get("/afterMongo", (req,res) => {
+    db.collection('quotes').find().toArray(function(err,results) {
+        console.log("found quotes");
+        console.log(results);
+        res.render("afterMongo", {quotes:results});;
+    }); //cursor is a mongo object
+})
+app.post('/quotes', (req, res) => {
+    db.collection('quotes').save(req.body, (err,result) => {
+        var x = JSON.stringify(req.body); //must use json.stringify, else will have typeError:Cannot convert object to primitive value
+        console.dir("quotes --> " + x);
+        if (err) {
+            return console.log(err);
+        }
+        else {
+            console.log("saved quotes to database mongodb");
+        }
+        res.redirect("/afterMongo");
+    })
+})
+app.put("/quotes", (req,res) => {
+    //Handle put request
+    db.collection('quotes').findOneAndUpdate({name: 'watar'}, {
+        $set: {
+            name: req.body.name,
+            quote: req.body.quote
+        }
+    }, {
+        sort: {_id: -1},
+        upsert: true
+    }, (err, result) => {
+      if (err) {
+        return res.send(err)
+      }
+      else {
+        res.send(result)
+      }
+    })
+})
+app.delete('/quotes', (req, res) => {
+    // Handle delete event here
+    db.collection('quotes').findOneAndDelete({name: req.body.name},
+        (err, result) => {
+            if (err) return res.send(500, err)
+            res.send({message: 'A darth vadar quote got deleted'})
+        }
+    )
+})
+
 //Set up route for chat messages 666666 can do this in another controller but they lazy
  app.get('/messages', function(req, res) {
     ChatMsg.findAll().then((chatMessages) => {
@@ -713,6 +767,90 @@ module.exports = app;
 
 app.set('port', serverPort);
 
+const assert = require('assert');
 var server = httpServer.listen(app.get('port'), function () {
     console.log('http server listening on port ' + server.address().port);
+    const MongoClient = require('mongodb').MongoClient
+
+
+    MongoClient.connect('mongodb://itp211mongodbname:itp211mongodbpassword@ds223685.mlab.com:23685/itp211mongodbname', (err, client) => {
+      // ... start the server   
+        if (err) {
+            console.log("FAIL CONNECTION TO MONGODB");
+            return console.log("ERRR " + err);
+        }
+        else{
+            console.log("CLIENT CONNECT MONGO FINAL");
+            db = client.db('itp211mongodbname');
+            insertDocuments(db, function() {
+                indexCollection(db, function() {
+                    findDocuments(db, function() {
+                        removeDocument(db, function(success) {
+                            console.log("in middle of deleting -->  + " + success);
+                            //client.close()
+                        })
+                    })
+                })
+            })
+        }
+    })
 });
+
+const insertDocuments = function(db, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');
+    // Insert some documents
+    collection.insertMany([
+      {a : 1}, {a : 2}, {a : 3}
+    ], function(err, result) {
+      assert.equal(err, null);
+      assert.equal(3, result.result.n);
+      assert.equal(3, result.ops.length);
+      console.log("Inserted 3 documents into the collection");
+      callback(result);
+    });
+}
+const findDocuments = function(db, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');
+    // Find some documents
+    collection.find({}).toArray(function(err, docs) {
+      assert.equal(err, null);
+      console.log("Found the following records");
+      console.log(docs)
+      callback(docs);
+    });
+    collection.find({'a': 3}).toArray(function(err, docs) {
+        assert.equal(err, null);
+        console.log("Found records with value a : 3");
+        console.log(docs);
+        callback(docs);
+    });
+}
+const removeDocument = function(db, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');
+    // Delete document where a is 3
+    var ids = [1, 2, 3] 
+    var myquery = { a: { $in: ids} };
+    //collection.deleteOne({ a : 3 }, function(err, result) {
+    collection.deleteMany(myquery, function(err, result) {
+        assert.equal(err, null);
+        //assert.equal(1, result.result.n);
+        console.log(JSON.stringify(result.result.n));
+        console.log("result --> " + result);
+        console.log("success delete!!!")
+        callback(result);
+    })
+}
+const indexCollection = function(db, callback) {
+    db.collection('documents').createIndex(
+      { "a": 1 },
+        null,
+        function(err, results) {
+            console.log("indexing----");
+            console.log(results);
+            callback();
+        }
+    );
+};

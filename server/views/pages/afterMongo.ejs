@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        mongodb
+    </title>
+</head>
+<style>
+#output{
+    border-radius:50%;
+    /*display: inline; */
+    width: 200px;
+    height: 200px;
+    border: 2px solid lightslategray;
+}
+.user{
+    color: blue;
+}
+</style>
+<body>
+    <% include ../partials/header %>
+    <!-- Page Content -->
+    <div class="container">
+       
+        <!-- Team Members Row -->
+        <div class="row">
+
+          <div class="col-lg-12">
+            <h2 class="my-4"> After the mongodb </h2>
+          </div>
+        
+          <ul class="quotes">
+            <% for(var i=0; i<quotes.length; i++) {%>
+              <li class="quote">
+                <span>name: <%= quotes[i].name %></span>
+                <span>>> quote: <%= quotes[i].quote %></span>
+                <span><%=quotes[i]._id %></span>
+              </li>
+            <% } %>
+          </ul>
+    
+          
+        </div>
+    </div>
+        
+        <% include ../partials/footer %>
+      
+        <script>
+
+                
+        </script>
+
+</body>
+
+</html>

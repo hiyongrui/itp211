@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        mongodb
+    </title>
+</head>
+<style>
+    #output{
+    border-radius:50%;
+    /*display: inline; */
+    width: 200px;
+    height: 200px;
+    border: 2px solid lightslategray;
+}
+.user{
+    color: blue;
+}
+</style>
+
+<body>
+    <% include ../partials/header %>
+    <!-- Page Content -->
+    <div class="container">
+        <div>
+            <h2>Replace last quote written by Master Yoda with a quote written by Darth Vadar</h2>
+            <button id="update"> Darth Vadar invades! </button>
+        </div>
+        <div>
+            <h2>Delete Darth Vadar's first quote</h2>
+            <button id="delete"> Delete first Darth Vadar quote </button>
+        </div>
+        <!-- Team Members Row -->
+        <div class="row">
+
+            <div class="col-lg-12">
+                <h2 class="my-4"> All the mongodb </h2>
+            </div>
+
+            <form action="/quotes" method="POST">
+                <input type="text" placeholder="name" name="name">
+                <input type="text" placeholder="quote" name="quote">
+                <button type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+    <% include ../partials/footer %>
+
+    <script>
+        var update = document.getElementById('update')
+
+        update.addEventListener('click', function () {
+            // Send PUT Request here
+            fetch('quotes', {
+                method: 'put',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    'name': 'Darth Vader',
+                    'quote': 'I find your lack of faith disturbing.'
+                })
+            }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+            }).then(data => {
+                alert("final data");
+                alert(JSON.stringify(data));  
+                window.location.href = "/afterMongo";
+            })
+        })
+
+        var del = document.getElementById('delete')
+
+        del.addEventListener('click', function () {
+            fetch('quotes', {
+                method: 'delete',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name': 'Darth Vader'
+                })
+            })
+                .then(res => {
+                    if (res.ok) return res.json()
+                }).
+                then(data => {
+                    console.log(data)
+                    //window.location.reload(true)
+                    window.location.href = "/afterMongo"
+                })
+        })
+    </script>
+
+</body>
+
+</html>
