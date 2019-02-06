@@ -91,6 +91,15 @@ var sequelizeSessionStore = new SessionStore({
 var passport = require('passport');
 var flash = require('connect-flash');
 
+const Joi = require('joi');
+
+const dbREST = require("./server/controllers/db");
+const collection = "todo";
+// schema used for data validation for our todo document
+const schema = Joi.object().keys({
+    todo : Joi.string().required()
+});
+
 var app = express();
 var serverPort = 3000;
 var httpServer = require('http').Server(app);
@@ -480,6 +489,82 @@ app.delete('/reviews/:reviews_id' , reviews.hasAuthorization , reviews.delete);
 app.get('/users/profile/:name/rating/:user_id', reviews.hasAuthorization, reviews.viewReviewsOfThisUser); //review for this oner user
 //end of charmaine router
 
+app.get("/restful", (req,res)=> {
+    res.render('restful');
+})
+// read
+app.get('/getTodos',(req,res)=>{
+    // get all Todo documents within our todo collection
+    // send back to user as json
+    dbREST.getDB().collection(collection).find({}).toArray((err,documents)=>{
+        if(err)
+            console.log(err);
+        else{
+            res.json(documents);
+        }
+    });
+});
+
+// update
+app.put('/:id',(req,res)=>{
+    // Primary Key of Todo Document we wish to update
+    const todoID = req.params.id;
+    // Document used to update
+    const userInput = req.body;
+    // Find Document By ID and Update
+    dbREST.getDB().collection(collection).findOneAndUpdate({_id : dbREST.getPrimaryKey(todoID)},{$set : {todo : userInput.todo}},{returnOriginal : false},(err,result)=>{
+        if(err)
+            console.log(err);
+        else{
+            res.json(result);
+        }      
+    });
+});
+
+
+//create
+app.post('/',(req,res,next)=>{
+    // Document to be inserted
+    const userInput = req.body;
+
+    // Validate document
+    // If document is invalid pass to error middleware
+    // else insert document within todo collection
+    Joi.validate(userInput,schema,(err,result)=>{
+        if(err){
+            const error = new Error("Invalid Input");
+            error.status = 400;
+            next(error);
+        }
+        else{
+            dbREST.getDB().collection(collection).insertOne(userInput,(err,result)=>{
+                if(err){
+                    const error = new Error("Failed to insert Todo Document");
+                    error.status = 400;
+                    next(error);
+                }
+                else
+                    res.json({result : result, document : result.ops[0],msg : "Successfully inserted Todo!!!",error : null});
+            });
+        }
+    })    
+});
+
+
+
+//delete
+app.delete('/:id',(req,res)=>{
+    // Primary Key of Todo Document
+    const todoID = req.params.id;
+    // Find Document By ID and delete document from record
+    dbREST.getDB().collection(collection).findOneAndDelete({_id : dbREST.getPrimaryKey(todoID)},(err,result)=>{
+        if(err)
+            console.log(err);
+        else
+            res.json(result);
+    });
+});
+
 var db;
 
 app.get("/mongodb", (req,res) => {
@@ -770,6 +855,15 @@ app.set('port', serverPort);
 const assert = require('assert');
 var server = httpServer.listen(app.get('port'), function () {
     console.log('http server listening on port ' + server.address().port);
+    dbREST.connect((err) => {
+        if (err) {
+            console.log("mongo restful db fail to conncect");
+        }
+        else{
+            console.log("restful connection successful");
+            //findAllDocuments(dbREST)
+        }
+    })
     const MongoClient = require('mongodb').MongoClient
 
 
