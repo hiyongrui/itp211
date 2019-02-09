@@ -489,6 +489,12 @@ app.delete('/reviews/:reviews_id' , reviews.hasAuthorization , reviews.delete);
 app.get('/users/profile/:name/rating/:user_id', reviews.hasAuthorization, reviews.viewReviewsOfThisUser); //review for this oner user
 //end of charmaine router
 
+var userMongoose = require("./server/controllers/UserMongoose");
+app.use("/users", userMongoose);
+app.get("/mongoose", (req,res) => {
+    res.render('mongoose');
+})
+
 app.get("/restful", (req,res)=> {
     res.render('restful');
 })
@@ -853,20 +859,36 @@ module.exports = app;
 app.set('port', serverPort);
 
 const assert = require('assert');
+const mongooseATLAS = require("mongoose");
+
 var server = httpServer.listen(app.get('port'), function () {
     console.log('http server listening on port ' + server.address().port);
+    
+    mongooseATLAS.connect(
+        //"mongodb+srv://nodeuser:nodepwd@opencodez-pzgjy.gcp.mongodb.net/test?retryWrites=true",
+        "mongodb+srv://mongodbuser:mongodbpassword@cluster0-mnf7x.mongodb.net/mongoCLOUD?retryWrites=true",
+        { 
+            useNewUrlParser: true
+        }
+    );
+    const dbMongooseATLAS = mongooseATLAS.connection;
+    dbMongooseATLAS.on('error', console.error.bind(console, 'connection error to db monoogse CLOUD ATLAS:'));
+    dbMongooseATLAS.once('open', function() {
+    // we're connected!
+        console.log("\n Connected to MongoDB database CLOUD MONGOOSE ATLAS"); 
+    });
+
     dbREST.connect((err) => {
         if (err) {
-            console.log("mongo restful db fail to conncect");
+            console.log("mongo restful db fail to connect");
         }
         else{
-            console.log("restful connection successful");
-            //findAllDocuments(dbREST)
+            console.log("restful connection successful to mongodb community edition - cmd prompt mongo.exe thro/compass?");
+            //findAllDocuments(dbREST) NOTE: add mongo bin folder to path environment variable, so can run mongo in cmd/anywhere
         }
     })
+
     const MongoClient = require('mongodb').MongoClient
-
-
     MongoClient.connect('mongodb://itp211mongodbname:itp211mongodbpassword@ds223685.mlab.com:23685/itp211mongodbname', (err, client) => {
       // ... start the server   
         if (err) {
